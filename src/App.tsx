@@ -711,10 +711,47 @@ export default function App() {
                     <p className="text-sm font-bold">{selectedItem?.leader}</p>
                   </div>
                 </div>
-                <div className="px-8 pb-8 flex gap-3">
-                  <button className="flex-1 py-2.5 bg-rose-500 text-white rounded-lg font-bold hover:bg-rose-600 transition-colors">Dissolve Group</button>
-                  <button className="flex-1 py-2.5 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition-colors">Manage Members</button>
-                  <button className="flex-1 py-2.5 bg-slate-100 text-slate-600 rounded-lg font-bold hover:bg-slate-200 transition-colors">View Logs</button>
+                <div className="px-8 pb-8 flex flex-col md:flex-row gap-3">
+                  <button 
+                    onClick={() => openModal({
+                      title: 'Giải tán nhóm?',
+                      children: `Bạn có chắc muốn giải tán nhóm ${selectedItem?.name}? Mọi dữ liệu và thành viên trong nhóm sẽ bị xóa và không thể khôi phục.`,
+                      confirmLabel: 'Giải tán',
+                      type: 'danger',
+                      onConfirm: () => console.log('Dissolved group')
+                    })}
+                    className="flex-1 py-2.5 bg-rose-500 text-white rounded-lg font-bold hover:bg-rose-600 transition-colors"
+                  >
+                    Giải tán nhóm
+                  </button>
+                  <button 
+                    onClick={() => openModal({
+                      title: 'Quản lý thành viên',
+                      type: 'form',
+                      children: (
+                        <div className="space-y-4 pt-2">
+                          <p className="text-sm text-slate-500 mb-4">Thêm thành viên mới vào nhóm: <span className="font-bold text-slate-800">{selectedItem?.name}</span></p>
+                          <div>
+                            <label className="text-sm font-medium text-slate-700 block mb-1">Email hoặc Số điện thoại</label>
+                            <input type="text" placeholder="Nhập email hoặc SĐT người dùng" className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
+                          </div>
+                          <div>
+                           <label className="text-sm font-medium text-slate-700 block mb-1">Vai trò</label>
+                           <select className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none">
+                             <option value="member">Thành viên</option>
+                             <option value="admin">Quản trị viên</option>
+                           </select>
+                          </div>
+                        </div>
+                      ),
+                      confirmLabel: 'Thêm thành viên',
+                      onConfirm: () => console.log('Added member')
+                    })}
+                    className="flex-1 py-2.5 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition-colors"
+                  >
+                    Quản lý thành viên
+                  </button>
+                  <button className="flex-1 py-2.5 bg-slate-100 text-slate-600 rounded-lg font-bold hover:bg-slate-200 transition-colors">Xem lịch sử</button>
                 </div>
               </div>
 
@@ -743,7 +780,21 @@ export default function App() {
                           <Badge variant={member.role === 'Leader' ? 'active' : 'pending'}>{member.role}</Badge>
                         </td>
                         <td className="px-6 py-4 text-slate-600">{member.date}</td>
-                        <td className="px-6 py-4 text-rose-500 font-bold cursor-pointer hover:underline">[Remove]</td>
+                        <td 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openModal({
+                              title: 'Xóa thành viên',
+                              children: `Bạn có chắc muốn xóa ${member.name} khỏi nhóm này?`,
+                              confirmLabel: 'Xóa',
+                              type: 'danger',
+                              onConfirm: () => console.log('Removed member')
+                            });
+                          }}
+                          className="px-6 py-4 text-rose-500 font-bold cursor-pointer hover:underline"
+                        >
+                          [Xóa]
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -758,9 +809,36 @@ export default function App() {
               <div className="flex justify-between items-center">
                 <h4 className="font-bold text-xl">Quản lý Nhóm</h4>
                 <div className="flex gap-2">
-                  <button className="flex items-center gap-2 px-4 py-2 bg-[#1e293b] text-white rounded-lg text-sm font-medium">
+                  <button 
+                    onClick={() => openModal({
+                      title: 'Tạo nhóm mới',
+                      type: 'form',
+                      children: (
+                        <div className="space-y-4 pt-2">
+                          <div>
+                            <label className="text-sm font-medium text-slate-700 block mb-1">Tên nhóm</label>
+                            <input type="text" placeholder="Nhập tên nhóm" className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium text-slate-700 block mb-1">Mô tả</label>
+                            <textarea placeholder="Nhập mô tả nhóm" rows={3} className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none resize-none"></textarea>
+                          </div>
+                          <div>
+                           <label className="text-sm font-medium text-slate-700 block mb-1">Loại nhóm</label>
+                           <select className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none">
+                             <option value="public">Công khai</option>
+                             <option value="private">Riêng tư</option>
+                           </select>
+                          </div>
+                        </div>
+                      ),
+                      confirmLabel: 'Tạo nhóm',
+                      onConfirm: () => console.log('Created group')
+                    })}
+                    className="flex items-center gap-2 px-4 py-2 bg-[#1e293b] text-white rounded-lg text-sm font-medium hover:bg-slate-800 transition-colors"
+                  >
                     <Plus size={16} />
-                    Create New Group
+                    Tạo nhóm mới
                   </button>
                   <button className="flex items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium">
                     <RefreshCw size={16} />
@@ -861,7 +939,18 @@ export default function App() {
                     <textarea rows={3} placeholder="Enter notification message..." className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none resize-none"></textarea>
                   </div>
                   <div className="flex justify-end">
-                    <button className="px-12 py-2 bg-orange-500 text-white rounded-lg font-bold hover:bg-orange-600 transition-colors">Send Now</button>
+                    <button 
+                      onClick={() => openModal({
+                        title: 'Xác nhận gửi thông báo',
+                        children: 'Bạn có chắc chắn muốn gửi thông báo này cho tất cả người dùng không?',
+                        confirmLabel: 'Gửi ngay',
+                        type: 'info',
+                        onConfirm: () => console.log('Notification sent')
+                      })}
+                      className="px-12 py-2 bg-orange-500 text-white rounded-lg font-bold hover:bg-orange-600 transition-colors"
+                    >
+                      Send Now
+                    </button>
                   </div>
                 </div>
               </div>
