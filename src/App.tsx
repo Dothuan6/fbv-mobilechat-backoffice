@@ -171,6 +171,8 @@ export default function App() {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalConfig, setModalConfig] = useState<any>({});
+  const [chatDetailTab, setChatDetailTab] = useState('Tin nhắn');
+  const [postDetailTab, setPostDetailTab] = useState('Chi tiết');
 
   const openModal = (config: any) => {
     setModalConfig(config);
@@ -969,17 +971,13 @@ export default function App() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {[
-                      { date: '01/04 09:00', title: 'Welcome to April!', audience: 'All (12,483)', delivered: '12,321', error: '162', status: 'Sent' },
-                      { date: '30/03 12:00', title: 'System Maintenance Notice', audience: 'Specific (1 user)', delivered: '12,390', error: '1', status: 'Failed' },
-                      { date: '30/03 12:00', title: 'System Maintenance Notice', audience: 'All (12,483)', delivered: '1', error: '0', status: 'Sent' },
-                    ].map((notif, i) => (
+                    {MOCK_NOTIFICATIONS.map((notif, i) => (
                       <tr key={i} className="hover:bg-slate-50 transition-colors">
                         <td className="px-6 py-4">{notif.date}</td>
                         <td className="px-6 py-4 font-medium">{notif.title}</td>
                         <td className="px-6 py-4 text-slate-600">{notif.audience}</td>
-                        <td className="px-6 py-4 text-slate-600">{notif.delivered}</td>
-                        <td className="px-6 py-4 text-slate-600">{notif.error}</td>
+                        <td className="px-6 py-4 text-center font-bold text-blue-600">{notif.delivered}</td>
+                        <td className="px-6 py-4 text-center font-bold text-rose-500">{notif.error}</td>
                         <td className="px-6 py-4">
                           <Badge variant={notif.status.toLowerCase()}>{notif.status}</Badge>
                         </td>
@@ -1038,9 +1036,46 @@ export default function App() {
                     <td className="px-6 py-4 text-slate-600">{media.date}</td>
                     <td className="px-6 py-4">
                       <div className="flex justify-center gap-2">
-                        <button className="p-1.5 border border-slate-200 rounded hover:bg-white"><FileText size={14} /></button>
+                        <button 
+                          onClick={() => openModal({
+                            title: 'Chi tiết tệp tin',
+                            children: (
+                              <div className="space-y-4">
+                                <div className="aspect-video bg-slate-100 rounded-lg overflow-hidden border border-slate-200">
+                                  <img src={media.thumb} alt="" className="w-full h-full object-contain" />
+                                </div>
+                                <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
+                                  <span className="text-slate-400 font-bold uppercase text-[10px]">Tên tệp</span>
+                                  <span className="text-slate-400 font-bold uppercase text-[10px]">Định dạng</span>
+                                  <span className="font-medium">{media.name}</span>
+                                  <span className="font-medium uppercase">{media.type}</span>
+                                  <span className="text-slate-400 font-bold uppercase text-[10px] mt-2">Ngày tải lên</span>
+                                  <span className="text-slate-400 font-bold uppercase text-[10px] mt-2">Dung lượng</span>
+                                  <span className="font-medium">{media.date}</span>
+                                  <span className="font-medium">2.4 MB</span>
+                                </div>
+                              </div>
+                            ),
+                            confirmLabel: 'Đóng',
+                            type: 'info'
+                          })}
+                          className="p-1.5 border border-slate-200 rounded hover:bg-white"
+                        >
+                          <FileText size={14} />
+                        </button>
                         <button className="p-1.5 border border-slate-200 rounded hover:bg-white"><Download size={14} /></button>
-                        <button className="p-1.5 border border-slate-200 rounded hover:bg-white text-rose-500"><Trash2 size={14} /></button>
+                        <button 
+                          onClick={() => openModal({
+                            title: 'Xóa tệp tin?',
+                            children: `Bạn có chắc muốn xóa tệp "${media.name}" không? Thao tác này sẽ gỡ tệp khỏi toàn bộ các cuộc trò chuyện.`,
+                            confirmLabel: 'Xóa vĩnh viễn',
+                            type: 'danger',
+                            onConfirm: () => console.log('Deleted media', media.id)
+                          })}
+                          className="p-1.5 border border-slate-200 rounded hover:bg-white text-rose-500"
+                        >
+                          <Trash2 size={14} />
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -1082,7 +1117,29 @@ export default function App() {
                         <td className="px-6 py-4 text-slate-500">{cfg.date}</td>
                         <td className="px-6 py-4 text-slate-500">{cfg.by}</td>
                         <td className="px-6 py-4 text-center">
-                          <button className="flex items-center gap-1 px-3 py-1 border border-slate-200 rounded text-xs font-medium hover:bg-white">
+                          <button 
+                            onClick={() => openModal({
+                              title: `Chỉnh sửa: ${cfg.key}`,
+                              children: (
+                                <div className="space-y-4">
+                                  <div className="p-3 bg-slate-50 rounded-lg border border-slate-100 mb-4">
+                                    <p className="text-xs text-slate-500">Mô tả: {CONFIG_KEYS.find(k => k.key === cfg.key)?.desc}</p>
+                                  </div>
+                                  <div className="space-y-1">
+                                    <label className="text-xs font-bold text-slate-500">Giá trị cấu hình ({cfg.type})</label>
+                                    <input type="text" defaultValue={cfg.val} className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none font-mono" />
+                                  </div>
+                                  <div className="space-y-1">
+                                    <label className="text-xs font-bold text-slate-500">Ghi chú thay đổi</label>
+                                    <textarea rows={2} placeholder="Lý do thay đổi..." className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none resize-none text-sm"></textarea>
+                                  </div>
+                                </div>
+                              ),
+                              confirmLabel: 'Lưu thay đổi',
+                              onConfirm: () => console.log('Config updated', cfg.key)
+                            })}
+                            className="flex items-center gap-1 px-3 py-1 border border-slate-200 rounded text-xs font-medium hover:bg-white"
+                          >
                             <FileText size={12} /> Edit
                           </button>
                         </td>
@@ -1126,7 +1183,43 @@ export default function App() {
                 <h4 className="text-2xl font-bold">Admin Roles & Permissions (RBAC)</h4>
                 <p className="text-slate-500 text-sm">RBAC — Kiểm soát truy cập dựa trên vai trò</p>
               </div>
-              <button className="px-6 py-2 bg-orange-500 text-white rounded-lg font-bold hover:bg-orange-600 transition-colors">
+              <button 
+                onClick={() => openModal({
+                  title: 'Thêm Quản trị viên mới',
+                  children: (
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <label className="text-xs font-bold text-slate-500">Họ và tên</label>
+                          <input type="text" placeholder="Nguyễn Văn A" className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-xs font-bold text-slate-500">Email</label>
+                          <input type="email" placeholder="admin@fbv.app" className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <label className="text-xs font-bold text-slate-500">Vai trò</label>
+                          <select className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none bg-white">
+                            <option>Admin</option>
+                            <option>Moderator</option>
+                            <option>Content Manager</option>
+                            <option>Viewer</option>
+                          </select>
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-xs font-bold text-slate-500">Phòng ban</label>
+                          <input type="text" placeholder="Technology" className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
+                        </div>
+                      </div>
+                    </div>
+                  ),
+                  confirmLabel: 'Tạo tài khoản',
+                  onConfirm: () => console.log('Admin created')
+                })}
+                className="px-6 py-2 bg-orange-500 text-white rounded-lg font-bold hover:bg-orange-600 transition-colors"
+              >
                 [ + Tạo Admin mới ]
               </button>
             </div>
@@ -1204,9 +1297,10 @@ export default function App() {
                   {['Tin nhắn', 'Media', 'File', 'Link'].map((tab) => (
                     <button 
                       key={tab}
+                      onClick={() => setChatDetailTab(tab)}
                       className={cn(
                         "pb-3 text-sm font-medium transition-colors border-b-2",
-                        tab === 'Media' ? "text-blue-600 border-blue-600" : "text-slate-400 border-transparent hover:text-slate-600"
+                        chatDetailTab === tab ? "text-blue-600 border-blue-600" : "text-slate-400 border-transparent hover:text-slate-600"
                       )}
                     >
                       {tab}
@@ -1214,35 +1308,142 @@ export default function App() {
                   ))}
                 </div>
 
-                <h5 className="font-bold mb-4">Ảnh & Video — 24 files | Tổng dung lượng: 156 MB</h5>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                  {Array.from({ length: 12 }).map((_, i) => (
-                    <div key={i} className="group relative bg-slate-50 rounded-lg overflow-hidden border border-slate-100">
-                      <img src={`https://picsum.photos/seed/chat${i}/200`} alt="" className="w-full aspect-square object-cover" />
-                      <div className="p-2">
-                        <p className="text-[10px] font-bold truncate">IMG_001.jpg</p>
-                        <p className="text-[10px] text-slate-400">2.4 MB</p>
-                        <p className="text-[10px] text-slate-400">Nguyễn Văn An</p>
-                        <p className="text-[10px] text-slate-400">01/04/2026 09:30</p>
+                {chatDetailTab === 'Tin nhắn' && (() => {
+                  const MOCK_MESSAGES = [
+                    { id: '1', sender: 'Nguyễn Văn An', avatar: 'https://i.pravatar.cc/150?u=1', text: 'Ai review PR #142 chưa? Cần merge gấp trước 5pm hôm nay.', time: '09:42', isFlagged: false, isSelf: false },
+                    { id: '2', sender: 'Trần Thị Bình', avatar: 'https://i.pravatar.cc/150?u=2', text: 'Để mình check. Có test case chưa hay chỉ code thôi?', time: '09:44', isFlagged: false, isSelf: true },
+                    { id: '3', sender: 'Nguyễn Văn An', avatar: 'https://i.pravatar.cc/150?u=1', text: 'Có test rồi, pipeline xanh. Review giùm mình nhé!', time: '09:45', isFlagged: false, isSelf: false },
+                    { id: '4', sender: 'Lê Văn Cường', avatar: 'https://i.pravatar.cc/150?u=3', text: 'Mình thấy có vấn đề ở dòng 42 file auth.service.ts, check lại logic token refresh nhé.', time: '09:47', isFlagged: true, isSelf: false },
+                    { id: '5', sender: 'Trần Thị Bình', avatar: 'https://i.pravatar.cc/150?u=2', text: 'Đúng rồi, cần fix phần này trước khi merge.', time: '09:50', isFlagged: false, isSelf: true },
+                    { id: '7', sender: 'Nguyễn Văn An', avatar: 'https://i.pravatar.cc/150?u=1', text: 'Đã push fix. Pipeline đang chạy lại... 🚀', time: '10:05', isFlagged: false, isSelf: false },
+                  ];
+                  return (
+                    <div className="space-y-4">
+                      <div className="bg-slate-50 rounded-xl p-4 space-y-4 max-h-[500px] overflow-y-auto">
+                        {MOCK_MESSAGES.map((msg) => (
+                          <div key={msg.id} className={cn('flex gap-3', msg.isSelf && 'flex-row-reverse')}>
+                             <img src={msg.avatar} alt="" className="w-8 h-8 rounded-full flex-shrink-0 mt-1 object-cover" />
+                             <div className={cn('max-w-[70%] space-y-1', msg.isSelf && 'items-end flex flex-col')}>
+                               <div className={cn('flex items-center gap-2', msg.isSelf && 'flex-row-reverse')}>
+                                 <p className="text-xs font-bold text-slate-700">{msg.sender}</p>
+                                 <p className="text-[10px] text-slate-400">{msg.time}</p>
+                                 {msg.isFlagged && <span className="px-1.5 py-0.5 bg-rose-100 text-rose-600 text-[9px] font-bold rounded uppercase">⚠️ Vi phạm</span>}
+                               </div>
+                               <div className={cn(
+                                 'px-4 py-2 rounded-2xl text-sm shadow-sm',
+                                 msg.isSelf ? 'bg-blue-600 text-white rounded-tr-sm' : 
+                                 msg.isFlagged ? 'bg-rose-50 border border-rose-200 text-slate-800 rounded-tl-sm' : 
+                                 'bg-white text-slate-800 border border-slate-100 rounded-tl-sm'
+                               )}>
+                                 {msg.text}
+                               </div>
+                               {msg.isFlagged && (
+                                 <button 
+                                   onClick={() => openModal({
+                                     title: 'Xóa tin nhắn vi phạm?',
+                                     children: 'Bạn có chắc chắn muốn xóa tin nhắn này không?',
+                                     confirmLabel: 'Xóa',
+                                     type: 'danger',
+                                     onConfirm: () => console.log('Deleted message', msg.id)
+                                   })}
+                                   className="text-[10px] text-rose-500 hover:underline"
+                                 >
+                                   [Xóa tin nhắn]
+                                 </button>
+                               )}
+                             </div>
+                          </div>
+                        ))}
                       </div>
-                      <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
-                        <div className="flex gap-2">
-                          <button className="p-1.5 bg-white rounded-full text-slate-700 hover:bg-blue-50"><Download size={14} /></button>
-                          <button className="p-1.5 bg-white rounded-full text-slate-700 hover:bg-blue-50"><ExternalLink size={14} /></button>
-                          <button className="p-1.5 bg-white rounded-full text-rose-500 hover:bg-rose-50"><Trash2 size={14} /></button>
-                        </div>
-                        <div className="flex gap-2">
-                          <button className="flex items-center gap-1 px-2 py-1 bg-white/20 backdrop-blur-md text-white text-[10px] rounded hover:bg-white/30">
-                            <Download size={10} /> Tải xuống
-                          </button>
-                          <button className="flex items-center gap-1 px-2 py-1 bg-rose-500/80 backdrop-blur-md text-white text-[10px] rounded hover:bg-rose-600">
-                            <Trash2 size={10} /> Xóa
-                          </button>
-                        </div>
+                      <div className="bg-amber-50 p-3 rounded-lg text-xs text-amber-700 font-medium">
+                        ℹ️ Chỉ xem và kiểm duyệt tin nhắn. Quản trị viên không thể gửi tin nhắn trong cuộc trò chuyện này.
                       </div>
                     </div>
-                  ))}
-                </div>
+                  );
+                })()}
+
+                {chatDetailTab === 'Media' && (
+                  <div>
+                    <h5 className="font-bold mb-4">Ảnh & Video — 24 files | Tổng dung lượng: 156 MB</h5>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                      {Array.from({ length: 12 }).map((_, i) => (
+                        <div key={i} className="group relative bg-slate-50 rounded-lg overflow-hidden border border-slate-100">
+                          <img src={`https://picsum.photos/seed/chat${i}/200`} alt="" className="w-full aspect-square object-cover" />
+                          <div className="p-2">
+                            <p className="text-[10px] font-bold truncate">IMG_001.jpg</p>
+                            <p className="text-[10px] text-slate-400">2.4 MB</p>
+                            <p className="text-[10px] text-slate-400">Nguyễn Văn An</p>
+                            <p className="text-[10px] text-slate-400">01/04/2026 09:30</p>
+                          </div>
+                          <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
+                            <div className="flex gap-2">
+                              <button className="p-1.5 bg-white rounded-full text-slate-700 hover:bg-blue-50"><Download size={14} /></button>
+                              <button className="p-1.5 bg-white rounded-full text-slate-700 hover:bg-blue-50"><ExternalLink size={14} /></button>
+                              <button className="p-1.5 bg-white rounded-full text-rose-500 hover:bg-rose-50"><Trash2 size={14} /></button>
+                            </div>
+                            <div className="flex gap-2">
+                              <button className="flex items-center gap-1 px-2 py-1 bg-white/20 backdrop-blur-md text-white text-[10px] rounded hover:bg-white/30">
+                                <Download size={10} /> Tải xuống
+                              </button>
+                              <button className="flex items-center gap-1 px-2 py-1 bg-rose-500/80 backdrop-blur-md text-white text-[10px] rounded hover:bg-rose-600">
+                                <Trash2 size={10} /> Xóa
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {chatDetailTab === 'File' && (
+                  <div className="space-y-3">
+                    <h5 className="font-bold mb-4 text-slate-700 uppercase text-xs tracking-wider">Tài liệu đính kèm</h5>
+                    {[
+                      { name: 'fbv-roadmap-2026.pdf', size: '2.4 MB', date: '01/04/2026' },
+                      { name: 'contract-draft.docx', size: '1.1 MB', date: '30/03/2026' },
+                      { name: 'technical-specs.zip', size: '15.6 MB', date: '28/03/2026' },
+                    ].map((file, i) => (
+                      <div key={i} className="flex items-center justify-between p-4 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                            <FileText size={20} className="text-blue-500" />
+                          </div>
+                          <div>
+                            <p className="font-medium text-sm">{file.name}</p>
+                            <p className="text-xs text-slate-400">{file.size} • {file.date}</p>
+                          </div>
+                        </div>
+                        <button className="p-2 text-slate-400 hover:text-blue-600 transition-colors">
+                          <Download size={20} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {chatDetailTab === 'Link' && (
+                  <div className="space-y-3">
+                    <h5 className="font-bold mb-4 text-slate-700 uppercase text-xs tracking-wider">Liên kết đã chia sẻ</h5>
+                    {[
+                      { url: 'https://fbv.app/blog/new-features', title: 'New FBV Features 2026', sender: 'Admin' },
+                      { url: 'https://jira.fbv.app/FBV-1024', title: '[FBV-1024] UI/UX Bug fixes', sender: 'Nguyễn Văn An' },
+                    ].map((link, i) => (
+                      <div key={i} className="p-4 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors">
+                        <div className="flex items-start gap-3">
+                          <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <ExternalLink size={20} className="text-purple-500" />
+                          </div>
+                          <div>
+                            <p className="font-medium text-sm text-blue-600 hover:underline cursor-pointer">{link.title}</p>
+                            <p className="text-xs text-slate-400 truncate max-w-md">{link.url}</p>
+                            <p className="text-[10px] text-slate-500 mt-1">Gửi bởi {link.sender}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           );
@@ -1309,9 +1510,10 @@ export default function App() {
                   {['Chi tiết', 'Bình luận', 'Tương tác'].map((tab) => (
                     <button 
                       key={tab}
+                      onClick={() => setPostDetailTab(tab)}
                       className={cn(
                         "pb-3 text-sm font-medium transition-colors border-b-2",
-                        tab === 'Chi tiết' ? "text-blue-600 border-blue-600" : "text-slate-400 border-transparent hover:text-slate-600"
+                        postDetailTab === tab ? "text-blue-600 border-blue-600" : "text-slate-400 border-transparent hover:text-slate-600"
                       )}
                     >
                       {tab}
@@ -1319,58 +1521,121 @@ export default function App() {
                   ))}
                 </div>
 
-                <div className="flex flex-col md:flex-row items-start gap-6">
-                  <img src={selectedItem?.media} alt="Post media" className="w-full md:w-1/3 rounded-xl border border-slate-200 shadow-sm" />
-                  <div className="flex-1 space-y-4">
-                    <div>
-                      <h5 className="font-bold text-lg">Tác giả: {selectedItem?.author}</h5>
-                      <p className="text-sm text-slate-500">{selectedItem?.date}</p>
-                    </div>
-                    <div className="p-4 bg-slate-50 rounded-lg border border-slate-100">
-                      <p className="text-slate-800">{selectedItem?.content}</p>
-                    </div>
-                    <div className="flex gap-4 items-center">
-                      <div className="flex gap-2 items-center">
-                         <Badge variant={selectedItem?.status === 'Active' ? 'active' : selectedItem?.status === 'Pending' ? 'pending' : 'deleted'}>{selectedItem?.status}</Badge>
+                {postDetailTab === 'Chi tiết' && (
+                  <div className="flex flex-col md:flex-row items-start gap-6">
+                    <img src={selectedItem?.media} alt="Post media" className="w-full md:w-1/3 rounded-xl border border-slate-200 shadow-sm" />
+                    <div className="flex-1 space-y-4">
+                      <div>
+                        <h5 className="font-bold text-lg">Tác giả: {selectedItem?.author}</h5>
+                        <p className="text-sm text-slate-500">{selectedItem?.date}</p>
                       </div>
-                      <div className="text-sm font-medium text-slate-600">👍 {selectedItem?.likes} Lượt thích</div>
-                      <div className="text-sm font-medium text-slate-600">💬 {selectedItem?.comments} Bình luận</div>
+                      <div className="p-4 bg-slate-50 rounded-lg border border-slate-100 italic">
+                        <p className="text-slate-800">"{selectedItem?.content}"</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="p-3 border border-slate-100 rounded-lg bg-blue-50/50">
+                          <p className="text-xs text-slate-400 uppercase font-bold">Thống kê</p>
+                          <div className="flex gap-4 mt-2">
+                             <span className="text-sm font-bold">👍 {selectedItem?.likes} Likes</span>
+                             <span className="text-sm font-bold">💬 {selectedItem?.comments} Comments</span>
+                          </div>
+                        </div>
+                        <div className="p-3 border border-slate-100 rounded-lg bg-orange-50/50">
+                          <p className="text-xs text-slate-400 uppercase font-bold">Trạng thái hiện tại</p>
+                          <div className="mt-2 text-sm font-bold">
+                            <Badge variant={selectedItem?.status === 'Active' ? 'active' : selectedItem?.status === 'Pending' ? 'pending' : 'deleted'}>{selectedItem?.status}</Badge>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="pt-4 flex gap-3">
+                        <button 
+                          onClick={() => openModal({
+                            title: 'Xác nhận xóa bài viết?',
+                            children: `Hành động này sẽ xóa vĩnh viễn bài bài viết của ${selectedItem?.author}. Bạn có chắc chắn không?`,
+                            confirmLabel: 'Xóa bài viết',
+                            type: 'danger',
+                            onConfirm: () => console.log('Deleted post', selectedItem?.id)
+                          })}
+                          className="px-6 py-2 bg-rose-500 text-white rounded-lg font-bold hover:bg-rose-600 transition-colors"
+                        >
+                          Xóa bài viết
+                        </button>
+                        <button className="px-6 py-2 border border-slate-200 rounded-lg font-bold hover:bg-slate-50 transition-colors">Gỡ bài (Ẩn)</button>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
 
-                <div className="mt-8">
-                  <h5 className="font-bold mb-4">Danh sách Bình luận & Tương tác</h5>
-                  <div className="overflow-hidden border border-slate-100 rounded-xl">
-                    <table className="w-full text-sm">
-                      <thead className="bg-slate-50 text-slate-500">
-                        <tr>
-                          <th className="px-6 py-3 text-left font-bold">Người dùng</th>
-                          <th className="px-6 py-3 text-left font-bold">Nội dung bình luận</th>
-                          <th className="px-6 py-3 text-left font-bold">Thời gian</th>
-                          <th className="px-6 py-3 text-left font-bold">Trạng thái</th>
-                          <th className="px-6 py-3 text-left font-bold">Hành động</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100">
-                        {MOCK_INTERACTIONS.map((item, i) => ( 
-                          <tr key={i} className="hover:bg-slate-50 transition-colors">
-                            <td className="px-6 py-4 font-medium flex items-center gap-3">
-                              <img src={item.avatar} alt="" className="w-8 h-8 rounded-full shadow-sm" />
-                              {item.user}
-                            </td>
-                            <td className="px-6 py-4 text-slate-600 max-w-xs truncate">{item.content}</td>
-                            <td className="px-6 py-4 text-slate-500">{item.time}</td>
-                            <td className="px-6 py-4">
-                              <Badge variant={item.status === 'Active' ? 'active' : 'suspended'}>{item.status}</Badge>
-                            </td>
-                            <td className="px-6 py-4 text-rose-500 font-bold cursor-pointer hover:underline">[Xóa]</td>
+                {postDetailTab === 'Bình luận' && (
+                  <div className="space-y-4">
+                    <h5 className="font-bold mb-4">Danh sách Bình luận ({MOCK_INTERACTIONS.length})</h5>
+                    <div className="overflow-hidden border border-slate-100 rounded-xl">
+                      <table className="w-full text-sm">
+                        <thead className="bg-slate-50 text-slate-500">
+                          <tr>
+                            <th className="px-6 py-3 text-left font-bold">Người dùng</th>
+                            <th className="px-6 py-3 text-left font-bold">Nội dung</th>
+                            <th className="px-6 py-3 text-left font-bold">Thời gian</th>
+                            <th className="px-6 py-3 text-left font-bold">Trạng thái</th>
+                            <th className="px-6 py-3 text-left font-bold text-center">Hành động</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {MOCK_INTERACTIONS.map((item, i) => ( 
+                            <tr key={i} className="hover:bg-slate-50 transition-colors">
+                              <td className="px-6 py-4 font-medium flex items-center gap-3">
+                                <img src={item.avatar} alt="" className="w-8 h-8 rounded-full shadow-sm" />
+                                {item.user}
+                              </td>
+                              <td className="px-6 py-4 text-slate-600 max-w-xs truncate">{item.content}</td>
+                              <td className="px-6 py-4 text-slate-500">{item.time}</td>
+                              <td className="px-6 py-4">
+                                <Badge variant={item.status === 'Active' ? 'active' : 'suspended'}>{item.status}</Badge>
+                              </td>
+                              <td className="px-6 py-4">
+                                <div className="flex justify-center gap-3">
+                                  <button className="text-blue-600 hover:underline">Ẩn</button>
+                                  <button 
+                                    onClick={() => openModal({
+                                      title: 'Xóa bình luận?',
+                                      children: 'Bạn có chắc chắn muốn xóa bình luận này không?',
+                                      confirmLabel: 'Xóa',
+                                      type: 'danger',
+                                      onConfirm: () => console.log('Deleted comment')
+                                    })}
+                                    className="text-rose-600 hover:underline"
+                                  >
+                                    Xóa
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {postDetailTab === 'Tương tác' && (
+                  <div className="space-y-4">
+                    <h5 className="font-bold mb-4">Danh sách Tương tác (Likes)</h5>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {MOCK_USERS.slice(0, 8).map((user) => (
+                        <div key={user.id} className="flex items-center gap-4 p-4 border border-slate-100 rounded-xl hover:bg-blue-50/30 transition-colors">
+                           <img src={user.avatar} className="w-12 h-12 rounded-full border-2 border-white shadow-sm" />
+                           <div>
+                             <p className="font-bold text-sm text-slate-800">{user.name}</p>
+                             <p className="text-xs text-slate-400">Đã thích vào 02/04 09:30</p>
+                           </div>
+                           <div className="ml-auto flex gap-1">
+                             <div className="w-6 h-6 bg-blue-100 flex items-center justify-center rounded-full text-blue-600">👍</div>
+                           </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           );
@@ -1512,8 +1777,23 @@ export default function App() {
             </div>
             
             <div className="flex justify-end gap-3">
-              <button className="px-6 py-2 bg-slate-100 text-slate-600 rounded-lg font-medium hover:bg-slate-200 transition-colors">Hủy đổi</button>
-              <button className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">Lưu Cài đặt</button>
+              <button 
+                onClick={() => setViewMode('list')}
+                className="px-6 py-2 bg-slate-100 text-slate-600 rounded-lg font-medium hover:bg-slate-200 transition-colors"
+              >
+                Hủy đổi
+              </button>
+              <button 
+                onClick={() => openModal({
+                  title: 'Cập nhật thành công',
+                  children: 'Thông tin cài đặt tài khoản của bạn đã được lưu lại trên hệ thống.',
+                  type: 'info',
+                  confirmLabel: 'Tuyệt vời'
+                })}
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+              >
+                Lưu Cài đặt
+              </button>
             </div>
           </div>
         );
@@ -1533,22 +1813,61 @@ export default function App() {
                       <th className="px-6 py-3 text-left font-bold">Action</th>
                       <th className="px-6 py-3 text-left font-bold">Target</th>
                       <th className="px-6 py-3 text-left font-bold">IP Address</th>
+                      <th className="px-6 py-3 text-left font-bold">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {[
-                      { time: '01/04/2026 10:30', admin: 'admin@fbv.app', action: 'Update Config', target: 'auth.otp_expiry_sec', ip: '1.2.3.4' },
-                      { time: '01/04/2026 10:15', admin: 'superadmin@fbv', action: 'Delete User', target: 'user_992', ip: '5.6.7.8' },
-                      { time: '01/04/2026 10:00', admin: 'content_mgr@fbv.app', action: 'Delete Post', target: 'post_123', ip: '9.10.11.12' },
-                    ].map((log, i) => (
+                    {MOCK_AUDIT_LOGS.map((log, i) => (
                       <tr key={i} className="hover:bg-slate-50 transition-colors">
                         <td className="px-6 py-4 text-slate-500">{log.time}</td>
                         <td className="px-6 py-4 font-medium">{log.admin}</td>
                         <td className="px-6 py-4">
-                          <span className="px-2 py-0.5 bg-slate-100 rounded text-[10px] font-bold uppercase">{log.action}</span>
+                          <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-[10px] font-bold uppercase border border-blue-100">{log.action}</span>
                         </td>
-                        <td className="px-6 py-4 text-slate-600">{log.target}</td>
+                        <td className="px-6 py-4 text-slate-600 max-w-xs truncate">{log.target}</td>
                         <td className="px-6 py-4 text-slate-400 font-mono text-xs">{log.ip}</td>
+                        <td className="px-6 py-4">
+                          <button 
+                            onClick={() => openModal({
+                              title: 'Chi tiết Nhật ký hệ thống',
+                              children: (
+                                <div className="space-y-4">
+                                  <div className="p-4 bg-slate-50 rounded-xl space-y-3">
+                                    <div className="flex justify-between border-b border-slate-100 pb-2">
+                                      <span className="text-xs text-slate-400 font-bold uppercase">Thời gian</span>
+                                      <span className="text-sm font-medium">{log.time}</span>
+                                    </div>
+                                    <div className="flex justify-between border-b border-slate-100 pb-2">
+                                      <span className="text-xs text-slate-400 font-bold uppercase">Quản trị viên</span>
+                                      <span className="text-sm font-medium">{log.admin}</span>
+                                    </div>
+                                    <div className="flex justify-between border-b border-slate-100 pb-2">
+                                      <span className="text-xs text-slate-400 font-bold uppercase">Hành động</span>
+                                      <span className="text-sm font-bold text-blue-600">{log.action}</span>
+                                    </div>
+                                    <div className="flex justify-between border-b border-slate-100 pb-2">
+                                      <span className="text-xs text-slate-400 font-bold uppercase">Đối tượng</span>
+                                      <span className="text-sm font-medium font-mono truncate max-w-[200px]">{log.target}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                      <span className="text-xs text-slate-400 font-bold uppercase">Địa chỉ IP</span>
+                                      <span className="text-sm font-medium">{log.ip}</span>
+                                    </div>
+                                    <div className="flex justify-between pt-2">
+                                      <span className="text-xs text-slate-400 font-bold uppercase">Kết quả</span>
+                                      <Badge variant="active">{log.result}</Badge>
+                                    </div>
+                                  </div>
+                                </div>
+                              ),
+                              confirmLabel: 'Đóng',
+                              type: 'info'
+                            })}
+                            className="text-blue-600 font-medium hover:underline"
+                          >
+                            Chi tiết
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
