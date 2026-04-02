@@ -28,7 +28,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
-import { MOCK_USERS, MOCK_GROUPS, MOCK_POSTS, MOCK_ADMINS } from './mockData';
+import { MOCK_USERS, MOCK_GROUPS, MOCK_POSTS, MOCK_ADMINS, CHART_DATA_7DAYS, CHART_DATA_30DAYS, MOCK_AUDIT_LOGS, MOCK_NOTIFICATIONS, MOCK_MEDIA, CONFIG_KEYS, MOCK_CHATS, MOCK_INTERACTIONS } from './mockData';
 import { 
   BarChart, 
   Bar, 
@@ -123,24 +123,26 @@ const Badge = ({ children, variant }: any) => {
   );
 };
 
-const Modal = ({ isOpen, onClose, title, children, confirmLabel, onConfirm, type = 'danger' }: any) => {
+const Modal = ({ isOpen, onClose, title, children, confirmLabel, onConfirm, type = 'danger', wide = false }: any) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
       <motion.div 
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden"
+        className={cn("bg-white rounded-xl shadow-2xl w-full mx-auto overflow-hidden", wide ? "max-w-2xl px-2" : "max-w-md")}
       >
-        <div className="p-6 text-center">
-          <div className="flex justify-center mb-4">
-            <div className={cn("p-3 rounded-full", type === 'danger' ? "bg-rose-100 text-rose-600" : "bg-amber-100 text-amber-600")}>
-              <AlertTriangle size={32} />
+        <div className={cn("p-6", type !== 'form' && "text-center")}>
+          {type !== 'form' && (
+            <div className="flex justify-center mb-4">
+              <div className={cn("p-3 rounded-full", type === 'danger' ? "bg-rose-100 text-rose-600" : type === 'info' ? "bg-blue-100 text-blue-600" : "bg-amber-100 text-amber-600")}>
+                {type === 'info' ? <CheckCircle2 size={32} /> : <AlertTriangle size={32} />}
+              </div>
             </div>
-          </div>
-          <h3 className="text-lg font-bold mb-2">{title}</h3>
-          <div className="text-slate-500 text-sm mb-6">{children}</div>
-          <div className="flex gap-3 justify-center">
+          )}
+          <h3 className={cn("text-lg font-bold mb-2", type === 'form' && "border-b border-slate-100 pb-4 mb-4")}>{title}</h3>
+          <div className={cn("text-slate-500 text-sm mb-6", type === 'form' && "text-left")}>{children}</div>
+          <div className={cn("flex gap-3", type === 'form' ? "justify-end pt-4 border-t border-slate-100" : "justify-center")}>
             <button 
               onClick={onClose}
               className="px-6 py-2 bg-slate-100 text-slate-600 rounded-lg font-medium hover:bg-slate-200 transition-colors"
@@ -148,10 +150,10 @@ const Modal = ({ isOpen, onClose, title, children, confirmLabel, onConfirm, type
               Hủy
             </button>
             <button 
-              onClick={() => { onConfirm(); onClose(); }}
+              onClick={() => { if(onConfirm) onConfirm(); onClose(); }}
               className={cn("px-6 py-2 text-white rounded-lg font-medium transition-colors", type === 'danger' ? "bg-rose-500 hover:bg-rose-600" : "bg-blue-500 hover:bg-blue-600")}
             >
-              {confirmLabel}
+              {confirmLabel || 'Xác nhận'}
             </button>
           </div>
         </div>
@@ -219,11 +221,16 @@ export default function App() {
                     <button className="px-3 py-1 text-slate-500 hover:bg-slate-50 rounded-md">[ Tùy chỉnh ]</button>
                   </div>
                 </div>
-                <div className="h-64 flex items-center justify-center bg-slate-50 rounded-lg border border-dashed border-slate-200">
-                  <div className="text-center">
-                    <LayoutDashboard className="mx-auto text-slate-300 mb-2" size={48} />
-                    <p className="text-slate-400 text-sm">Biểu đồ đường — số lượng đăng ký 7 ngày gần nhất</p>
-                  </div>
+                <div className="h-64 pt-4 pb-2">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={CHART_DATA_7DAYS}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} dy={10} />
+                      <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} dx={-10} />
+                      <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                      <Line type="monotone" dataKey="users" stroke="#2563eb" strokeWidth={3} dot={{ strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }} />
+                    </LineChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
 
@@ -231,11 +238,16 @@ export default function App() {
                 <div className="flex justify-between items-center mb-6">
                   <h4 className="font-bold">Nhóm được tạo theo ngày</h4>
                 </div>
-                <div className="h-64 flex items-center justify-center bg-slate-50 rounded-lg border border-dashed border-slate-200">
-                  <div className="text-center">
-                    <MessageSquare className="mx-auto text-slate-300 mb-2" size={48} />
-                    <p className="text-slate-400 text-sm">Biểu đồ cột — nhóm mới tạo 7 ngày gần nhất</p>
-                  </div>
+                <div className="h-64 pt-4 pb-2">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={CHART_DATA_7DAYS}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} dy={10} />
+                      <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} dx={-10} />
+                      <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} cursor={{ fill: '#f1f5f9' }} />
+                      <Bar dataKey="groups" fill="#10b981" radius={[4, 4, 0, 0]} barSize={32} />
+                    </BarChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
             </div>
@@ -325,10 +337,62 @@ export default function App() {
                     <p className="text-sm font-bold">{selectedItem?.phone}</p>
                   </div>
                 </div>
-                <div className="px-8 pb-8 flex gap-3">
-                  <button className="flex-1 py-2.5 bg-rose-500 text-white rounded-lg font-bold hover:bg-rose-600 transition-colors">Suspend Account</button>
-                  <button className="flex-1 py-2.5 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 transition-colors">Manual Verify</button>
-                  <button className="flex-1 py-2.5 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition-colors">Update Info</button>
+                <div className="px-8 pb-8 flex flex-col md:flex-row gap-3">
+                  <button 
+                    onClick={() => openModal({
+                      title: 'Đình chỉ tài khoản?',
+                      children: `Bạn có chắc muốn đình chỉ tài khoản ${selectedItem?.name}? Người dùng sẽ không thể đăng nhập.`,
+                      confirmLabel: 'Đình chỉ',
+                      type: 'danger',
+                      onConfirm: () => console.log('Suspended')
+                    })}
+                    className="flex-1 py-2.5 bg-rose-500 text-white rounded-lg font-bold hover:bg-rose-600 transition-colors"
+                  >
+                    Đình chỉ tài khoản
+                  </button>
+                  <button 
+                    onClick={() => openModal({
+                      title: 'Xác thực thủ công',
+                      children: `Xác nhận tài khoản ${selectedItem?.name} hợp lệ?`,
+                      confirmLabel: 'Xác nhận',
+                      type: 'info',
+                      onConfirm: () => console.log('Verified')
+                    })}
+                    className="flex-1 py-2.5 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 transition-colors"
+                  >
+                    Xác thực thủ công
+                  </button>
+                  <button 
+                    onClick={() => openModal({
+                      title: 'Cập nhật thông tin',
+                      type: 'form',
+                      children: (
+                        <div className="space-y-4 pt-2">
+                          <div>
+                            <label className="text-sm font-medium text-slate-700 block mb-1">Tên người dùng</label>
+                            <input type="text" defaultValue={selectedItem?.name} className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium text-slate-700 block mb-1">Email</label>
+                            <input type="email" defaultValue={selectedItem?.email} className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
+                          </div>
+                          <div>
+                           <label className="text-sm font-medium text-slate-700 block mb-1">Trạng thái</label>
+                           <select defaultValue={selectedItem?.status} className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none">
+                             <option value="Hoạt động">Hoạt động</option>
+                             <option value="Đình chỉ">Đình chỉ</option>
+                             <option value="Chờ XN">Chờ XN</option>
+                           </select>
+                          </div>
+                        </div>
+                      ),
+                      confirmLabel: 'Lưu thay đổi',
+                      onConfirm: () => console.log('Updated info')
+                    })}
+                    className="flex-1 py-2.5 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition-colors"
+                  >
+                    Cập nhật thông tin
+                  </button>
                 </div>
               </div>
 
@@ -355,7 +419,21 @@ export default function App() {
                         <td className="px-6 py-4 font-medium">{device.name}</td>
                         <td className="px-6 py-4 text-slate-600">{device.loc}</td>
                         <td className="px-6 py-4 text-slate-600">{device.time}</td>
-                        <td className="px-6 py-4 text-rose-500 font-bold cursor-pointer hover:underline">[Logout]</td>
+                        <td 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openModal({
+                              title: 'Đăng xuất thiết bị',
+                              children: `Bạn có chắc muốn đăng xuất tài khoản khỏi thiết bị ${device.name}?`,
+                              confirmLabel: 'Đăng xuất',
+                              type: 'danger',
+                              onConfirm: () => console.log('Logged out device')
+                            });
+                          }}
+                          className="px-6 py-4 text-rose-500 font-bold cursor-pointer hover:underline"
+                        >
+                          [Đăng xuất]
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -370,9 +448,37 @@ export default function App() {
               <div className="flex justify-between items-center">
                 <h4 className="font-bold text-xl">Quản lý Người dùng</h4>
                 <div className="flex gap-2">
-                  <button className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm font-medium hover:bg-emerald-600 transition-colors">
+                  <button 
+                    onClick={() => openModal({
+                      title: 'Tạo tài khoản mới',
+                      type: 'form',
+                      children: (
+                        <div className="space-y-4 pt-2">
+                          <div>
+                            <label className="text-sm font-medium text-slate-700 block mb-1">Tên người dùng</label>
+                            <input type="text" placeholder="Nhập tên" className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium text-slate-700 block mb-1">Email</label>
+                            <input type="email" placeholder="Nhập email" className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium text-slate-700 block mb-1">Số điện thoại</label>
+                            <input type="text" placeholder="Nhập SĐT" className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium text-slate-700 block mb-1">Mật khẩu</label>
+                            <input type="password" placeholder="••••••••" className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
+                          </div>
+                        </div>
+                      ),
+                      confirmLabel: 'Tạo mới',
+                      onConfirm: () => console.log('Created user')
+                    })}
+                    className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm font-medium hover:bg-emerald-600 transition-colors"
+                  >
                     <Plus size={16} />
-                    Create New
+                    Tạo mới
                   </button>
                   <button className="flex items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
                     <RefreshCw size={16} />
@@ -1096,53 +1202,229 @@ export default function App() {
             </div>
           </div>
         );
-      case 'interactions':
+      case 'posts':
+        if (viewMode === 'detail') {
+          return (
+            <div className="space-y-6">
+              <button 
+                onClick={() => setViewMode('list')}
+                className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition-colors"
+              >
+                <ChevronRight size={16} className="rotate-180" /> Quay lại danh sách
+              </button>
+              <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100">
+                <h4 className="text-2xl font-bold mb-1">Chi tiết Bài viết</h4>
+                <p className="text-slate-500 text-sm mb-8">Trang chủ / Quản lý Bài viết / {selectedItem?.id}</p>
+                
+                <div className="flex gap-8 border-b border-slate-100 mb-6">
+                  {['Chi tiết', 'Bình luận', 'Tương tác'].map((tab) => (
+                    <button 
+                      key={tab}
+                      className={cn(
+                        "pb-3 text-sm font-medium transition-colors border-b-2",
+                        tab === 'Chi tiết' ? "text-blue-600 border-blue-600" : "text-slate-400 border-transparent hover:text-slate-600"
+                      )}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="flex flex-col md:flex-row items-start gap-6">
+                  <img src={selectedItem?.media} alt="Post media" className="w-full md:w-1/3 rounded-xl border border-slate-200 shadow-sm" />
+                  <div className="flex-1 space-y-4">
+                    <div>
+                      <h5 className="font-bold text-lg">Tác giả: {selectedItem?.author}</h5>
+                      <p className="text-sm text-slate-500">{selectedItem?.date}</p>
+                    </div>
+                    <div className="p-4 bg-slate-50 rounded-lg border border-slate-100">
+                      <p className="text-slate-800">{selectedItem?.content}</p>
+                    </div>
+                    <div className="flex gap-4 items-center">
+                      <div className="flex gap-2 items-center">
+                         <Badge variant={selectedItem?.status === 'Active' ? 'active' : selectedItem?.status === 'Pending' ? 'pending' : 'deleted'}>{selectedItem?.status}</Badge>
+                      </div>
+                      <div className="text-sm font-medium text-slate-600">👍 {selectedItem?.likes} Lượt thích</div>
+                      <div className="text-sm font-medium text-slate-600">💬 {selectedItem?.comments} Bình luận</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8">
+                  <h5 className="font-bold mb-4">Danh sách Bình luận & Tương tác</h5>
+                  <div className="overflow-hidden border border-slate-100 rounded-xl">
+                    <table className="w-full text-sm">
+                      <thead className="bg-slate-50 text-slate-500">
+                        <tr>
+                          <th className="px-6 py-3 text-left font-bold">Người dùng</th>
+                          <th className="px-6 py-3 text-left font-bold">Nội dung bình luận</th>
+                          <th className="px-6 py-3 text-left font-bold">Thời gian</th>
+                          <th className="px-6 py-3 text-left font-bold">Trạng thái</th>
+                          <th className="px-6 py-3 text-left font-bold">Hành động</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {MOCK_INTERACTIONS.map((item, i) => ( 
+                          <tr key={i} className="hover:bg-slate-50 transition-colors">
+                            <td className="px-6 py-4 font-medium flex items-center gap-3">
+                              <img src={item.avatar} alt="" className="w-8 h-8 rounded-full shadow-sm" />
+                              {item.user}
+                            </td>
+                            <td className="px-6 py-4 text-slate-600 max-w-xs truncate">{item.content}</td>
+                            <td className="px-6 py-4 text-slate-500">{item.time}</td>
+                            <td className="px-6 py-4">
+                              <Badge variant={item.status === 'Active' ? 'active' : 'suspended'}>{item.status}</Badge>
+                            </td>
+                            <td className="px-6 py-4 text-rose-500 font-bold cursor-pointer hover:underline">[Xóa]</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        }
+        return (
+          <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+            <div className="p-6 border-b border-slate-100 space-y-4">
+              <div className="flex justify-between items-center">
+                <h4 className="font-bold text-xl">Quản lý Bài viết</h4>
+                <div className="flex gap-2">
+                  <button className="flex items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-50">
+                    <RefreshCw size={16} />
+                    Làm mới
+                  </button>
+                  <button className="flex items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-50">
+                    <Filter size={16} />
+                    Bộ lọc
+                  </button>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                  <input type="text" placeholder="Tìm kiếm bài viết theo tác giả, nội dung..." className="w-full pl-10 pr-4 py-1.5 border border-slate-200 rounded-lg text-sm focus:outline-none" />
+                </div>
+              </div>
+            </div>
+            <table className="w-full text-sm">
+              <thead className="bg-[#1e293b] text-white">
+                <tr>
+                  <th className="px-6 py-3 text-left font-bold">Hình ảnh</th>
+                  <th className="px-6 py-3 text-left font-bold">Nội dung</th>
+                  <th className="px-6 py-3 text-left font-bold">Tác giả</th>
+                  <th className="px-6 py-3 text-left font-bold">Tương tác</th>
+                  <th className="px-6 py-3 text-left font-bold">Ngày đăng</th>
+                  <th className="px-6 py-3 text-left font-bold">Trạng thái</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {MOCK_POSTS.map((post) => (
+                  <tr 
+                    key={post.id} 
+                    onClick={() => { setSelectedItem(post); setViewMode('detail'); }}
+                    className="hover:bg-slate-50 transition-colors cursor-pointer group"
+                  >
+                    <td className="px-6 py-4">
+                      <img src={post.media} alt="" className="w-16 h-12 object-cover rounded shadow-sm border border-slate-200" />
+                    </td>
+                    <td className="px-6 py-4 text-slate-600 max-w-xs truncate">{post.content}</td>
+                    <td className="px-6 py-4 font-medium group-hover:text-blue-600">{post.author}</td>
+                    <td className="px-6 py-4 text-slate-500">
+                      👍 {post.likes} <span className="mx-1 text-slate-300">|</span> 💬 {post.comments}
+                    </td>
+                    <td className="px-6 py-4">{post.date}</td>
+                    <td className="px-6 py-4">
+                      <Badge variant={post.status === 'Active' ? 'active' : post.status === 'Pending' ? 'pending' : 'deleted'}>
+                        {post.status}
+                      </Badge>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      case 'settings':
         return (
           <div className="space-y-6">
             <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100">
-              <h4 className="text-2xl font-bold mb-1">Interactions & Comments Audit</h4>
-              <p className="text-slate-500 text-sm mb-8">Giám sát bình luận và tương tác trên toàn hệ thống.</p>
+              <h4 className="text-2xl font-bold mb-1">Cài đặt Tài khoản</h4>
+              <p className="text-slate-500 text-sm mb-8">Quản lý thông tin tài khoản và tùy chọn hiển thị cá nhân.</p>
               
-              <div className="flex gap-4 mb-6">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                  <input type="text" placeholder="Tìm theo nội dung bình luận / người dùng..." className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
-                </div>
-                <button className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium hover:bg-slate-50">Filter</button>
-              </div>
+              <div className="space-y-8">
+                <section>
+                  <h5 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">THÔNG TIN CÁ NHÂN</h5>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-slate-700">Tên hiển thị:</label>
+                      <input 
+                        type="text" 
+                        defaultValue="Super Admin" 
+                        className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-slate-700">Email:</label>
+                      <input 
+                        type="email" 
+                        defaultValue="admin@fbv.app" 
+                        disabled
+                        className="w-full px-4 py-2 border border-slate-200 rounded-lg bg-slate-50 text-slate-500 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                </section>
 
-              <div className="overflow-hidden border border-slate-100 rounded-xl">
-                <table className="w-full text-sm">
-                  <thead className="bg-slate-50 text-slate-500">
-                    <tr>
-                      <th className="px-6 py-3 text-left font-bold">User</th>
-                      <th className="px-6 py-3 text-left font-bold">Comment Content</th>
-                      <th className="px-6 py-3 text-left font-bold">Post ID</th>
-                      <th className="px-6 py-3 text-left font-bold">Time</th>
-                      <th className="px-6 py-3 text-left font-bold">Status</th>
-                      <th className="px-6 py-3 text-left font-bold">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {[
-                      { user: 'Nguyễn Văn An', content: 'Bài viết rất hay và ý nghĩa!', postId: 'post_123', time: '09:30 01/04', status: 'Active' },
-                      { user: 'Trần Thị Bình', content: 'Cảm ơn bạn đã chia sẻ.', postId: 'post_456', time: '09:15 01/04', status: 'Active' },
-                      { user: 'Lê Văn Cường', content: 'Nội dung không phù hợp.', postId: 'post_789', time: '08:45 01/04', status: 'Flagged' },
-                    ].map((item, i) => (
-                      <tr key={i} className="hover:bg-slate-50 transition-colors">
-                        <td className="px-6 py-4 font-medium">{item.user}</td>
-                        <td className="px-6 py-4 text-slate-600 max-w-xs truncate">{item.content}</td>
-                        <td className="px-6 py-4 text-blue-600 font-mono text-xs">{item.postId}</td>
-                        <td className="px-6 py-4 text-slate-500">{item.time}</td>
-                        <td className="px-6 py-4">
-                          <Badge variant={item.status === 'Active' ? 'active' : 'suspended'}>{item.status}</Badge>
-                        </td>
-                        <td className="px-6 py-4 text-rose-500 font-bold cursor-pointer hover:underline">[Delete]</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <section>
+                  <h5 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">ĐỔI MẬT KHẨU</h5>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-slate-700">Mật khẩu hiện tại:</label>
+                      <input 
+                        type="password" 
+                        placeholder="••••••••" 
+                        className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-slate-700">Mật khẩu mới:</label>
+                      <input 
+                        type="password" 
+                        className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-slate-700">Nhập lại mật khẩu mới:</label>
+                      <input 
+                        type="password" 
+                        className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      />
+                    </div>
+                  </div>
+                </section>
+
+                <section>
+                  <h5 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">TÙY CHỌN HIỂN THỊ</h5>
+                  <div className="space-y-4">
+                    <label className="flex items-center gap-3">
+                      <input type="checkbox" defaultChecked className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
+                      <span className="text-sm font-medium text-slate-700">Nhận thông báo qua email khi có báo cáo vi phạm mới</span>
+                    </label>
+                    <label className="flex items-center gap-3">
+                      <input type="checkbox" defaultChecked className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" />
+                      <span className="text-sm font-medium text-slate-700">Hiển thị thông báo popup trong trình duyệt</span>
+                    </label>
+                  </div>
+                </section>
               </div>
+            </div>
+            
+            <div className="flex justify-end gap-3">
+              <button className="px-6 py-2 bg-slate-100 text-slate-600 rounded-lg font-medium hover:bg-slate-200 transition-colors">Hủy đổi</button>
+              <button className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">Lưu Cài đặt</button>
             </div>
           </div>
         );
@@ -1243,12 +1525,6 @@ export default function App() {
             />
             <SidebarItem 
               icon={MessageSquare} 
-              label="Tương tác & Bình luận" 
-              active={activeTab === 'interactions'} 
-              onClick={() => setActiveTab('interactions')} 
-            />
-            <SidebarItem 
-              icon={MessageSquare} 
               label="Cuộc trò chuyện" 
               active={activeTab === 'chats'} 
               onClick={() => setActiveTab('chats')} 
@@ -1286,12 +1562,6 @@ export default function App() {
               label="Phương tiện" 
               active={activeTab === 'media'} 
               onClick={() => setActiveTab('media')} 
-            />
-            <SidebarItem 
-              icon={History} 
-              label="Audit Logs" 
-              active={activeTab === 'audit'} 
-              onClick={() => setActiveTab('audit')} 
             />
             <SidebarItem 
               icon={Settings} 
@@ -1360,6 +1630,13 @@ export default function App() {
           </AnimatePresence>
         </div>
       </main>
+
+      {/* Global Modal Instance */}
+      <Modal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        {...modalConfig} 
+      />
     </div>
   );
 }
