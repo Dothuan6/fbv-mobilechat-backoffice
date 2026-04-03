@@ -704,14 +704,14 @@ export default function App() {
         return (
           <div className="space-y-6">
             <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100">
-              <h4 className="text-2xl font-bold mb-1">App Branding & Basic Settings</h4>
-              <p className="text-slate-500 text-sm mb-8">Manage the application name and visual identity.</p>
+              <h4 className="text-2xl font-bold mb-1">Cài đặt ứng dụng</h4>
+              <p className="text-slate-500 text-sm mb-8">Quản lý tên và nhận diện thương hiệu ứng dụng.</p>
 
               <div className="space-y-8">
                 <section>
-                  <h5 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">BASIC SETTINGS</h5>
+                  <h5 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Cài đặt cơ bản</h5>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700">Application Name:</label>
+                    <label className="text-sm font-medium text-slate-700">Tên ứng dụng</label>
                     <input
                       type="text"
                       defaultValue="FBV MobileChat"
@@ -721,42 +721,42 @@ export default function App() {
                 </section>
 
                 <section>
-                  <h5 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">LOGO MANAGEMENT</h5>
+                  <h5 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Quản lý logo</h5>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="border border-slate-100 rounded-xl p-6 text-center">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase mb-4">CURRENT LOGO</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase mb-4">Logo hiện tại</p>
                       <div className="w-32 h-32 bg-[#1e293b] rounded-xl mx-auto flex items-center justify-center mb-4">
                         <span className="text-white font-bold text-3xl">FBV</span>
                       </div>
                       <p className="text-sm font-medium">FBV 192x192 px</p>
-                      <p className="text-xs text-slate-400">[ Logo currently active ]</p>
+                      <p className="text-xs text-slate-400">[ Logo hiện tại]</p>
                     </div>
 
                     <div className="border border-dashed border-slate-300 rounded-xl p-6 flex flex-col items-center justify-center text-center bg-slate-50/50">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase mb-4">UPLOAD NEW LOGO</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase mb-4">Tải lên logo mới</p>
                       <div className="w-12 h-12 text-slate-300 mb-4">
                         <Download size={48} strokeWidth={1} />
                       </div>
-                      <p className="text-sm text-slate-600 mb-1">Drop PNG/SVG file here to upload</p>
-                      <p className="text-[10px] text-slate-400 mb-4">Recommended size: 512x512 px, transparent background</p>
+                      <p className="text-sm text-slate-600 mb-1">Thả file PNG/SVG vào đây để tải lên</p>
+                      <p className="text-[10px] text-slate-400 mb-4">Kích thước đề xuất: 512x512 px, nền trong suốt</p>
                       <button className="px-4 py-1.5 border border-slate-300 rounded-lg text-xs font-medium hover:bg-white transition-colors">
                         [ Choose File ]
                       </button>
                     </div>
 
                     <div className="border border-slate-100 rounded-xl p-6 text-center bg-slate-50/30">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase mb-4">NEW LOGO PREVIEW</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase mb-4">Xem trước logo mới</p>
                       <div className="w-32 h-32 bg-slate-200 rounded-xl mx-auto flex items-center justify-center mb-4">
                         <ImageIcon size={48} className="text-slate-400" />
                       </div>
-                      <p className="text-sm text-slate-400">[ Logo preview before saving ]</p>
-                      <p className="text-xs text-slate-400">Will be active after upload and save</p>
+                      <p className="text-sm text-slate-400">[ Xem trước logo mới ]</p>
+                      <p className="text-xs text-slate-400">Sẽ hoạt động sau khi tải lên và lưu</p>
                     </div>
                   </div>
                 </section>
 
                 <section>
-                  <h5 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">SETTINGS CHANGE HISTORY</h5>
+                  <h5 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Lịch sử thay đổi cài đặt</h5>
                   <div className="overflow-hidden border border-slate-100 rounded-xl">
                     <table className="w-full text-sm">
                       <thead className="bg-slate-50 text-slate-500">
@@ -1120,9 +1120,9 @@ export default function App() {
               <p className="text-slate-500 text-sm">Total Assets: 1,452 (512 Images, 940 Videos)</p>
 
               <div className="flex justify-between items-center pt-4">
-                <button className="flex items-center gap-2 px-4 py-1.5 border border-slate-200 rounded-lg text-sm font-medium">
+                {/* <button className="flex items-center gap-2 px-4 py-1.5 border border-slate-200 rounded-lg text-sm font-medium">
                   Bulk Actions <ChevronDown size={14} />
-                </button>
+                </button> */}
                 <div className="relative w-64">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                   <input type="text" placeholder="Search media files..." className="w-full pl-10 pr-4 py-1.5 border border-slate-200 rounded-lg text-sm" />
@@ -1132,7 +1132,7 @@ export default function App() {
             <table className="w-full text-sm">
               <thead className="bg-slate-50 text-slate-500">
                 <tr>
-                  <th className="px-6 py-3 text-left"><input type="checkbox" /></th>
+                  {/* <th className="px-6 py-3 text-left"><input type="checkbox" /></th> */}
                   <th className="px-6 py-3 text-left font-bold">Media Type</th>
                   <th className="px-6 py-3 text-left font-bold">Content/Filename</th>
                   <th className="px-6 py-3 text-left font-bold">Upload Date <ChevronDown size={14} className="inline" /></th>
@@ -1890,7 +1890,7 @@ export default function App() {
                   </div>
                 </section>
 
-                <section>
+                {/* <section>
                   <h5 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">TÙY CHỌN HIỂN THỊ</h5>
                   <div className="space-y-4">
                     <label className="flex items-center gap-3">
@@ -1902,7 +1902,7 @@ export default function App() {
                       <span className="text-sm font-medium text-slate-700">Hiển thị thông báo popup trong trình duyệt</span>
                     </label>
                   </div>
-                </section>
+                </section> */}
               </div>
             </div>
 
@@ -1942,7 +1942,7 @@ export default function App() {
                       <th className="px-6 py-3 text-left font-bold">Admin</th>
                       <th className="px-6 py-3 text-left font-bold">Action</th>
                       <th className="px-6 py-3 text-left font-bold">Target</th>
-                      <th className="px-6 py-3 text-left font-bold">IP Address</th>
+                      {/* <th className="px-6 py-3 text-left font-bold">IP Address</th> */}
                       <th className="px-6 py-3 text-left font-bold">Actions</th>
                     </tr>
                   </thead>
@@ -1955,7 +1955,7 @@ export default function App() {
                           <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-[10px] font-bold uppercase border border-blue-100">{log.action}</span>
                         </td>
                         <td className="px-6 py-4 text-slate-600 max-w-xs truncate">{log.target}</td>
-                        <td className="px-6 py-4 text-slate-400 font-mono text-xs">{log.ip}</td>
+                        {/* <td className="px-6 py-4 text-slate-400 font-mono text-xs">{log.ip}</td> */}
                         <td className="px-6 py-4">
                           <button
                             onClick={() => openModal({
@@ -1979,10 +1979,10 @@ export default function App() {
                                       <span className="text-xs text-slate-400 font-bold uppercase">Đối tượng</span>
                                       <span className="text-sm font-medium font-mono truncate max-w-[200px]">{log.target}</span>
                                     </div>
-                                    <div className="flex justify-between">
+                                    {/* <div className="flex justify-between">
                                       <span className="text-xs text-slate-400 font-bold uppercase">Địa chỉ IP</span>
                                       <span className="text-sm font-medium">{log.ip}</span>
-                                    </div>
+                                    </div> */}
                                     <div className="flex justify-between pt-2">
                                       <span className="text-xs text-slate-400 font-bold uppercase">Kết quả</span>
                                       <Badge variant="active">{log.result}</Badge>
@@ -2092,14 +2092,14 @@ export default function App() {
               onClick={() => setActiveTab('media')}
             />
             <SidebarItem
-              icon={Settings}
-              label="Cài đặt"
+              icon={UserCircle}
+              label="Tài khoản"
               active={activeTab === 'settings'}
               onClick={() => setActiveTab('settings')}
             />
             <SidebarItem
-              icon={ImageIcon}
-              label="App Branding & Basic Settings"
+              icon={Settings}
+              label="Cấu hình ứng dụng"
               active={activeTab === 'branding'}
               onClick={() => setActiveTab('branding')}
             />
@@ -2133,10 +2133,10 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-6">
-            <button className="relative text-slate-400 hover:text-slate-600 transition-colors">
+            {/* <button className="relative text-slate-400 hover:text-slate-600 transition-colors">
               <Bell size={20} />
               <span className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 text-white text-[10px] flex items-center justify-center rounded-full border-2 border-white">3</span>
-            </button>
+            </button> */}
             <div className="flex items-center gap-3">
               <div className="px-3 py-1 bg-blue-600 text-white text-[10px] font-bold rounded uppercase">ADMIN</div>
             </div>
