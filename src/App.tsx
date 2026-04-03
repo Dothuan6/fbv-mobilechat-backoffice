@@ -511,8 +511,20 @@ export default function App() {
               </div>
 
               <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                <div className="p-6 border-b border-slate-100">
+                <div className="p-6 border-b border-slate-100 flex justify-between items-center">
                   <h5 className="font-bold">Login Device List</h5>
+                  <button
+                    onClick={() => openModal({
+                      title: 'Đăng xuất tất cả thiết bị?',
+                      children: 'Bạn có chắc muốn đăng xuất tài khoản khỏi tất cả các thiết bị đang đăng nhập không?',
+                      confirmLabel: 'Đăng xuất tất cả',
+                      type: 'danger',
+                      onConfirm: () => console.log('Logged out all devices')
+                    })}
+                    className="text-xs font-bold text-rose-500 hover:underline px-2 py-1 bg-rose-50 rounded"
+                  >
+                    [Đăng xuất tất cả]
+                  </button>
                 </div>
                 <table className="w-full text-sm">
                   <thead className="bg-slate-50 text-slate-500">
