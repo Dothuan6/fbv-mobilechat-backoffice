@@ -17,7 +17,7 @@ export const Badge = ({ children, variant }: { children: React.ReactNode; varian
     'bị cấm': 'bg-rose-100 text-rose-700',
     'hoạt động': 'bg-emerald-100 text-emerald-700',
     'đình chỉ': 'bg-slate-100 text-slate-700',
-    'chờ xn': 'bg-amber-100 text-amber-700',
+    'chờ xác nhận': 'bg-amber-100 text-amber-700',
     'đã giải tán': 'bg-rose-100 text-rose-700',
     success: 'bg-emerald-100 text-emerald-700',
   };

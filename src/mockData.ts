@@ -4,12 +4,12 @@ export const MOCK_USERS: User[] = [
   { id: '1', stt: 1, avatar: 'https://i.pravatar.cc/150?u=1', name: 'Nguyễn Văn An', email: 'nguyenan@email.com', phone: '+84901234567', regType: 'Email', regDate: '01/01/2025', status: 'Hoạt động' },
   { id: '2', stt: 2, avatar: 'https://i.pravatar.cc/150?u=2', name: 'Trần Thị Bình', email: 'trinhbinh@gmail.com', phone: '+84912345678', regType: 'Google', regDate: '15/01/2025', status: 'Hoạt động' },
   { id: '3', stt: 3, avatar: 'https://i.pravatar.cc/150?u=3', name: 'Lê Văn Cường', email: 'levanc@email.com', phone: '+84923456789', regType: 'SĐT', regDate: '20/01/2025', status: 'Đình chỉ' },
-  { id: '4', stt: 4, avatar: 'https://i.pravatar.cc/150?u=4', name: 'Phạm Minh Dũng', email: 'phammd@email.com', phone: '+84934567890', regType: 'Apple', regDate: '25/01/2025', status: 'Chờ XN' },
+  { id: '4', stt: 4, avatar: 'https://i.pravatar.cc/150?u=4', name: 'Phạm Minh Dũng', email: 'phammd@email.com', phone: '+84934567890', regType: 'Apple', regDate: '25/01/2025', status: 'Chờ XÁC NHẬN' },
   { id: '5', stt: 5, avatar: 'https://i.pravatar.cc/150?u=5', name: 'Hoàng Thị Em', email: 'hte@gmail.com', phone: '+84945678901', regType: 'Email', regDate: '01/02/2025', status: 'Hoạt động' },
   { id: '6', stt: 6, avatar: 'https://i.pravatar.cc/150?u=6', name: 'Võ Thị Phượng', email: 'phuong@email.com', phone: '+84956789012', regType: 'Google', regDate: '10/02/2025', status: 'Bị cấm' },
   { id: '7', stt: 7, avatar: 'https://i.pravatar.cc/150?u=7', name: 'Đinh Văn Quân', email: 'quan@fbv.app', phone: '+84967890123', regType: 'SĐT', regDate: '15/02/2025', status: 'Hoạt động' },
   { id: '8', stt: 8, avatar: 'https://i.pravatar.cc/150?u=8', name: 'Bùi Thị Hoa', email: 'hoabui@gmail.com', phone: '+84978901234', regType: 'Apple', regDate: '20/02/2025', status: 'Hoạt động' },
-  { id: '9', stt: 9, avatar: 'https://i.pravatar.cc/150?u=9', name: 'Trương Văn Minh', email: 'minh.truong@email.com', phone: '+84989012345', regType: 'Email', regDate: '28/02/2025', status: 'Chờ XN' },
+  { id: '9', stt: 9, avatar: 'https://i.pravatar.cc/150?u=9', name: 'Trương Văn Minh', email: 'minh.truong@email.com', phone: '+84989012345', regType: 'Email', regDate: '28/02/2025', status: 'Chờ XÁC NHẬN' },
   { id: '10', stt: 10, avatar: 'https://i.pravatar.cc/150?u=10', name: 'Lý Thị Lan', email: 'lan.ly@gmail.com', phone: '+84990123456', regType: 'Google', regDate: '05/03/2025', status: 'Hoạt động' },
 ];
 
@@ -32,11 +32,11 @@ export const MOCK_POSTS: Post[] = [
 ];
 
 export const MOCK_ADMINS: Admin[] = [
-  { id: '1', name: 'Nguyễn Văn An', email: 'an@fbv.app', role: 'Super Admin', department: 'Technology', status: 'Active' },
-  { id: '2', name: 'Trần Thị Bình', email: 'binh@fbv.app', role: 'Admin', department: 'Business', status: 'Active' },
-  { id: '3', name: 'Lê Văn Cường', email: 'cuong@fbv.app', role: 'Moderator', department: 'Content', status: 'Active' },
-  { id: '4', name: 'Phạm Thị Duyên', email: 'duyen@fbv.app', role: 'Content Manager', department: 'Marketing', status: 'Inactive' },
-  { id: '5', name: 'Hoàng Minh Tú', email: 'tu@fbv.app', role: 'Viewer', department: 'QA', status: 'Active' },
+  { id: '1', name: 'Nguyễn Văn An', email: 'an@fbv.app', role: 'Super Admin', department: 'Technology', status: 'Active', permissions: ['dashboard', 'users', 'groups', 'posts', 'chats', 'notifications', 'audit', 'config', 'rbac', 'media', 'settings', 'branding'] },
+  { id: '2', name: 'Trần Thị Bình', email: 'binh@fbv.app', role: 'Admin', department: 'Business', status: 'Active', permissions: ['dashboard', 'users', 'groups', 'posts', 'chats', 'notifications', 'media'] },
+  { id: '3', name: 'Lê Văn Cường', email: 'cuong@fbv.app', role: 'Moderator', department: 'Content', status: 'Active', permissions: ['dashboard', 'posts', 'chats', 'media'] },
+  { id: '4', name: 'Phạm Thị Duyên', email: 'duyen@fbv.app', role: 'Content Manager', department: 'Marketing', status: 'Inactive', permissions: ['dashboard', 'posts', 'notifications'] },
+  { id: '5', name: 'Hoàng Minh Tú', email: 'tu@fbv.app', role: 'Viewer', department: 'QA', status: 'Active', permissions: ['dashboard', 'audit'] },
 ];
 
 export const CHART_DATA_7DAYS = [

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  LayoutDashboard, 
-  Users, 
-  UserCircle, 
-  MessageSquare, 
-  FileText, 
-  Settings, 
-  Bell, 
-  ShieldCheck, 
-  Image as ImageIcon, 
-  ChevronDown, 
+import {
+  LayoutDashboard,
+  Users,
+  UserCircle,
+  MessageSquare,
+  FileText,
+  Settings,
+  Bell,
+  ShieldCheck,
+  Image as ImageIcon,
+  ChevronDown,
   LogOut,
   Search,
   RefreshCw,
@@ -28,24 +28,38 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
-import { MOCK_USERS, MOCK_GROUPS, MOCK_POSTS, MOCK_ADMINS, CHART_DATA_7DAYS, CHART_DATA_30DAYS, MOCK_AUDIT_LOGS, MOCK_NOTIFICATIONS, MOCK_MEDIA, CONFIG_KEYS, MOCK_CHATS, MOCK_INTERACTIONS } from './mockData';
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer, 
-  LineChart, 
-  Line 
+import {
+  MOCK_USERS,
+  MOCK_GROUPS,
+  MOCK_POSTS,
+  MOCK_ADMINS,
+  CHART_DATA_7DAYS,
+  CHART_DATA_30DAYS,
+  MOCK_AUDIT_LOGS,
+  MOCK_NOTIFICATIONS,
+  MOCK_MEDIA,
+  CONFIG_KEYS,
+  MOCK_CHATS,
+  MOCK_INTERACTIONS
+} from './mockData';
+import { Admin } from './types';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  LineChart,
+  Line
 } from 'recharts';
 
 // --- Components ---
 
 const SidebarItem = ({ icon: Icon, label, active, onClick, subItems }: any) => {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   return (
     <div>
       <button
@@ -63,9 +77,9 @@ const SidebarItem = ({ icon: Icon, label, active, onClick, subItems }: any) => {
           <span>{label}</span>
         </div>
         {subItems && (
-          <ChevronDown 
-            size={14} 
-            className={cn("transition-transform", isOpen && "rotate-180")} 
+          <ChevronDown
+            size={14}
+            className={cn("transition-transform", isOpen && "rotate-180")}
           />
         )}
       </button>
@@ -127,7 +141,7 @@ const Modal = ({ isOpen, onClose, title, children, confirmLabel, onConfirm, type
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-      <motion.div 
+      <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         className={cn("bg-white rounded-xl shadow-2xl w-full mx-auto overflow-hidden", wide ? "max-w-2xl px-2" : "max-w-md")}
@@ -143,14 +157,14 @@ const Modal = ({ isOpen, onClose, title, children, confirmLabel, onConfirm, type
           <h3 className={cn("text-lg font-bold mb-2", type === 'form' && "border-b border-slate-100 pb-4 mb-4")}>{title}</h3>
           <div className={cn("text-slate-500 text-sm mb-6", type === 'form' && "text-left")}>{children}</div>
           <div className={cn("flex gap-3", type === 'form' ? "justify-end pt-4 border-t border-slate-100" : "justify-center")}>
-            <button 
+            <button
               onClick={onClose}
               className="px-6 py-2 bg-slate-100 text-slate-600 rounded-lg font-medium hover:bg-slate-200 transition-colors"
             >
               Hủy
             </button>
-            <button 
-              onClick={() => { if(onConfirm) onConfirm(); onClose(); }}
+            <button
+              onClick={() => { if (onConfirm) onConfirm(); onClose(); }}
               className={cn("px-6 py-2 text-white rounded-lg font-medium transition-colors", type === 'danger' ? "bg-rose-500 hover:bg-rose-600" : "bg-blue-500 hover:bg-blue-600")}
             >
               {confirmLabel || 'Xác nhận'}
@@ -173,11 +187,109 @@ export default function App() {
   const [modalConfig, setModalConfig] = useState<any>({});
   const [chatDetailTab, setChatDetailTab] = useState('Tin nhắn');
   const [postDetailTab, setPostDetailTab] = useState('Chi tiết');
+  const [admins, setAdmins] = useState<Admin[]>(MOCK_ADMINS);
 
   const openModal = (config: any) => {
     setModalConfig(config);
     setIsModalOpen(true);
   };
+
+  const handleEditPermissions = (admin: Admin) => {
+    let currentPermissions = [...(admin.permissions || [])];
+
+    const PermissionItem = ({ permission, isChecked, onChange }: any) => (
+      <label className="flex items-start gap-3 p-3 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors border border-transparent hover:border-slate-100">
+        <input
+          type="checkbox"
+          defaultChecked={isChecked}
+          onChange={(e) => onChange(e.target.checked)}
+          className="mt-1 w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
+        />
+        <div>
+          <p className="text-sm font-bold text-slate-700">{permission.label}</p>
+          <p className="text-[10px] text-slate-400 leading-tight">{permission.description}</p>
+        </div>
+      </label>
+    );
+
+    openModal({
+      title: `Chỉnh sửa phân quyền: ${admin.name}`,
+      type: 'form',
+      wide: true,
+      children: (
+        <div className="space-y-6 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+          <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+                {admin.name.charAt(0)}
+              </div>
+              <div>
+                <p className="font-bold text-slate-800">{admin.name}</p>
+                <p className="text-xs text-slate-500">{admin.role} • {admin.department}</p>
+              </div>
+            </div>
+          </div>
+
+          {PERMISSION_GROUPS.map((group) => (
+            <div key={group.title} className="space-y-3">
+              <h5 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">{group.title}</h5>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {group.permissions.map((p) => (
+                  <PermissionItem
+                    key={p.id}
+                    permission={p}
+                    isChecked={currentPermissions.includes(p.id)}
+                    onChange={(checked: boolean) => {
+                      if (checked) {
+                        if (!currentPermissions.includes(p.id)) currentPermissions.push(p.id);
+                      } else {
+                        currentPermissions = currentPermissions.filter(id => id !== p.id);
+                      }
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      ),
+      confirmLabel: 'Lưu thay đổi',
+      onConfirm: () => {
+        setAdmins(prev => prev.map(a => a.id === admin.id ? { ...a, permissions: currentPermissions } : a));
+        console.log('Updated permissions for', admin.name, currentPermissions);
+      }
+    });
+  };
+
+  const PERMISSION_GROUPS = [
+    {
+      title: 'OVERVIEW',
+      permissions: [
+        { id: 'dashboard', label: 'Dashboard', description: 'Xem tổng quan hệ thống và thống kê' },
+      ]
+    },
+    {
+      title: 'QUẢN LÝ',
+      permissions: [
+        { id: 'users', label: 'Người dùng', description: 'Quản lý tài khoản người dùng, khóa/mở khóa' },
+        { id: 'groups', label: 'Nhóm', description: 'Quản lý các nhóm chat và thành viên' },
+        { id: 'posts', label: 'Bài viết', description: 'Kiểm duyệt bài viết và bình luận' },
+        { id: 'chats', label: 'Cuộc trò chuyện', description: 'Theo dõi và kiểm duyệt nội dung tin nhắn' },
+        { id: 'notifications', label: 'Thông báo', description: 'Gửi thông báo Push cho người dùng' },
+        { id: 'audit', label: 'Audit Logs', description: 'Xem nhật ký hoạt động hệ thống' },
+      ]
+    },
+    {
+      title: 'HỆ THỐNG',
+      permissions: [
+        { id: 'config', label: 'Cấu hình', description: 'Chỉnh sửa tham số kỹ thuật hệ thống' },
+        { id: 'rbac', label: 'Phân quyền', description: 'Quản lý tài khoản admin và quyền truy cập' },
+        { id: 'media', label: 'Phương tiện', description: 'Quản lý kho tệp tin hình ảnh, video' },
+        { id: 'settings', label: 'Cài đặt', description: 'Cài đặt tài khoản cá nhân' },
+        { id: 'branding', label: 'Branding', description: 'Cài đặt giao diện và thương hiệu app' },
+      ]
+    }
+  ];
 
   useEffect(() => {
     setViewMode('list');
@@ -190,26 +302,26 @@ export default function App() {
         return (
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <StatCard 
-                label="Tổng người dùng đã đăng ký" 
-                value="12,483" 
-                trend="+142" 
-                color="bg-blue-500" 
-                icon={Users} 
+              <StatCard
+                label="Tổng người dùng đã đăng ký"
+                value="12,483"
+                trend="+142"
+                color="bg-blue-500"
+                icon={Users}
               />
-              <StatCard 
-                label="Tổng nhóm đã tạo" 
-                value="3,291" 
-                trend="+25" 
-                color="bg-emerald-500" 
-                icon={MessageSquare} 
+              <StatCard
+                label="Tổng nhóm đã tạo"
+                value="3,291"
+                trend="+25"
+                color="bg-emerald-500"
+                icon={MessageSquare}
               />
-              <StatCard 
-                label="Người dùng bị khóa" 
-                value="47" 
-                trend="+3" 
-                color="bg-rose-500" 
-                icon={ShieldCheck} 
+              <StatCard
+                label="Người dùng bị khóa"
+                value="47"
+                trend="+3"
+                color="bg-rose-500"
+                icon={ShieldCheck}
               />
             </div>
 
@@ -293,7 +405,7 @@ export default function App() {
         if (viewMode === 'detail') {
           return (
             <div className="space-y-6">
-              <button 
+              <button
                 onClick={() => setViewMode('list')}
                 className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition-colors"
               >
@@ -340,7 +452,7 @@ export default function App() {
                   </div>
                 </div>
                 <div className="px-8 pb-8 flex flex-col md:flex-row gap-3">
-                  <button 
+                  <button
                     onClick={() => openModal({
                       title: 'Đình chỉ tài khoản?',
                       children: `Bạn có chắc muốn đình chỉ tài khoản ${selectedItem?.name}? Người dùng sẽ không thể đăng nhập.`,
@@ -352,7 +464,7 @@ export default function App() {
                   >
                     Đình chỉ tài khoản
                   </button>
-                  <button 
+                  <button
                     onClick={() => openModal({
                       title: 'Xác thực thủ công',
                       children: `Xác nhận tài khoản ${selectedItem?.name} hợp lệ?`,
@@ -364,7 +476,7 @@ export default function App() {
                   >
                     Xác thực thủ công
                   </button>
-                  <button 
+                  <button
                     onClick={() => openModal({
                       title: 'Cập nhật thông tin',
                       type: 'form',
@@ -379,12 +491,12 @@ export default function App() {
                             <input type="email" defaultValue={selectedItem?.email} className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
                           </div>
                           <div>
-                           <label className="text-sm font-medium text-slate-700 block mb-1">Trạng thái</label>
-                           <select defaultValue={selectedItem?.status} className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none">
-                             <option value="Hoạt động">Hoạt động</option>
-                             <option value="Đình chỉ">Đình chỉ</option>
-                             <option value="Chờ XN">Chờ XN</option>
-                           </select>
+                            <label className="text-sm font-medium text-slate-700 block mb-1">Trạng thái</label>
+                            <select defaultValue={selectedItem?.status} className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none">
+                              <option value="Hoạt động">Hoạt động</option>
+                              <option value="Đình chỉ">Đình chỉ</option>
+                              <option value="Chờ XÁC NHẬN">Chờ XÁC NHẬN</option>
+                            </select>
                           </div>
                         </div>
                       ),
@@ -421,7 +533,7 @@ export default function App() {
                         <td className="px-6 py-4 font-medium">{device.name}</td>
                         <td className="px-6 py-4 text-slate-600">{device.loc}</td>
                         <td className="px-6 py-4 text-slate-600">{device.time}</td>
-                        <td 
+                        <td
                           onClick={(e) => {
                             e.stopPropagation();
                             openModal({
@@ -450,7 +562,7 @@ export default function App() {
               <div className="flex justify-between items-center">
                 <h4 className="font-bold text-xl">Quản lý Người dùng</h4>
                 <div className="flex gap-2">
-                  <button 
+                  <button
                     onClick={() => openModal({
                       title: 'Tạo tài khoản mới',
                       type: 'form',
@@ -506,9 +618,9 @@ export default function App() {
                 </div>
                 <div className="relative flex-1 min-w-[200px]">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                  <input 
-                    type="text" 
-                    placeholder="Tìm theo tên / email / SĐT..." 
+                  <input
+                    type="text"
+                    placeholder="Tìm theo tên / email / SĐT..."
                     className="w-full pl-10 pr-4 py-1.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                   />
                 </div>
@@ -533,8 +645,8 @@ export default function App() {
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {MOCK_USERS.map((user) => (
-                  <tr 
-                    key={user.id} 
+                  <tr
+                    key={user.id}
                     onClick={() => { setSelectedItem(user); setViewMode('detail'); }}
                     className="hover:bg-slate-50 transition-colors cursor-pointer group"
                   >
@@ -549,9 +661,9 @@ export default function App() {
                     <td className="px-6 py-4 text-slate-600">{user.regDate}</td>
                     <td className="px-6 py-4">
                       <Badge variant={
-                        user.status === 'Hoạt động' ? 'active' : 
-                        user.status === 'Chờ XN' ? 'pending' : 
-                        user.status === 'Đình chỉ' ? 'suspended' : 'deleted'
+                        user.status === 'Hoạt động' ? 'active' :
+                          user.status === 'Chờ XÁC NHẬN' ? 'pending' :
+                            user.status === 'Đình chỉ' ? 'suspended' : 'deleted'
                       }>
                         {user.status}
                       </Badge>
@@ -582,15 +694,15 @@ export default function App() {
             <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100">
               <h4 className="text-2xl font-bold mb-1">App Branding & Basic Settings</h4>
               <p className="text-slate-500 text-sm mb-8">Manage the application name and visual identity.</p>
-              
+
               <div className="space-y-8">
                 <section>
                   <h5 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">BASIC SETTINGS</h5>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Application Name:</label>
-                    <input 
-                      type="text" 
-                      defaultValue="FBV MobileChat" 
+                    <input
+                      type="text"
+                      defaultValue="FBV MobileChat"
                       className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     />
                   </div>
@@ -607,7 +719,7 @@ export default function App() {
                       <p className="text-sm font-medium">FBV 192x192 px</p>
                       <p className="text-xs text-slate-400">[ Logo currently active ]</p>
                     </div>
-                    
+
                     <div className="border border-dashed border-slate-300 rounded-xl p-6 flex flex-col items-center justify-center text-center bg-slate-50/50">
                       <p className="text-[10px] font-bold text-slate-400 uppercase mb-4">UPLOAD NEW LOGO</p>
                       <div className="w-12 h-12 text-slate-300 mb-4">
@@ -675,7 +787,7 @@ export default function App() {
         if (viewMode === 'detail') {
           return (
             <div className="space-y-6">
-              <button 
+              <button
                 onClick={() => setViewMode('list')}
                 className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition-colors"
               >
@@ -714,7 +826,7 @@ export default function App() {
                   </div>
                 </div>
                 <div className="px-8 pb-8 flex flex-col md:flex-row gap-3">
-                  <button 
+                  <button
                     onClick={() => openModal({
                       title: 'Giải tán nhóm?',
                       children: `Bạn có chắc muốn giải tán nhóm ${selectedItem?.name}? Mọi dữ liệu và thành viên trong nhóm sẽ bị xóa và không thể khôi phục.`,
@@ -726,7 +838,7 @@ export default function App() {
                   >
                     Giải tán nhóm
                   </button>
-                  <button 
+                  <button
                     onClick={() => openModal({
                       title: 'Quản lý thành viên',
                       type: 'form',
@@ -738,11 +850,11 @@ export default function App() {
                             <input type="text" placeholder="Nhập email hoặc SĐT người dùng" className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
                           </div>
                           <div>
-                           <label className="text-sm font-medium text-slate-700 block mb-1">Vai trò</label>
-                           <select className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none">
-                             <option value="member">Thành viên</option>
-                             <option value="admin">Quản trị viên</option>
-                           </select>
+                            <label className="text-sm font-medium text-slate-700 block mb-1">Vai trò</label>
+                            <select className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none">
+                              <option value="member">Thành viên</option>
+                              <option value="admin">Quản trị viên</option>
+                            </select>
                           </div>
                         </div>
                       ),
@@ -782,7 +894,7 @@ export default function App() {
                           <Badge variant={member.role === 'Leader' ? 'active' : 'pending'}>{member.role}</Badge>
                         </td>
                         <td className="px-6 py-4 text-slate-600">{member.date}</td>
-                        <td 
+                        <td
                           onClick={(e) => {
                             e.stopPropagation();
                             openModal({
@@ -811,7 +923,7 @@ export default function App() {
               <div className="flex justify-between items-center">
                 <h4 className="font-bold text-xl">Quản lý Nhóm</h4>
                 <div className="flex gap-2">
-                  <button 
+                  <button
                     onClick={() => openModal({
                       title: 'Tạo nhóm mới',
                       type: 'form',
@@ -826,11 +938,11 @@ export default function App() {
                             <textarea placeholder="Nhập mô tả nhóm" rows={3} className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none resize-none"></textarea>
                           </div>
                           <div>
-                           <label className="text-sm font-medium text-slate-700 block mb-1">Loại nhóm</label>
-                           <select className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none">
-                             <option value="public">Công khai</option>
-                             <option value="private">Riêng tư</option>
-                           </select>
+                            <label className="text-sm font-medium text-slate-700 block mb-1">Loại nhóm</label>
+                            <select className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none">
+                              <option value="public">Công khai</option>
+                              <option value="private">Riêng tư</option>
+                            </select>
                           </div>
                         </div>
                       ),
@@ -881,8 +993,8 @@ export default function App() {
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {MOCK_GROUPS.map((group) => (
-                  <tr 
-                    key={group.id} 
+                  <tr
+                    key={group.id}
                     onClick={() => { setSelectedItem(group); setViewMode('detail'); }}
                     className="hover:bg-slate-50 transition-colors cursor-pointer group"
                   >
@@ -915,7 +1027,7 @@ export default function App() {
             <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100">
               <h4 className="text-2xl font-bold mb-1">Push Notification Management</h4>
               <p className="text-slate-500 text-sm mb-8">System configuration and runtime parameters for FBV MobileChat.</p>
-              
+
               <div className="bg-slate-50/50 p-6 rounded-xl border border-slate-100 mb-8">
                 <h5 className="font-bold mb-4">Compose Notification</h5>
                 <div className="space-y-4">
@@ -941,7 +1053,7 @@ export default function App() {
                     <textarea rows={3} placeholder="Enter notification message..." className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none resize-none"></textarea>
                   </div>
                   <div className="flex justify-end">
-                    <button 
+                    <button
                       onClick={() => openModal({
                         title: 'Xác nhận gửi thông báo',
                         children: 'Bạn có chắc chắn muốn gửi thông báo này cho tất cả người dùng không?',
@@ -995,7 +1107,7 @@ export default function App() {
             <div className="p-6 border-b border-slate-100 space-y-4">
               <h4 className="font-bold text-xl">Media Management</h4>
               <p className="text-slate-500 text-sm">Total Assets: 1,452 (512 Images, 940 Videos)</p>
-              
+
               <div className="flex justify-between items-center pt-4">
                 <button className="flex items-center gap-2 px-4 py-1.5 border border-slate-200 rounded-lg text-sm font-medium">
                   Bulk Actions <ChevronDown size={14} />
@@ -1036,7 +1148,7 @@ export default function App() {
                     <td className="px-6 py-4 text-slate-600">{media.date}</td>
                     <td className="px-6 py-4">
                       <div className="flex justify-center gap-2">
-                        <button 
+                        <button
                           onClick={() => openModal({
                             title: 'Chi tiết tệp tin',
                             children: (
@@ -1064,7 +1176,7 @@ export default function App() {
                           <FileText size={14} />
                         </button>
                         <button className="p-1.5 border border-slate-200 rounded hover:bg-white"><Download size={14} /></button>
-                        <button 
+                        <button
                           onClick={() => openModal({
                             title: 'Xóa tệp tin?',
                             children: `Bạn có chắc muốn xóa tệp "${media.name}" không? Thao tác này sẽ gỡ tệp khỏi toàn bộ các cuộc trò chuyện.`,
@@ -1090,7 +1202,7 @@ export default function App() {
             <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100">
               <h4 className="text-2xl font-bold mb-1">System Configuration Settings</h4>
               <p className="text-slate-500 text-sm mb-8">System configuration and runtime parameters for FBV MobileChat.</p>
-              
+
               <h5 className="font-bold mb-4">Active Configuration Keys</h5>
               <div className="overflow-hidden border border-slate-100 rounded-xl mb-8">
                 <table className="w-full text-sm">
@@ -1117,7 +1229,7 @@ export default function App() {
                         <td className="px-6 py-4 text-slate-500">{cfg.date}</td>
                         <td className="px-6 py-4 text-slate-500">{cfg.by}</td>
                         <td className="px-6 py-4 text-center">
-                          <button 
+                          <button
                             onClick={() => openModal({
                               title: `Chỉnh sửa: ${cfg.key}`,
                               children: (
@@ -1183,7 +1295,7 @@ export default function App() {
                 <h4 className="text-2xl font-bold">Admin Roles & Permissions (RBAC)</h4>
                 <p className="text-slate-500 text-sm">RBAC — Kiểm soát truy cập dựa trên vai trò</p>
               </div>
-              <button 
+              <button
                 onClick={() => openModal({
                   title: 'Thêm Quản trị viên mới',
                   children: (
@@ -1231,31 +1343,53 @@ export default function App() {
                     <th className="px-6 py-3 text-left font-bold">Name</th>
                     <th className="px-6 py-3 text-left font-bold">Email</th>
                     <th className="px-6 py-3 text-left font-bold">Role</th>
-                    <th className="px-6 py-3 text-left font-bold">Department</th>
+                    <th className="px-6 py-3 text-left font-bold">Permissions</th>
                     <th className="px-6 py-3 text-left font-bold">Status</th>
                     <th className="px-6 py-3 text-left font-bold">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {MOCK_ADMINS.map((admin, i) => (
+                  {admins.map((admin, i) => (
                     <tr key={admin.id} className="hover:bg-slate-50 transition-colors">
                       <td className="px-6 py-4">{i + 1}</td>
                       <td className="px-6 py-4 font-medium">{admin.name}</td>
                       <td className="px-6 py-4 text-slate-600">{admin.email}</td>
-                      <td className="px-6 py-4 text-slate-600">{admin.role}</td>
-                      <td className="px-6 py-4 text-slate-600">{admin.department}</td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col">
+                          <span className="font-bold text-slate-700">{admin.role}</span>
+                          <span className="text-[10px] text-slate-400 uppercase tracking-tighter">{admin.department}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-wrap gap-1 max-w-[200px]">
+                          {(admin.permissions || []).slice(0, 3).map(p => (
+                            <span key={p} className="px-1.5 py-0.5 bg-blue-50 text-blue-600 border border-blue-100 rounded text-[9px] font-bold uppercase">{p}</span>
+                          ))}
+                          {(admin.permissions || []).length > 3 && (
+                            <span className="px-1.5 py-0.5 bg-slate-50 text-slate-400 border border-slate-100 rounded text-[9px] font-bold tracking-tighter">+{admin.permissions!.length - 3}</span>
+                          )}
+                          {(admin.permissions || []).length === 0 && (
+                            <span className="text-[10px] text-slate-400 italic">No permissions</span>
+                          )}
+                        </div>
+                      </td>
                       <td className="px-6 py-4">
                         <Badge variant={admin.status.toLowerCase()}>{admin.status}</Badge>
                       </td>
                       <td className="px-6 py-4 text-blue-600 font-medium">
-                        <button className="hover:underline">Edit</button>
-                        <span className="mx-2 text-slate-300">|</span>
                         <button 
+                          onClick={() => handleEditPermissions(admin)}
+                          className="hover:underline flex items-center gap-1"
+                        >
+                          <Settings size={12} /> Edit
+                        </button>
+                        <span className="mx-2 text-slate-300">|</span>
+                        <button
                           onClick={() => openModal({
                             title: 'Xác nhận xóa Admin?',
                             children: `Bạn có chắc muốn xóa tài khoản '${admin.name}' không? Hành động này không thể hoàn tác.`,
                             confirmLabel: 'Xác nhận',
-                            onConfirm: () => console.log('Deleted admin', admin.id)
+                            onConfirm: () => setAdmins(prev => prev.filter(a => a.id !== admin.id))
                           })}
                           className="hover:underline"
                         >
@@ -1283,7 +1417,7 @@ export default function App() {
         if (viewMode === 'detail') {
           return (
             <div className="space-y-6">
-              <button 
+              <button
                 onClick={() => setViewMode('list')}
                 className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition-colors"
               >
@@ -1292,10 +1426,10 @@ export default function App() {
               <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100">
                 <h4 className="text-2xl font-bold mb-1">Chat Media & Message Audit View</h4>
                 <p className="text-slate-500 text-sm mb-8">Trang chủ / Quản lý Cuộc trò chuyện / {selectedItem?.name}</p>
-                
+
                 <div className="flex gap-8 border-b border-slate-100 mb-6">
                   {['Tin nhắn', 'Media', 'File', 'Link'].map((tab) => (
-                    <button 
+                    <button
                       key={tab}
                       onClick={() => setChatDetailTab(tab)}
                       className={cn(
@@ -1322,36 +1456,36 @@ export default function App() {
                       <div className="bg-slate-50 rounded-xl p-4 space-y-4 max-h-[500px] overflow-y-auto">
                         {MOCK_MESSAGES.map((msg) => (
                           <div key={msg.id} className={cn('flex gap-3', msg.isSelf && 'flex-row-reverse')}>
-                             <img src={msg.avatar} alt="" className="w-8 h-8 rounded-full flex-shrink-0 mt-1 object-cover" />
-                             <div className={cn('max-w-[70%] space-y-1', msg.isSelf && 'items-end flex flex-col')}>
-                               <div className={cn('flex items-center gap-2', msg.isSelf && 'flex-row-reverse')}>
-                                 <p className="text-xs font-bold text-slate-700">{msg.sender}</p>
-                                 <p className="text-[10px] text-slate-400">{msg.time}</p>
-                                 {msg.isFlagged && <span className="px-1.5 py-0.5 bg-rose-100 text-rose-600 text-[9px] font-bold rounded uppercase">⚠️ Vi phạm</span>}
-                               </div>
-                               <div className={cn(
-                                 'px-4 py-2 rounded-2xl text-sm shadow-sm',
-                                 msg.isSelf ? 'bg-blue-600 text-white rounded-tr-sm' : 
-                                 msg.isFlagged ? 'bg-rose-50 border border-rose-200 text-slate-800 rounded-tl-sm' : 
-                                 'bg-white text-slate-800 border border-slate-100 rounded-tl-sm'
-                               )}>
-                                 {msg.text}
-                               </div>
-                               {msg.isFlagged && (
-                                 <button 
-                                   onClick={() => openModal({
-                                     title: 'Xóa tin nhắn vi phạm?',
-                                     children: 'Bạn có chắc chắn muốn xóa tin nhắn này không?',
-                                     confirmLabel: 'Xóa',
-                                     type: 'danger',
-                                     onConfirm: () => console.log('Deleted message', msg.id)
-                                   })}
-                                   className="text-[10px] text-rose-500 hover:underline"
-                                 >
-                                   [Xóa tin nhắn]
-                                 </button>
-                               )}
-                             </div>
+                            <img src={msg.avatar} alt="" className="w-8 h-8 rounded-full flex-shrink-0 mt-1 object-cover" />
+                            <div className={cn('max-w-[70%] space-y-1', msg.isSelf && 'items-end flex flex-col')}>
+                              <div className={cn('flex items-center gap-2', msg.isSelf && 'flex-row-reverse')}>
+                                <p className="text-xs font-bold text-slate-700">{msg.sender}</p>
+                                <p className="text-[10px] text-slate-400">{msg.time}</p>
+                                {msg.isFlagged && <span className="px-1.5 py-0.5 bg-rose-100 text-rose-600 text-[9px] font-bold rounded uppercase">⚠️ Vi phạm</span>}
+                              </div>
+                              <div className={cn(
+                                'px-4 py-2 rounded-2xl text-sm shadow-sm',
+                                msg.isSelf ? 'bg-blue-600 text-white rounded-tr-sm' :
+                                  msg.isFlagged ? 'bg-rose-50 border border-rose-200 text-slate-800 rounded-tl-sm' :
+                                    'bg-white text-slate-800 border border-slate-100 rounded-tl-sm'
+                              )}>
+                                {msg.text}
+                              </div>
+                              {msg.isFlagged && (
+                                <button
+                                  onClick={() => openModal({
+                                    title: 'Xóa tin nhắn vi phạm?',
+                                    children: 'Bạn có chắc chắn muốn xóa tin nhắn này không?',
+                                    confirmLabel: 'Xóa',
+                                    type: 'danger',
+                                    onConfirm: () => console.log('Deleted message', msg.id)
+                                  })}
+                                  className="text-[10px] text-rose-500 hover:underline"
+                                >
+                                  [Xóa tin nhắn]
+                                </button>
+                              )}
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -1471,7 +1605,7 @@ export default function App() {
                   { id: '3', type: 'Nhóm', name: 'TTS Test', info: '28 thành viên', time: '09:15' },
                   { id: '4', type: '1:1', name: 'Lê Văn Cường → Admin', info: 'Trực tiếp', time: '08:55' },
                 ].map((chat) => (
-                  <div 
+                  <div
                     key={chat.id}
                     onClick={() => { setSelectedItem(chat); setViewMode('detail'); }}
                     className="flex items-center justify-between p-4 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer group"
@@ -1496,7 +1630,7 @@ export default function App() {
         if (viewMode === 'detail') {
           return (
             <div className="space-y-6">
-              <button 
+              <button
                 onClick={() => setViewMode('list')}
                 className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition-colors"
               >
@@ -1505,10 +1639,10 @@ export default function App() {
               <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100">
                 <h4 className="text-2xl font-bold mb-1">Chi tiết Bài viết</h4>
                 <p className="text-slate-500 text-sm mb-8">Trang chủ / Quản lý Bài viết / {selectedItem?.id}</p>
-                
+
                 <div className="flex gap-8 border-b border-slate-100 mb-6">
                   {['Chi tiết', 'Bình luận', 'Tương tác'].map((tab) => (
-                    <button 
+                    <button
                       key={tab}
                       onClick={() => setPostDetailTab(tab)}
                       className={cn(
@@ -1536,8 +1670,8 @@ export default function App() {
                         <div className="p-3 border border-slate-100 rounded-lg bg-blue-50/50">
                           <p className="text-xs text-slate-400 uppercase font-bold">Thống kê</p>
                           <div className="flex gap-4 mt-2">
-                             <span className="text-sm font-bold">👍 {selectedItem?.likes} Likes</span>
-                             <span className="text-sm font-bold">💬 {selectedItem?.comments} Comments</span>
+                            <span className="text-sm font-bold">👍 {selectedItem?.likes} Likes</span>
+                            <span className="text-sm font-bold">💬 {selectedItem?.comments} Comments</span>
                           </div>
                         </div>
                         <div className="p-3 border border-slate-100 rounded-lg bg-orange-50/50">
@@ -1548,7 +1682,7 @@ export default function App() {
                         </div>
                       </div>
                       <div className="pt-4 flex gap-3">
-                        <button 
+                        <button
                           onClick={() => openModal({
                             title: 'Xác nhận xóa bài viết?',
                             children: `Hành động này sẽ xóa vĩnh viễn bài bài viết của ${selectedItem?.author}. Bạn có chắc chắn không?`,
@@ -1581,7 +1715,7 @@ export default function App() {
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                          {MOCK_INTERACTIONS.map((item, i) => ( 
+                          {MOCK_INTERACTIONS.map((item, i) => (
                             <tr key={i} className="hover:bg-slate-50 transition-colors">
                               <td className="px-6 py-4 font-medium flex items-center gap-3">
                                 <img src={item.avatar} alt="" className="w-8 h-8 rounded-full shadow-sm" />
@@ -1595,7 +1729,7 @@ export default function App() {
                               <td className="px-6 py-4">
                                 <div className="flex justify-center gap-3">
                                   <button className="text-blue-600 hover:underline">Ẩn</button>
-                                  <button 
+                                  <button
                                     onClick={() => openModal({
                                       title: 'Xóa bình luận?',
                                       children: 'Bạn có chắc chắn muốn xóa bình luận này không?',
@@ -1623,14 +1757,14 @@ export default function App() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {MOCK_USERS.slice(0, 8).map((user) => (
                         <div key={user.id} className="flex items-center gap-4 p-4 border border-slate-100 rounded-xl hover:bg-blue-50/30 transition-colors">
-                           <img src={user.avatar} className="w-12 h-12 rounded-full border-2 border-white shadow-sm" />
-                           <div>
-                             <p className="font-bold text-sm text-slate-800">{user.name}</p>
-                             <p className="text-xs text-slate-400">Đã thích vào 02/04 09:30</p>
-                           </div>
-                           <div className="ml-auto flex gap-1">
-                             <div className="w-6 h-6 bg-blue-100 flex items-center justify-center rounded-full text-blue-600">👍</div>
-                           </div>
+                          <img src={user.avatar} className="w-12 h-12 rounded-full border-2 border-white shadow-sm" />
+                          <div>
+                            <p className="font-bold text-sm text-slate-800">{user.name}</p>
+                            <p className="text-xs text-slate-400">Đã thích vào 02/04 09:30</p>
+                          </div>
+                          <div className="ml-auto flex gap-1">
+                            <div className="w-6 h-6 bg-blue-100 flex items-center justify-center rounded-full text-blue-600">👍</div>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -1676,8 +1810,8 @@ export default function App() {
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {MOCK_POSTS.map((post) => (
-                  <tr 
-                    key={post.id} 
+                  <tr
+                    key={post.id}
                     onClick={() => { setSelectedItem(post); setViewMode('detail'); }}
                     className="hover:bg-slate-50 transition-colors cursor-pointer group"
                   >
@@ -1707,24 +1841,24 @@ export default function App() {
             <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100">
               <h4 className="text-2xl font-bold mb-1">Cài đặt Tài khoản</h4>
               <p className="text-slate-500 text-sm mb-8">Quản lý thông tin tài khoản và tùy chọn hiển thị cá nhân.</p>
-              
+
               <div className="space-y-8">
                 <section>
                   <h5 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">THÔNG TIN CÁ NHÂN</h5>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-slate-700">Tên hiển thị:</label>
-                      <input 
-                        type="text" 
-                        defaultValue="Super Admin" 
+                      <input
+                        type="text"
+                        defaultValue="Super Admin"
                         className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-slate-700">Email:</label>
-                      <input 
-                        type="email" 
-                        defaultValue="admin@fbv.app" 
+                      <input
+                        type="email"
+                        defaultValue="admin@fbv.app"
                         disabled
                         className="w-full px-4 py-2 border border-slate-200 rounded-lg bg-slate-50 text-slate-500 focus:outline-none"
                       />
@@ -1737,23 +1871,23 @@ export default function App() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-slate-700">Mật khẩu hiện tại:</label>
-                      <input 
-                        type="password" 
-                        placeholder="••••••••" 
+                      <input
+                        type="password"
+                        placeholder="••••••••"
                         className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-slate-700">Mật khẩu mới:</label>
-                      <input 
-                        type="password" 
+                      <input
+                        type="password"
                         className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-slate-700">Nhập lại mật khẩu mới:</label>
-                      <input 
-                        type="password" 
+                      <input
+                        type="password"
                         className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
                     </div>
@@ -1775,15 +1909,15 @@ export default function App() {
                 </section>
               </div>
             </div>
-            
+
             <div className="flex justify-end gap-3">
-              <button 
+              <button
                 onClick={() => setViewMode('list')}
                 className="px-6 py-2 bg-slate-100 text-slate-600 rounded-lg font-medium hover:bg-slate-200 transition-colors"
               >
                 Hủy đổi
               </button>
-              <button 
+              <button
                 onClick={() => openModal({
                   title: 'Cập nhật thành công',
                   children: 'Thông tin cài đặt tài khoản của bạn đã được lưu lại trên hệ thống.',
@@ -1803,7 +1937,7 @@ export default function App() {
             <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100">
               <h4 className="text-2xl font-bold mb-1">Audit Logs</h4>
               <p className="text-slate-500 text-sm mb-8">Nhật ký hoạt động của quản trị viên hệ thống.</p>
-              
+
               <div className="overflow-hidden border border-slate-100 rounded-xl">
                 <table className="w-full text-sm">
                   <thead className="bg-slate-50 text-slate-500">
@@ -1827,7 +1961,7 @@ export default function App() {
                         <td className="px-6 py-4 text-slate-600 max-w-xs truncate">{log.target}</td>
                         <td className="px-6 py-4 text-slate-400 font-mono text-xs">{log.ip}</td>
                         <td className="px-6 py-4">
-                          <button 
+                          <button
                             onClick={() => openModal({
                               title: 'Chi tiết Nhật ký hệ thống',
                               children: (
@@ -1903,85 +2037,85 @@ export default function App() {
         <div className="flex-1 overflow-y-auto py-4">
           <div className="px-4 mb-2">
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">OVERVIEW</p>
-            <SidebarItem 
-              icon={LayoutDashboard} 
-              label="Dashboard" 
-              active={activeTab === 'dashboard'} 
-              onClick={() => setActiveTab('dashboard')} 
+            <SidebarItem
+              icon={LayoutDashboard}
+              label="Dashboard"
+              active={activeTab === 'dashboard'}
+              onClick={() => setActiveTab('dashboard')}
             />
           </div>
 
           <div className="px-4 mb-2">
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">QUẢN LÝ</p>
-            <SidebarItem 
-              icon={Users} 
-              label="Người dùng" 
-              active={activeTab === 'users'} 
-              onClick={() => setActiveTab('users')} 
+            <SidebarItem
+              icon={Users}
+              label="Người dùng"
+              active={activeTab === 'users'}
+              onClick={() => setActiveTab('users')}
             />
-            <SidebarItem 
-              icon={UserCircle} 
-              label="Nhóm" 
-              active={activeTab === 'groups'} 
-              onClick={() => setActiveTab('groups')} 
+            <SidebarItem
+              icon={UserCircle}
+              label="Nhóm"
+              active={activeTab === 'groups'}
+              onClick={() => setActiveTab('groups')}
             />
-            <SidebarItem 
-              icon={FileText} 
-              label="Bài viết" 
-              active={activeTab === 'posts'} 
-              onClick={() => setActiveTab('posts')} 
+            <SidebarItem
+              icon={FileText}
+              label="Bài viết"
+              active={activeTab === 'posts'}
+              onClick={() => setActiveTab('posts')}
             />
-            <SidebarItem 
-              icon={MessageSquare} 
-              label="Cuộc trò chuyện" 
-              active={activeTab === 'chats'} 
-              onClick={() => setActiveTab('chats')} 
+            <SidebarItem
+              icon={MessageSquare}
+              label="Cuộc trò chuyện"
+              active={activeTab === 'chats'}
+              onClick={() => setActiveTab('chats')}
             />
-            <SidebarItem 
-              icon={Bell} 
-              label="Thông báo" 
-              active={activeTab === 'notifications'} 
-              onClick={() => setActiveTab('notifications')} 
+            <SidebarItem
+              icon={Bell}
+              label="Thông báo"
+              active={activeTab === 'notifications'}
+              onClick={() => setActiveTab('notifications')}
             />
-            <SidebarItem 
-              icon={FileText} 
-              label="Audit Logs" 
-              active={activeTab === 'audit'} 
-              onClick={() => setActiveTab('audit')} 
+            <SidebarItem
+              icon={FileText}
+              label="Audit Logs"
+              active={activeTab === 'audit'}
+              onClick={() => setActiveTab('audit')}
             />
           </div>
 
           <div className="px-4 mb-2">
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">HỆ THỐNG</p>
-            <SidebarItem 
-              icon={Settings} 
-              label="Cấu hình" 
-              active={activeTab === 'config'} 
-              onClick={() => setActiveTab('config')} 
+            <SidebarItem
+              icon={Settings}
+              label="Cấu hình"
+              active={activeTab === 'config'}
+              onClick={() => setActiveTab('config')}
             />
-            <SidebarItem 
-              icon={ShieldCheck} 
-              label="Phân quyền" 
-              active={activeTab === 'rbac'} 
-              onClick={() => setActiveTab('rbac')} 
+            <SidebarItem
+              icon={ShieldCheck}
+              label="Phân quyền"
+              active={activeTab === 'rbac'}
+              onClick={() => setActiveTab('rbac')}
             />
-            <SidebarItem 
-              icon={ImageIcon} 
-              label="Phương tiện" 
-              active={activeTab === 'media'} 
-              onClick={() => setActiveTab('media')} 
+            <SidebarItem
+              icon={ImageIcon}
+              label="Phương tiện"
+              active={activeTab === 'media'}
+              onClick={() => setActiveTab('media')}
             />
-            <SidebarItem 
-              icon={Settings} 
-              label="Cài đặt" 
-              active={activeTab === 'settings'} 
-              onClick={() => setActiveTab('settings')} 
+            <SidebarItem
+              icon={Settings}
+              label="Cài đặt"
+              active={activeTab === 'settings'}
+              onClick={() => setActiveTab('settings')}
             />
-            <SidebarItem 
-              icon={ImageIcon} 
-              label="App Branding & Basic Settings" 
-              active={activeTab === 'branding'} 
-              onClick={() => setActiveTab('branding')} 
+            <SidebarItem
+              icon={ImageIcon}
+              label="App Branding & Basic Settings"
+              active={activeTab === 'branding'}
+              onClick={() => setActiveTab('branding')}
             />
           </div>
         </div>
@@ -2040,10 +2174,10 @@ export default function App() {
       </main>
 
       {/* Global Modal Instance */}
-      <Modal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        {...modalConfig} 
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        {...modalConfig}
       />
     </div>
   );

@@ -9,7 +9,7 @@ export interface User {
   phone: string;
   regType: 'Email' | 'Google' | 'SĐT' | 'Apple';
   regDate: string;
-  status: 'Hoạt động' | 'Đình chỉ' | 'Chờ XN' | 'Bị cấm';
+  status: 'Hoạt động' | 'Đình chỉ' | 'Chờ XÁC NHẬN' | 'Bị cấm';
 }
 
 export interface Group {
@@ -39,6 +39,7 @@ export interface Admin {
   name: string;
   email: string;
   role: string;
+  permissions?: string[];
   department: string;
   status: 'Active' | 'Inactive';
 }
