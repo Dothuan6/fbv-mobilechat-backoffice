@@ -2249,6 +2249,12 @@ export default function App() {
               active={activeTab === 'users'}
               onClick={() => setActiveTab('users')}
             />
+            <SidebarItem
+              icon={MessageSquare}
+              label="Nhóm trò chuyện"
+              active={activeTab === 'chats'}
+              onClick={() => setActiveTab('chats')}
+            />
             {/* <SidebarItem
               icon={UserCircle}
               label="Nhóm"
@@ -2261,13 +2267,6 @@ export default function App() {
               active={activeTab === 'posts'}
               onClick={() => setActiveTab('posts')}
             />
-            <SidebarItem
-              icon={MessageSquare}
-              label="Nhóm trò chuyện"
-              active={activeTab === 'chats'}
-              onClick={() => setActiveTab('chats')}
-            />
-
             <SidebarItem
               icon={FileText}
               label="Audit Logs"
