@@ -84,14 +84,22 @@ export interface ConfigKey {
   by: string;
 }
 
-export interface Chat {
-  id: string;
-  type: 'Nhóm' | '1:1';
+export interface Member {
+  userId: string;
   name: string;
-  info: string;
-  lastMsg: string;
-  time: string;
-  msgCount: number;
+  role: 'owner' | 'admin' | 'member';
+  joinedAt: string;
+}
+
+export interface Conversation {
+  id: string;
+  type: 'group' | 'direct';
+  avatar: string[];
+  name: string;
+  members: Member[];
+  createdAt: string;
+  status: 'active' | 'disbanded';
+  ownerId?: string;
 }
 
 export interface Interaction {

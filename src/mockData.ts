@@ -1,4 +1,4 @@
-import { User, Group, Post, Admin } from './types';
+import { User, Group, Post, Admin, Conversation, Member } from './types';
 
 export const MOCK_USERS: User[] = [
   { id: '1', stt: 1, avatar: 'https://i.pravatar.cc/150?u=1', name: 'Nguyễn Văn An', email: 'nguyenan@email.com', phone: '+84901234567', regType: 'Email', regDate: '01/01/2025', status: 'Hoạt động' },
@@ -96,13 +96,64 @@ export const CONFIG_KEYS = [
   { id: '6', key: 'feature.story_enabled', type: 'Bool', val: 'true', desc: 'Bật/tắt tính năng Story', date: '20/02/2026 16:00', by: 'admin@fbv.app' },
 ];
 
-export const MOCK_CHATS = [
-  { id: '1', type: 'Nhóm', name: 'Backend Dev Squad', info: '8 thành viên', lastMsg: 'Ai review PR #142 chưa?', time: '09:45', msgCount: 234 },
-  { id: '2', type: '1:1', name: 'Nguyễn Văn An → Trần Thị Bình', info: 'Trực tiếp', lastMsg: 'Xong rồi bạn ơi, check lại nhé!', time: '09:30', msgCount: 87 },
-  { id: '3', type: 'Nhóm', name: '[GR] Team Thiết kế FBV', info: '28 thành viên', lastMsg: 'Design system v3 đã upload lên drive', time: '09:15', msgCount: 512 },
-  { id: '4', type: '1:1', name: 'Lê Văn Cường → Admin', info: 'Trực tiếp', lastMsg: 'Tại sao tài khoản tôi bị khoá?', time: '08:55', msgCount: 12 },
-  { id: '5', type: 'Nhóm', name: 'FBV Community Hub', info: '312 thành viên', lastMsg: 'Sự kiện offline tháng 4 tại HN 🎉', time: '08:30', msgCount: 1893 },
-  { id: '6', type: '1:1', name: 'Phạm Minh Dũng → Hoàng Thị Em', info: 'Trực tiếp', lastMsg: 'Oke mình gặp lúc 2pm nhé', time: '08:00', msgCount: 45 },
+export const MOCK_CONVERSATIONS: Conversation[] = [
+  {
+    id: '1',
+    type: 'group',
+    name: 'Team Thiết kế FBV',
+    avatar: ['https://picsum.photos/seed/group1/100'],
+    members: [
+      { userId: '1', name: 'Nguyễn Văn An', role: 'owner', joinedAt: '10/01/2025' },
+      { userId: '2', name: 'Trần Thị Bình', role: 'admin', joinedAt: '10/01/2025' },
+      ...Array.from({ length: 26 }).map((_, i) => ({ userId: `${i + 10}`, name: `User ${i + 1}`, role: 'member' as const, joinedAt: '11/01/2025' }))
+    ],
+    createdAt: '10/01/2025',
+    status: 'active',
+    ownerId: '1'
+  },
+  {
+    id: '2',
+    type: 'direct',
+    name: 'Nhóm Marketing Q1',
+    avatar: ['https://i.pravatar.cc/150?u=1', 'https://i.pravatar.cc/150?u=2'],
+    members: [
+      { userId: '1', name: 'Nguyễn Văn An', role: 'member', joinedAt: '15/01/2025' },
+      { userId: '2', name: 'Trần Thị Bình', role: 'member', joinedAt: '15/01/2025' }
+    ],
+    createdAt: '15/01/2025',
+    status: 'active'
+  },
+  {
+    id: '3',
+    type: 'group',
+    name: 'Backend Dev Squad',
+    avatar: ['https://picsum.photos/seed/group3/100'],
+    members: [
+      { userId: '3', name: 'Lê Văn Cường', role: 'owner', joinedAt: '20/01/2025' },
+      { userId: '4', name: 'Phạm Minh Dũng', role: 'member', joinedAt: '20/01/2025' },
+      { userId: '5', name: 'Hoàng Thị Em', role: 'member', joinedAt: '21/01/2025' },
+      { userId: '6', name: 'Võ Thị Phượng', role: 'member', joinedAt: '21/01/2025' },
+      { userId: '7', name: 'Đinh Văn Quân', role: 'member', joinedAt: '22/01/2025' },
+      { userId: '8', name: 'Bùi Thị Hoa', role: 'member', joinedAt: '22/01/2025' },
+      { userId: '9', name: 'Trương Văn Minh', role: 'member', joinedAt: '23/01/2025' },
+      { userId: '10', name: 'Lý Thị Lan', role: 'member', joinedAt: '23/01/2025' }
+    ],
+    createdAt: '20/01/2025',
+    status: 'active',
+    ownerId: '3'
+  },
+  {
+    id: '4',
+    type: 'direct',
+    name: 'Người dùng A, Người dùng C',
+    avatar: ['https://i.pravatar.cc/150?u=11', 'https://i.pravatar.cc/150?u=12'],
+    members: [
+      { userId: '11', name: 'Người dùng A', role: 'member', joinedAt: '01/02/2025' },
+      { userId: '12', name: 'Người dùng C', role: 'member', joinedAt: '01/02/2025' }
+    ],
+    createdAt: '01/02/2025',
+    status: 'active'
+  }
 ];
 
 export const MOCK_INTERACTIONS = [

@@ -39,7 +39,7 @@ import {
   MOCK_NOTIFICATIONS,
   MOCK_MEDIA,
   CONFIG_KEYS,
-  MOCK_CHATS,
+  MOCK_CONVERSATIONS,
   MOCK_INTERACTIONS
 } from './mockData';
 import { Admin } from './types';
@@ -1426,199 +1426,312 @@ export default function App() {
         );
       case 'chats':
         if (viewMode === 'detail') {
+          const conversation = selectedItem;
           return (
             <div className="space-y-6">
-              <button
-                onClick={() => setViewMode('list')}
-                className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition-colors"
-              >
-                <ChevronRight size={16} className="rotate-180" /> Back to list
-              </button>
-              <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100">
-                <h4 className="text-2xl font-bold mb-1">Chat Media & Message Audit View</h4>
-                <p className="text-slate-500 text-sm mb-8">Trang chủ / Quản lý Cuộc trò chuyện / {selectedItem?.name}</p>
-
-                <div className="flex gap-8 border-b border-slate-100 mb-6">
-                  {['Tin nhắn', 'Media', 'File', 'Link'].map((tab) => (
-                    <button
-                      key={tab}
-                      onClick={() => setChatDetailTab(tab)}
-                      className={cn(
-                        "pb-3 text-sm font-medium transition-colors border-b-2",
-                        chatDetailTab === tab ? "text-blue-600 border-blue-600" : "text-slate-400 border-transparent hover:text-slate-600"
-                      )}
-                    >
-                      {tab}
-                    </button>
-                  ))}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="text-slate-400">Trang chủ / Quản lý Cuộc trò chuyện /</span>
+                  <span className="text-slate-800 font-medium">Chi tiết</span>
                 </div>
+                <button
+                  onClick={() => setViewMode('list')}
+                  className="flex items-center gap-2 text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors"
+                >
+                  <ChevronRight size={16} className="rotate-180" /> Quay lại danh sách
+                </button>
+              </div>
 
-                {chatDetailTab === 'Tin nhắn' && (() => {
-                  const MOCK_MESSAGES = [
-                    { id: '1', sender: 'Nguyễn Văn An', avatar: 'https://i.pravatar.cc/150?u=1', text: 'Ai review PR #142 chưa? Cần merge gấp trước 5pm hôm nay.', time: '09:42', isFlagged: false, isSelf: false },
-                    { id: '2', sender: 'Trần Thị Bình', avatar: 'https://i.pravatar.cc/150?u=2', text: 'Để mình check. Có test case chưa hay chỉ code thôi?', time: '09:44', isFlagged: false, isSelf: true },
-                    { id: '3', sender: 'Nguyễn Văn An', avatar: 'https://i.pravatar.cc/150?u=1', text: 'Có test rồi, pipeline xanh. Review giùm mình nhé!', time: '09:45', isFlagged: false, isSelf: false },
-                    { id: '4', sender: 'Lê Văn Cường', avatar: 'https://i.pravatar.cc/150?u=3', text: 'Mình thấy có vấn đề ở dòng 42 file auth.service.ts, check lại logic token refresh nhé.', time: '09:47', isFlagged: true, isSelf: false },
-                    { id: '5', sender: 'Trần Thị Bình', avatar: 'https://i.pravatar.cc/150?u=2', text: 'Đúng rồi, cần fix phần này trước khi merge.', time: '09:50', isFlagged: false, isSelf: true },
-                    { id: '7', sender: 'Nguyễn Văn An', avatar: 'https://i.pravatar.cc/150?u=1', text: 'Đã push fix. Pipeline đang chạy lại... 🚀', time: '10:05', isFlagged: false, isSelf: false },
-                  ];
-                  return (
-                    <div className="space-y-4">
-                      <div className="bg-slate-50 rounded-xl p-4 space-y-4 max-h-[500px] overflow-y-auto">
-                        {MOCK_MESSAGES.map((msg) => (
-                          <div key={msg.id} className={cn('flex gap-3', msg.isSelf && 'flex-row-reverse')}>
-                            <img src={msg.avatar} alt="" className="w-8 h-8 rounded-full flex-shrink-0 mt-1 object-cover" />
-                            <div className={cn('max-w-[70%] space-y-1', msg.isSelf && 'items-end flex flex-col')}>
-                              <div className={cn('flex items-center gap-2', msg.isSelf && 'flex-row-reverse')}>
-                                <p className="text-xs font-bold text-slate-700">{msg.sender}</p>
-                                <p className="text-[10px] text-slate-400">{msg.time}</p>
-                              </div>
-                              <div className={cn(
-                                'px-4 py-2 rounded-2xl text-sm shadow-sm',
-                                msg.isSelf ? 'bg-blue-600 text-white rounded-tr-sm' :
-                                  msg.isFlagged ? 'bg-rose-50 border border-rose-200 text-slate-800 rounded-tl-sm' :
-                                    'bg-white text-slate-800 border border-slate-100 rounded-tl-sm'
-                              )}>
-                                {msg.text}
-                              </div>
+              <div className="flex flex-col lg:flex-row gap-6">
+                <div className="flex-1 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col min-h-[700px]">
+                  <div className="p-4 border-b border-slate-100 flex gap-6">
+                    {['Tin nhắn', 'Media', 'Link', 'File'].map((tab) => (
+                      <button
+                        key={tab}
+                        onClick={() => setChatDetailTab(tab)}
+                        className={cn(
+                          "pb-2 text-sm font-bold transition-all relative",
+                          chatDetailTab === tab ? "text-blue-600" : "text-slate-400 hover:text-slate-600"
+                        )}
+                      >
+                        {tab}
+                        {chatDetailTab === tab && (
+                          <motion.div layoutId="chatTab" className="absolute -bottom-[11px] left-0 right-0 h-0.5 bg-blue-600" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
 
+                  <div className="flex-1 p-6 overflow-hidden">
+                    {chatDetailTab === 'Tin nhắn' && (
+                      <div className="h-[600px] flex flex-col">
+                        <div className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar">
+                          {[
+                            { id: '1', sender: 'Nguyễn Văn An', time: '10:00', content: 'Chào mọi người, dự án mới thế nào rồi?', type: 'text' },
+                            { id: '2', sender: 'Trần Thị Bình', time: '10:02', content: 'Đang tiến triển tốt nhé An.', type: 'text' },
+                            { id: '3', sender: 'Nguyễn Văn An', time: '10:05', content: 'Tuyệt vời! Gửi mình file spec nhé.', type: 'text' },
+                            { id: '4', sender: 'Lê Văn Cường', time: '10:10', content: 'Đây là file spec mới nhất.', type: 'file', fileName: 'spec_v2.pdf' },
+                          ].map((msg, i) => (
+                            <div key={i} className="flex gap-3">
+                              <div className="w-8 h-8 rounded-full bg-slate-200 flex-shrink-0" />
+                              <div className="space-y-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs font-bold text-slate-700">{msg.sender}</span>
+                                  <span className="text-[10px] text-slate-400">{msg.time}</span>
+                                </div>
+                                <div className="bg-slate-100 px-4 py-2 rounded-2xl rounded-tl-sm text-sm text-slate-600 max-w-md shadow-sm">
+                                  {msg.type === 'file' ? (
+                                    <div className="flex items-center gap-2 text-blue-600 font-medium">
+                                      <FileText size={16} />
+                                      {msg.fileName}
+                                    </div>
+                                  ) : msg.content}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="mt-4 p-3 bg-amber-50 rounded-xl border border-amber-100 flex items-center gap-3 text-amber-700 text-xs font-medium">
+                          <AlertTriangle size={16} />
+                          Chế độ kiểm duyệt: Chỉ xem nội dung, không thể gửi tin nhắn.
+                        </div>
+                      </div>
+                    )}
+                    {chatDetailTab === 'Media' && (
+                      <div className="grid grid-cols-4 gap-4">
+                        {Array.from({ length: 8 }).map((_, i) => (
+                          <div key={i} className="aspect-square bg-slate-100 rounded-xl border border-slate-200 overflow-hidden group relative">
+                            <img src={`https://picsum.photos/seed/media${i}/200`} alt="" className="w-full h-full object-cover" />
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                              <button className="p-2 bg-white rounded-full text-slate-800 hover:bg-blue-50"><Download size={16} /></button>
                             </div>
                           </div>
                         ))}
                       </div>
-                      <div className="bg-amber-50 p-3 rounded-lg text-xs text-amber-700 font-medium">
-                        ℹ️ Chỉ xem và kiểm duyệt tin nhắn. Quản trị viên không thể gửi tin nhắn trong cuộc trò chuyện này.
+                    )}
+                    {chatDetailTab === 'Link' && (
+                      <div className="space-y-3">
+                        <div className="p-4 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors">
+                          <p className="text-sm font-bold text-blue-600 hover:underline cursor-pointer">https://google.com</p>
+                          <p className="text-xs text-slate-400 mt-1">Gửi bởi Nguyễn Văn An • 10:05 01/01/2025</p>
+                        </div>
+                      </div>
+                    )}
+                    {chatDetailTab === 'File' && (
+                      <div className="space-y-3">
+                        <div className="p-4 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><FileText size={20} /></div>
+                            <div>
+                              <p className="text-sm font-bold text-slate-700">bao_cao_quy_1.pdf</p>
+                              <p className="text-xs text-slate-400">2.4 MB • 01/01/2025</p>
+                            </div>
+                          </div>
+                          <button className="text-slate-400 hover:text-blue-600"><Download size={20} /></button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="w-full lg:w-[400px] space-y-6">
+                  <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col items-center text-center">
+                    <div className="mb-4 relative">
+                      {conversation?.type === 'direct' ? (
+                        <div className="flex -space-x-4">
+                          {conversation.avatar.map((img: string, idx: number) => (
+                            <img key={idx} src={img} alt="" className="w-20 h-20 rounded-full border-4 border-white object-cover shadow-sm" />
+                          ))}
+                        </div>
+                      ) : (
+                        <img src={conversation?.avatar[0]} alt="" className="w-20 h-20 rounded-full border-4 border-white object-cover shadow-sm" />
+                      )}
+                      <div className="absolute -bottom-1 -right-1 bg-emerald-500 w-5 h-5 rounded-full border-2 border-white" />
+                    </div>
+                    <h4 className="text-xl font-bold text-slate-800">{conversation?.name}</h4>
+                    <p className="text-sm text-slate-400 mt-1">{conversation?.type === 'group' ? 'Nhóm trò chuyện' : 'Trò chuyện cá nhân'}</p>
+
+                    <div className="w-full mt-6 space-y-3">
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-slate-400">ID Phòng</span>
+                        <span className="font-bold text-slate-700">#{conversation?.id}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-slate-400">Số lượng</span>
+                        <span className="font-bold text-slate-700">{conversation?.members.length} thành viên</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-slate-400">Tạo lúc</span>
+                        <span className="font-bold text-slate-700">{conversation?.createdAt}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-slate-400">Trạng thái</span>
+                        <Badge variant="active">{conversation?.status === 'active' ? 'Hoạt động' : 'Đã giải tán'}</Badge>
                       </div>
                     </div>
-                  );
-                })()}
 
-                {chatDetailTab === 'Media' && (
-                  <div>
-                    <h5 className="font-bold mb-4">Ảnh & Video — 24 files | Tổng dung lượng: 156 MB</h5>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                      {Array.from({ length: 12 }).map((_, i) => (
-                        <div key={i} className="group relative bg-slate-50 rounded-lg overflow-hidden border border-slate-100">
-                          <img src={`https://picsum.photos/seed/chat${i}/200`} alt="" className="w-full aspect-square object-cover" />
-                          <div className="p-2">
-                            <p className="text-[10px] font-bold truncate">IMG_001.jpg</p>
-                            <p className="text-[10px] text-slate-400">2.4 MB</p>
-                            <p className="text-[10px] text-slate-400">Nguyễn Văn An</p>
-                            <p className="text-[10px] text-slate-400">01/04/2026 09:30</p>
+                    {conversation?.type === 'group' && (
+                      <button
+                        onClick={() => openModal({
+                          title: 'Giải tán nhóm?',
+                          children: 'Hành động này sẽ xóa vĩnh viễn toàn bộ tin nhắn và thành viên khỏi nhóm. Bạn có chắc chắn muốn tiếp tục?',
+                          confirmLabel: 'Giải tán ngay',
+                          onConfirm: () => console.log('Dissolved')
+                        })}
+                        className="w-full mt-6 py-2.5 bg-rose-50 text-rose-600 rounded-xl font-bold text-sm hover:bg-rose-100 transition-colors"
+                      >
+                        Giải tán nhóm
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div className="p-4 border-b border-slate-100 flex justify-between items-center">
+                      <h5 className="font-bold text-slate-800 text-sm">Danh sách thành viên</h5>
+                      <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-bold">{conversation?.members.length}</span>
+                    </div>
+                    <div className="divide-y divide-slate-50">
+                      {conversation?.members.slice(0, 10).map((member: any) => (
+                        <div key={member.userId} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors group">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xs">
+                              {member.name.charAt(0)}
+                            </div>
+                            <div>
+                              <p className="text-sm font-bold text-slate-700 group-hover:text-blue-600 transition-colors">{member.name}</p>
+                              <p className="text-[10px] text-slate-400">{member.role === 'owner' ? 'Chủ nhóm' : member.role === 'admin' ? 'Phó nhóm' : 'Thành viên'} • {member.joinedAt}</p>
+                            </div>
                           </div>
-                          <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
-                            <div className="flex gap-2">
-                              <button className="p-1.5 bg-white rounded-full text-slate-700 hover:bg-blue-50"><Download size={14} /></button>
-                              <button className="p-1.5 bg-white rounded-full text-slate-700 hover:bg-blue-50"><ExternalLink size={14} /></button>
-                              <button className="p-1.5 bg-white rounded-full text-rose-500 hover:bg-rose-50"><Trash2 size={14} /></button>
-                            </div>
-                            <div className="flex gap-2">
-                              <button className="flex items-center gap-1 px-2 py-1 bg-white/20 backdrop-blur-md text-white text-[10px] rounded hover:bg-white/30">
-                                <Download size={10} /> Tải xuống
+                          <div className="flex items-center gap-2">
+                            <button className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all" title="View Profile">
+                              <UserCircle size={16} />
+                            </button>
+                            {conversation?.type === 'group' && member.role !== 'owner' && (
+                              <button
+                                onClick={() => openModal({
+                                  title: 'Kick thành viên?',
+                                  children: `Bạn có chắc muốn xóa ${member.name} khỏi nhóm này?`,
+                                  confirmLabel: 'Xác nhận Kick',
+                                  onConfirm: () => console.log('Kicked', member.userId)
+                                })}
+                                className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+                                title="Kick Member"
+                              >
+                                <Trash2 size={16} />
                               </button>
-                              <button className="flex items-center gap-1 px-2 py-1 bg-rose-500/80 backdrop-blur-md text-white text-[10px] rounded hover:bg-rose-600">
-                                <Trash2 size={10} /> Xóa
-                              </button>
-                            </div>
+                            )}
                           </div>
                         </div>
                       ))}
                     </div>
                   </div>
-                )}
-
-                {chatDetailTab === 'File' && (
-                  <div className="space-y-3">
-                    <h5 className="font-bold mb-4 text-slate-700 uppercase text-xs tracking-wider">Tài liệu đính kèm</h5>
-                    {[
-                      { name: 'fbv-roadmap-2026.pdf', size: '2.4 MB', date: '01/04/2026' },
-                      { name: 'contract-draft.docx', size: '1.1 MB', date: '30/03/2026' },
-                      { name: 'technical-specs.zip', size: '15.6 MB', date: '28/03/2026' },
-                    ].map((file, i) => (
-                      <div key={i} className="flex items-center justify-between p-4 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
-                            <FileText size={20} className="text-blue-500" />
-                          </div>
-                          <div>
-                            <p className="font-medium text-sm">{file.name}</p>
-                            <p className="text-xs text-slate-400">{file.size} • {file.date}</p>
-                          </div>
-                        </div>
-                        <button className="p-2 text-slate-400 hover:text-blue-600 transition-colors">
-                          <Download size={20} />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {chatDetailTab === 'Link' && (
-                  <div className="space-y-3">
-                    <h5 className="font-bold mb-4 text-slate-700 uppercase text-xs tracking-wider">Liên kết đã chia sẻ</h5>
-                    {[
-                      { url: 'https://fbv.app/blog/new-features', title: 'New FBV Features 2026', sender: 'Admin' },
-                      { url: 'https://jira.fbv.app/FBV-1024', title: '[FBV-1024] UI/UX Bug fixes', sender: 'Nguyễn Văn An' },
-                    ].map((link, i) => (
-                      <div key={i} className="p-4 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors">
-                        <div className="flex items-start gap-3">
-                          <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <ExternalLink size={20} className="text-purple-500" />
-                          </div>
-                          <div>
-                            <p className="font-medium text-sm text-blue-600 hover:underline cursor-pointer">{link.title}</p>
-                            <p className="text-xs text-slate-400 truncate max-w-md">{link.url}</p>
-                            <p className="text-[10px] text-slate-500 mt-1">Gửi bởi {link.sender}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                </div>
               </div>
             </div>
           );
         }
+
         return (
           <div className="space-y-6">
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100">
-              <h4 className="text-2xl font-bold mb-1">Conversation Monitoring List</h4>
-              <div className="flex gap-4 mt-6">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                  <input type="text" placeholder="Tìm kiếm cuộc trò chuyện..." className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-2 text-sm text-slate-400">
+                <span>Trang chủ /</span>
+                <span className="text-slate-800 font-medium font-bold">Quản lý Cuộc trò chuyện</span>
+              </div>
+              <h1 className="text-3xl font-bold text-slate-800">Quản lý Cuộc trò chuyện</h1>
+              <p className="text-sm text-slate-500">Toàn bộ cuộc trò chuyện trong hệ thống</p>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+              <div className="p-6 border-b border-slate-100 flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2 px-3 py-2 border border-slate-200 rounded-xl text-sm bg-slate-50/50">
+                    <span className="text-slate-400 font-medium">Trạng thái:</span>
+                    <select className="bg-transparent font-bold text-slate-700 outline-none">
+                      <option>Đang hoạt động</option>
+                      <option>Đã giải tán</option>
+                    </select>
+                  </div>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                    <input
+                      type="text"
+                      placeholder="Tìm kiếm phòng chat..."
+                      className="pl-10 pr-4 py-2 border border-slate-200 rounded-xl text-sm w-80 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+                    />
+                  </div>
                 </div>
-                <div className="flex bg-slate-100 p-1 rounded-lg">
-                  <button className="px-8 py-1.5 bg-blue-600 text-white rounded-md text-sm font-medium">Tất cả</button>
-                  <button className="px-8 py-1.5 text-slate-500 hover:text-slate-800 text-sm font-medium">[Nhóm]</button>
-                  <button className="px-8 py-1.5 text-slate-500 hover:text-slate-800 text-sm font-medium">[1:1]</button>
+                <div className="flex gap-2">
+                  <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-all">
+                    <RefreshCw size={16} /> Làm mới
+                  </button>
                 </div>
               </div>
 
-              <div className="mt-8 space-y-3">
-                {[
-                  { id: '1', type: 'Nhóm', name: 'Backend Dev Squad', info: '8 thành viên', time: '09:45' },
-                  { id: '2', type: '1:1', name: 'Nguyễn Văn An → Trần Thị Bình', info: 'Trực tiếp', time: '09:30' },
-                  { id: '3', type: 'Nhóm', name: 'TTS Test', info: '28 thành viên', time: '09:15' },
-                  { id: '4', type: '1:1', name: 'Lê Văn Cường → Admin', info: 'Trực tiếp', time: '08:55' },
-                ].map((chat) => (
-                  <div
-                    key={chat.id}
-                    onClick={() => { setSelectedItem(chat); setViewMode('detail'); }}
-                    className="flex items-center justify-between p-4 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer group"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={cn("px-2 py-1 rounded text-[10px] font-bold uppercase", chat.type === 'Nhóm' ? "bg-blue-600 text-white" : "bg-purple-100 text-purple-700")}>
-                        [{chat.type}]
-                      </div>
-                      <div>
-                        <h5 className="font-bold text-sm group-hover:text-blue-600 transition-colors">{chat.name}</h5>
-                        <p className="text-xs text-slate-400">{chat.info}</p>
-                      </div>
-                    </div>
-                    <div className="text-xs text-slate-400">{chat.time}</div>
-                  </div>
-                ))}
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-slate-50/80 text-slate-500 uppercase text-[10px] font-bold tracking-widest border-b border-slate-100">
+                      <th className="px-6 py-4 text-left">ID</th>
+                      <th className="px-6 py-4 text-left">Tên phòng</th>
+                      <th className="px-6 py-4 text-left">Loại phòng</th>
+                      <th className="px-6 py-4 text-left">Số thành viên</th>
+                      <th className="px-6 py-4 text-left">Ngày tạo</th>
+                      <th className="px-6 py-4 text-left">Chủ phòng</th>
+                      <th className="px-6 py-4 text-left">Trạng thái</th>
+                      <th className="px-6 py-4 text-center">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-50">
+                    {MOCK_CONVERSATIONS.map((conv) => (
+                      <tr key={conv.id} className="hover:bg-blue-50/30 transition-colors group">
+                        <td className="px-6 py-4 font-bold text-slate-400">#{conv.id}</td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            {conv.type === 'direct' ? (
+                              <div className="flex -space-x-3">
+                                {conv.avatar.map((img, idx) => (
+                                  <img key={idx} src={img} alt="" className="w-8 h-8 rounded-full border-2 border-white object-cover" />
+                                ))}
+                              </div>
+                            ) : (
+                              <img src={conv.avatar[0]} alt="" className="w-8 h-8 rounded-full border border-slate-100 object-cover" />
+                            )}
+                            <span className="font-bold text-slate-700 group-hover:text-blue-600 transition-colors">{conv.name}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={cn(
+                            "px-2 py-0.5 rounded-md text-[10px] font-bold uppercase",
+                            conv.type === 'group' ? "bg-purple-100 text-purple-600" : "bg-blue-100 text-blue-600"
+                          )}>
+                            {conv.type === 'group' ? 'Nhóm' : 'Cá nhân'}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className="font-medium text-slate-600">{conv.members.length}</span>
+                        </td>
+                        <td className="px-6 py-4 text-slate-500 font-medium">{conv.createdAt}</td>
+                        <td className="px-6 py-4 text-slate-600 font-medium">
+                          {conv.type === 'group' ? conv.members.find(m => m.role === 'owner')?.name : '--'}
+                        </td>
+                        <td className="px-6 py-4">
+                          <Badge variant={conv.status === 'active' ? 'sent' : 'deleted'}>
+                            {conv.status === 'active' ? 'Đang hoạt động' : 'Đã giải tán'}
+                          </Badge>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <button
+                            onClick={() => { setSelectedItem(conv); setViewMode('detail'); }}
+                            className="px-4 py-1.5 bg-white border border-slate-200 text-slate-700 rounded-lg text-xs font-bold hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all shadow-sm"
+                          >
+                            View
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
