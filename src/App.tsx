@@ -1586,9 +1586,43 @@ export default function App() {
                   </div>
 
                   <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                    <div className="p-4 border-b border-slate-100 flex justify-between items-center">
-                      <h5 className="font-bold text-slate-800 text-sm">Danh sách thành viên</h5>
-                      <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-bold">{conversation?.members.length}</span>
+                    <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/30">
+                      <div className="flex items-center gap-2">
+                        <h5 className="font-bold text-slate-800 text-sm">Danh sách thành viên</h5>
+                        <span className="text-[10px] bg-white border border-slate-100 text-slate-400 px-2 py-0.5 rounded-full font-bold shadow-sm">{conversation?.members.length}</span>
+                      </div>
+                      {conversation?.type === 'group' && (
+                        <button
+                          onClick={() => openModal({
+                            title: 'Thêm thành viên vào nhóm',
+                            type: 'form',
+                            children: (
+                              <div className="space-y-4 pt-2">
+                                <p className="text-sm text-slate-500">Chọn người dùng để mời vào <span className="font-bold text-slate-800">{conversation?.name}</span></p>
+                                <div className="border border-slate-200 rounded-xl overflow-hidden bg-slate-50 max-h-[300px] overflow-y-auto divide-y divide-slate-100 custom-scrollbar">
+                                  {MOCK_USERS.map((user) => (
+                                    <div key={user.id} className="flex items-center justify-between p-3 hover:bg-white group cursor-pointer transition-all">
+                                      <div className="flex items-center gap-3">
+                                        <img src={user.avatar} className="w-9 h-9 rounded-full border-2 border-white shadow-sm" alt="" />
+                                        <div>
+                                          <p className="text-sm font-bold text-slate-700 group-hover:text-blue-600 transition-colors">{user.name}</p>
+                                          <p className="text-[10px] text-slate-400">{user.phone}</p>
+                                        </div>
+                                      </div>
+                                      <button className="px-3 py-1 bg-white border border-slate-200 text-blue-600 text-[10px] font-bold rounded-lg hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all">Mời</button>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            ),
+                            confirmLabel: 'Hoàn tất',
+                            onConfirm: () => console.log('Members Added')
+                          })}
+                          className="p-2 bg-white border border-slate-200 text-blue-600 rounded-lg font-bold text-xs hover:bg-blue-50 transition-all flex items-center gap-1.5 shadow-sm"
+                        >
+                          <Plus size={14} /> Thêm
+                        </button>
+                      )}
                     </div>
                     <div className="divide-y divide-slate-50">
                       {conversation?.members.slice(0, 10).map((member: any) => (
@@ -1603,7 +1637,18 @@ export default function App() {
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
-                            <button className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all" title="View Profile">
+                            <button
+                              onClick={() => {
+                                const user = MOCK_USERS.find(u => u.name === member.name);
+                                if (user) {
+                                  setSelectedItem(user);
+                                  setActiveTab('users');
+                                  setViewMode('detail');
+                                }
+                              }}
+                              className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                              title="Xem Profile"
+                            >
                               <UserCircle size={16} />
                             </button>
                             {conversation?.type === 'group' && member.role !== 'owner' && (
@@ -1639,7 +1684,7 @@ export default function App() {
                 <span className="text-slate-800 font-medium font-bold">Quản lý Cuộc trò chuyện</span>
               </div>
               <h1 className="text-3xl font-bold text-slate-800">Quản lý Cuộc trò chuyện</h1>
-              <p className="text-sm text-slate-500">Toàn bộ cuộc trò chuyện trong hệ thống</p>
+              <p className="text-sm text-slate-500">Toàn bộ nhóm chat trên hệ thống</p>
             </div>
 
             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
@@ -1662,7 +1707,49 @@ export default function App() {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-all">
+                  <button
+                    onClick={() => openModal({
+                      title: 'Tạo nhóm trò chuyện mới',
+                      type: 'form',
+                      children: (
+                        <div className="space-y-5 pt-2">
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Tên nhóm</label>
+                            <input
+                              type="text"
+                              placeholder="Nhập tên nhóm..."
+                              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+                            />
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Thêm thành viên</label>
+                            <div className="border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
+                              <div className="max-h-[200px] overflow-y-auto divide-y divide-slate-100 custom-scrollbar">
+                                {MOCK_USERS.map((user) => (
+                                  <div key={user.id} className="flex items-center justify-between p-3 hover:bg-white transition-colors">
+                                    <div className="flex items-center gap-3">
+                                      <img src={user.avatar} className="w-8 h-8 rounded-full" alt="" />
+                                      <div>
+                                        <p className="text-sm font-bold text-slate-700">{user.name}</p>
+                                        <p className="text-[10px] text-slate-400">{user.email}</p>
+                                      </div>
+                                    </div>
+                                    <input type="checkbox" className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ),
+                      confirmLabel: 'Tạo nhóm ngay',
+                      onConfirm: () => console.log('Group Created')
+                    })}
+                    className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 transition-all active:scale-95"
+                  >
+                    <Plus size={18} /> Tạo nhóm mới
+                  </button>
+                  <button className="flex items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all">
                     <RefreshCw size={16} /> Làm mới
                   </button>
                 </div>
@@ -2162,12 +2249,12 @@ export default function App() {
               active={activeTab === 'users'}
               onClick={() => setActiveTab('users')}
             />
-            <SidebarItem
+            {/* <SidebarItem
               icon={UserCircle}
               label="Nhóm"
               active={activeTab === 'groups'}
               onClick={() => setActiveTab('groups')}
-            />
+            /> */}
             <SidebarItem
               icon={FileText}
               label="Bài viết"
@@ -2176,7 +2263,7 @@ export default function App() {
             />
             <SidebarItem
               icon={MessageSquare}
-              label="Cuộc trò chuyện"
+              label="Nhóm trò chuyện"
               active={activeTab === 'chats'}
               onClick={() => setActiveTab('chats')}
             />
