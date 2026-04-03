@@ -291,10 +291,12 @@ export default function App() {
     }
   ];
 
-  useEffect(() => {
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
     setViewMode('list');
     setSelectedItem(null);
-  }, [activeTab]);
+    setSearchQuery('');
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -2237,7 +2239,7 @@ export default function App() {
               icon={LayoutDashboard}
               label="Dashboard"
               active={activeTab === 'dashboard'}
-              onClick={() => setActiveTab('dashboard')}
+              onClick={() => handleTabChange('dashboard')}
             />
           </div>
 
@@ -2247,13 +2249,13 @@ export default function App() {
               icon={Users}
               label="Người dùng"
               active={activeTab === 'users'}
-              onClick={() => setActiveTab('users')}
+              onClick={() => handleTabChange('users')}
             />
             <SidebarItem
               icon={MessageSquare}
               label="Nhóm trò chuyện"
               active={activeTab === 'chats'}
-              onClick={() => setActiveTab('chats')}
+              onClick={() => handleTabChange('chats')}
             />
             {/* <SidebarItem
               icon={UserCircle}
@@ -2265,13 +2267,13 @@ export default function App() {
               icon={FileText}
               label="Bài viết"
               active={activeTab === 'posts'}
-              onClick={() => setActiveTab('posts')}
+              onClick={() => handleTabChange('posts')}
             />
             <SidebarItem
               icon={FileText}
               label="Audit Logs"
               active={activeTab === 'audit'}
-              onClick={() => setActiveTab('audit')}
+              onClick={() => handleTabChange('audit')}
             />
           </div>
 
@@ -2282,25 +2284,25 @@ export default function App() {
               icon={ShieldCheck}
               label="Phân quyền"
               active={activeTab === 'rbac'}
-              onClick={() => setActiveTab('rbac')}
+              onClick={() => handleTabChange('rbac')}
             />
             <SidebarItem
               icon={ImageIcon}
               label="Phương tiện"
               active={activeTab === 'media'}
-              onClick={() => setActiveTab('media')}
+              onClick={() => handleTabChange('media')}
             />
             <SidebarItem
               icon={UserCircle}
               label="Tài khoản"
               active={activeTab === 'settings'}
-              onClick={() => setActiveTab('settings')}
+              onClick={() => handleTabChange('settings')}
             />
             <SidebarItem
               icon={Settings}
               label="Cấu hình ứng dụng"
-              active={activeTab === 'branding'}
-              onClick={() => setActiveTab('branding')}
+              active={activeTab === 'config'}
+              onClick={() => handleTabChange('config')}
             />
           </div>
         </div>
