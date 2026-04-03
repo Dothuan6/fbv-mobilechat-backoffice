@@ -877,7 +877,6 @@ export default function App() {
                   >
                     Quản lý thành viên
                   </button>
-                  {/* <button className="flex-1 py-2.5 bg-slate-100 text-slate-600 rounded-lg font-bold hover:bg-slate-200 transition-colors">Xem lịch sử</button> */}
                 </div>
               </div>
 
@@ -1473,7 +1472,6 @@ export default function App() {
                               <div className={cn('flex items-center gap-2', msg.isSelf && 'flex-row-reverse')}>
                                 <p className="text-xs font-bold text-slate-700">{msg.sender}</p>
                                 <p className="text-[10px] text-slate-400">{msg.time}</p>
-                                {/* {msg.isFlagged && <span className="px-1.5 py-0.5 bg-rose-100 text-rose-600 text-[9px] font-bold rounded uppercase">⚠️ Vi phạm</span>} */}
                               </div>
                               <div className={cn(
                                 'px-4 py-2 rounded-2xl text-sm shadow-sm',
@@ -1483,20 +1481,7 @@ export default function App() {
                               )}>
                                 {msg.text}
                               </div>
-                              {/* {msg.isFlagged && (
-                                // <button
-                                //   onClick={() => openModal({
-                                //     title: 'Xóa tin nhắn vi phạm?',
-                                //     children: 'Bạn có chắc chắn muốn xóa tin nhắn này không?',
-                                //     confirmLabel: 'Xóa',
-                                //     type: 'danger',
-                                //     onConfirm: () => console.log('Deleted message', msg.id)
-                                //   })}
-                                //   className="text-[10px] text-rose-500 hover:underline"
-                                // >
-                                //   [Xóa tin nhắn]
-                                // </button>
-                              )} */}
+
                             </div>
                           </div>
                         ))}
@@ -1706,7 +1691,6 @@ export default function App() {
                         >
                           Xóa bài viết
                         </button>
-                        {/* <button className="px-6 py-2 border border-slate-200 rounded-lg font-bold hover:bg-slate-50 transition-colors">Gỡ bài (Ẩn)</button> */}
                       </div>
                     </div>
                   </div>
@@ -1740,7 +1724,7 @@ export default function App() {
                               </td>
                               <td className="px-6 py-4">
                                 <div className="flex justify-center gap-3">
-                                  {/* <button className="text-blue-600 hover:underline">Ẩn</button> */}
+
                                   <button
                                     onClick={() => openModal({
                                       title: 'Xóa bình luận?',
@@ -2083,12 +2067,7 @@ export default function App() {
               active={activeTab === 'chats'}
               onClick={() => setActiveTab('chats')}
             />
-            {/* <SidebarItem
-              icon={Bell}
-              label="Thông báo"
-              active={activeTab === 'notifications'}
-              onClick={() => setActiveTab('notifications')}
-            /> */}
+
             <SidebarItem
               icon={FileText}
               label="Audit Logs"
@@ -2099,12 +2078,7 @@ export default function App() {
 
           <div className="px-4 mb-2">
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">HỆ THỐNG</p>
-            {/* <SidebarItem
-              icon={Settings}
-              label="Cấu hình"
-              active={activeTab === 'config'}
-              onClick={() => setActiveTab('config')}
-            /> */}
+
             <SidebarItem
               icon={ShieldCheck}
               label="Phân quyền"
