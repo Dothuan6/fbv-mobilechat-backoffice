@@ -187,6 +187,7 @@ export default function App() {
   const [modalConfig, setModalConfig] = useState<any>({});
   const [chatDetailTab, setChatDetailTab] = useState('Tin nhắn');
   const [postDetailTab, setPostDetailTab] = useState('Chi tiết');
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [admins, setAdmins] = useState<Admin[]>(MOCK_ADMINS);
 
   const openModal = (config: any) => {
@@ -2306,12 +2307,6 @@ export default function App() {
             />
 
             <SidebarItem
-              icon={UserCircle}
-              label="Tài khoản"
-              active={activeTab === 'settings'}
-              onClick={() => handleTabChange('settings')}
-            />
-            <SidebarItem
               icon={Settings}
               label="Cấu hình ứng dụng"
               active={activeTab === 'config'}
@@ -2326,17 +2321,55 @@ export default function App() {
           </div>
         </div>
 
-        <div className="p-4 border-t border-slate-800 bg-slate-900/50">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-slate-700 border border-slate-600 flex items-center justify-center">
+        <div className="relative p-4 border-t border-slate-800 bg-slate-900/50">
+          <AnimatePresence>
+            {isProfileOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                className="absolute bottom-full left-4 right-4 mb-2 bg-[#1e293b] border border-slate-800 rounded-xl shadow-2xl overflow-hidden z-50 p-1.5"
+              >
+                <button
+                  onClick={() => {
+                    handleTabChange('settings');
+                    setIsProfileOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all"
+                >
+                  <UserCircle size={16} />
+                  Tài khoản cá nhân
+                </button>
+                <button
+                  onClick={() => setIsProfileOpen(false)}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition-all"
+                >
+                  <LogOut size={16} />
+                  Đăng xuất
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <button
+            onClick={() => setIsProfileOpen(!isProfileOpen)}
+            className={cn(
+              "w-full flex items-center gap-3 p-2 rounded-xl transition-all",
+              isProfileOpen ? "bg-slate-800" : "hover:bg-slate-800/50"
+            )}
+          >
+            <div className="w-10 h-10 rounded-full bg-slate-700 border border-slate-600 flex items-center justify-center flex-shrink-0 shadow-inner">
               <UserCircle size={24} className="text-slate-400" />
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold truncate">Super Admin</p>
-              <p className="text-[10px] text-slate-500 truncate">admin@fbv.app</p>
+            <div className="flex-1 min-w-0 text-left">
+              <p className="text-sm font-bold truncate text-slate-200">Super Admin</p>
+              <p className="text-[10px] text-slate-500 truncate leading-tight">admin@fbv.app</p>
             </div>
-            <ChevronDown size={16} className="text-slate-500" />
-          </div>
+            <ChevronDown 
+              size={16} 
+              className={cn("text-slate-500 transition-transform duration-300", isProfileOpen && "rotate-180")} 
+            />
+          </button>
         </div>
       </aside>
 
