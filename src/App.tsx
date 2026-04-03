@@ -1212,90 +1212,109 @@ export default function App() {
       case 'config':
         return (
           <div className="space-y-6">
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100">
-              <h4 className="text-2xl font-bold mb-1">System Configuration Settings</h4>
-              <p className="text-slate-500 text-sm mb-8">System configuration and runtime parameters for FBV MobileChat.</p>
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-2 text-sm text-slate-400">
+                <span>Hệ thống /</span>
+                <span className="text-slate-800 font-medium font-bold">Thương hiệu & Cấu hình</span>
+              </div>
+              <h1 className="text-3xl font-bold text-slate-800">Cấu hình Ứng dụng</h1>
+              <p className="text-sm text-slate-500">Quản lý nhận diện thương hiệu và thông tin cơ bản của FBV MobileChat</p>
+            </div>
 
-              <h5 className="font-bold mb-4">Active Configuration Keys</h5>
-              <div className="overflow-hidden border border-slate-100 rounded-xl mb-8">
-                <table className="w-full text-sm">
-                  <thead className="bg-slate-50 text-slate-500">
-                    <tr>
-                      <th className="px-6 py-3 text-left font-bold">Key</th>
-                      <th className="px-6 py-3 text-left font-bold">Type</th>
-                      <th className="px-6 py-3 text-left font-bold">Current Value</th>
-                      <th className="px-6 py-3 text-left font-bold">Last Updated</th>
-                      <th className="px-6 py-3 text-left font-bold">Updated By</th>
-                      <th className="px-6 py-3 text-center font-bold">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {[
-                      { key: 'auth.otp_expiry_sec', type: 'Int', val: '300', date: '01/04/2024 10:30', by: 'admin@fbv.app' },
-                      { key: 'auth.otp_resend_cooldown', type: 'Int', val: '60', date: '15/03/2024 14:00', by: 'superadmin@fbv' },
-                      { key: 'feed.page_size', type: 'Int', val: '20', date: '10/03/2024 09:00', by: 'content_mgr@fbv.app' },
-                    ].map((cfg, i) => (
-                      <tr key={i} className="hover:bg-slate-50 transition-colors">
-                        <td className="px-6 py-4 font-medium">{cfg.key}</td>
-                        <td className="px-6 py-4 text-slate-500">{cfg.type}</td>
-                        <td className="px-6 py-4 font-bold">{cfg.val}</td>
-                        <td className="px-6 py-4 text-slate-500">{cfg.date}</td>
-                        <td className="px-6 py-4 text-slate-500">{cfg.by}</td>
-                        <td className="px-6 py-4 text-center">
-                          <button
-                            onClick={() => openModal({
-                              title: `Chỉnh sửa: ${cfg.key}`,
-                              children: (
-                                <div className="space-y-4">
-                                  <div className="p-3 bg-slate-50 rounded-lg border border-slate-100 mb-4">
-                                    <p className="text-xs text-slate-500">Mô tả: {CONFIG_KEYS.find(k => k.key === cfg.key)?.desc}</p>
-                                  </div>
-                                  <div className="space-y-1">
-                                    <label className="text-xs font-bold text-slate-500">Giá trị cấu hình ({cfg.type})</label>
-                                    <input type="text" defaultValue={cfg.val} className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none font-mono" />
-                                  </div>
-                                  <div className="space-y-1">
-                                    <label className="text-xs font-bold text-slate-500">Ghi chú thay đổi</label>
-                                    <textarea rows={2} placeholder="Lý do thay đổi..." className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none resize-none text-sm"></textarea>
-                                  </div>
-                                </div>
-                              ),
-                              confirmLabel: 'Lưu thay đổi',
-                              onConfirm: () => console.log('Config updated', cfg.key)
-                            })}
-                            className="flex items-center gap-1 px-3 py-1 border border-slate-200 rounded text-xs font-medium hover:bg-white"
-                          >
-                            <FileText size={12} /> Edit
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2 space-y-6">
+                <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+                  <h4 className="text-xl font-bold mb-6 flex items-center gap-2">
+                    <Settings className="text-blue-600" size={20} />
+                    Thông tin cơ bản
+                  </h4>
+                  
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-slate-700 block">Tên ứng dụng hiển thị</label>
+                      <input 
+                        type="text" 
+                        defaultValue="FBV MobileChat" 
+                        placeholder="Nhập tên ứng dụng..." 
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none font-medium"
+                      />
+                      <p className="text-[10px] text-slate-400">Tên này sẽ hiển thị trên thanh tiêu đề, email thông báo và các tin nhắn hệ thống.</p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-slate-700 block">Phiên bản hiện tại</label>
+                      <div className="flex items-center gap-3">
+                        <span className="px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg font-bold text-xs border border-blue-100">v1.2.4-stable</span>
+                        <button className="text-xs text-blue-600 font-bold hover:underline">Kiểm tra cập nhật</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+                  <h4 className="text-xl font-bold mb-6 flex items-center gap-2">
+                    <ShieldCheck className="text-emerald-600" size={20} />
+                    Trạng thái hệ thống
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="p-4 rounded-xl border border-slate-100 bg-slate-50/50 flex items-center justify-between">
+                      <span className="text-sm font-medium text-slate-600">Máy chủ API</span>
+                      <Badge variant="active">Đang hoạt động</Badge>
+                    </div>
+                    <div className="p-4 rounded-xl border border-slate-100 bg-slate-50/50 flex items-center justify-between">
+                      <span className="text-sm font-medium text-slate-600">Cơ sở dữ liệu</span>
+                      <Badge variant="active">Đang hoạt động</Badge>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <h5 className="font-bold mb-4">Change History</h5>
-              <div className="overflow-hidden border border-slate-100 rounded-xl">
-                <table className="w-full text-sm">
-                  <thead className="bg-slate-50 text-slate-500">
-                    <tr>
-                      <th className="px-6 py-3 text-left font-medium">Time</th>
-                      <th className="px-6 py-3 text-left font-medium">Key</th>
-                      <th className="px-6 py-3 text-left font-medium">Previous Value</th>
-                      <th className="px-6 py-3 text-left font-medium">New Value</th>
-                      <th className="px-6 py-3 text-left font-medium">Updated By</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    <tr>
-                      <td className="px-6 py-4">01/04/2024 10:30</td>
-                      <td className="px-6 py-4">auth.otp_expiry_sec</td>
-                      <td className="px-6 py-4">180</td>
-                      <td className="px-6 py-4 font-bold">300</td>
-                      <td className="px-6 py-4">admin@fbv.app</td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div className="space-y-6">
+                <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center text-center">
+                  <h4 className="text-sm font-bold text-slate-700 mb-6 uppercase tracking-widest w-full text-left">Logo Ứng dụng</h4>
+                  
+                  <div className="relative group">
+                    <div className="w-32 h-32 bg-blue-600 rounded-3xl flex items-center justify-center text-white text-4xl font-bold shadow-xl shadow-blue-500/20 mb-6 group-hover:scale-105 transition-transform duration-300">
+                      FBV
+                    </div>
+                    <button 
+                      onClick={() => openModal({
+                        title: 'Thay đổi Logo',
+                        children: 'Tính năng tải ảnh logo mới sẽ được triển khai trong bản cập nhật tiếp theo.',
+                        confirmLabel: 'Đã hiểu'
+                      })}
+                      className="absolute bottom-4 right-[-8px] p-2 bg-white rounded-full shadow-lg border border-slate-100 text-slate-600 hover:text-blue-600 transition-colors"
+                    >
+                      <ImageIcon size={18} />
+                    </button>
+                  </div>
+
+                  <div className="w-full space-y-4">
+                    <div className="p-4 rounded-xl border border-dashed border-slate-200 text-slate-400 text-xs py-8 bg-slate-50">
+                      Kéo thả logo mới vào đây <br/> (Hỗ trợ PNG, SVG, JPG)
+                    </div>
+                    <button className="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm hover:bg-slate-200 transition-colors">
+                      [ + Tải ảnh mới ]
+                    </button>
+                  </div>
+                </div>
+
+                <div className="bg-blue-600 p-8 rounded-2xl shadow-lg shadow-blue-500/20 text-white space-y-4">
+                  <h5 className="font-bold">Lưu thay đổi</h5>
+                  <p className="text-xs text-blue-100 leading-relaxed">
+                    Mọi thay đổi về cấu hình sẽ được áp dụng ngay lập tức cho tất cả người dùng cuối. 
+                  </p>
+                  <button 
+                    onClick={() => openModal({
+                      title: 'Xác nhận cập nhật',
+                      children: 'Bạn có chắc chắn muốn lưu các thay đổi cấu hình này không?',
+                      onConfirm: () => console.log('Config Updated')
+                    })}
+                    className="w-full py-3 bg-white text-blue-600 rounded-xl font-bold text-sm hover:bg-blue-50 transition-colors shadow-sm"
+                  >
+                    Lưu cấu hình ngay
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -2270,13 +2289,12 @@ export default function App() {
               onClick={() => handleTabChange('posts')}
             />
             <SidebarItem
-              icon={FileText}
-              label="Audit Logs"
-              active={activeTab === 'audit'}
-              onClick={() => handleTabChange('audit')}
+              icon={ImageIcon}
+              label="Phương tiện"
+              active={activeTab === 'media'}
+              onClick={() => handleTabChange('media')}
             />
           </div>
-
           <div className="px-4 mb-2">
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">HỆ THỐNG</p>
 
@@ -2286,12 +2304,7 @@ export default function App() {
               active={activeTab === 'rbac'}
               onClick={() => handleTabChange('rbac')}
             />
-            <SidebarItem
-              icon={ImageIcon}
-              label="Phương tiện"
-              active={activeTab === 'media'}
-              onClick={() => handleTabChange('media')}
-            />
+
             <SidebarItem
               icon={UserCircle}
               label="Tài khoản"
@@ -2303,6 +2316,12 @@ export default function App() {
               label="Cấu hình ứng dụng"
               active={activeTab === 'config'}
               onClick={() => handleTabChange('config')}
+            />
+            <SidebarItem
+              icon={FileText}
+              label="Audit Logs"
+              active={activeTab === 'audit'}
+              onClick={() => handleTabChange('audit')}
             />
           </div>
         </div>
