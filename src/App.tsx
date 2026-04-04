@@ -759,8 +759,8 @@ export default function App() {
                     color="bg-blue-500"
                     onClick={() => setActiveTab('posts')}
                     stats={[
-                      { label: 'Tổng bài viết', value: selectedItem?.resourceStats?.posts.count || 0 },
-                      { label: 'Dung lượng', value: selectedItem?.resourceStats?.posts.storage || '0 MB' }
+                      { label: 'Tổng bài viết', value: selectedItem?.resourceStats?.posts?.count || 0 },
+                      { label: 'Dung lượng', value: selectedItem?.resourceStats?.posts?.storage || '0 MB' }
                     ]}
                   />
 
@@ -770,8 +770,8 @@ export default function App() {
                     color="bg-purple-500"
                     onClick={() => setActiveTab('groups')}
                     stats={[
-                      { label: 'Nhóm tham gia', value: selectedItem?.resourceStats?.groups.count || 0 },
-                      { label: 'Nhóm quản lý', value: selectedItem?.resourceStats?.groups.owned || 0 }
+                      { label: 'Nhóm tham gia', value: selectedItem?.resourceStats?.groups?.count || 0 },
+                      { label: 'Nhóm quản lý', value: selectedItem?.resourceStats?.groups?.owned || 0 }
                     ]}
                   />
 
@@ -781,8 +781,8 @@ export default function App() {
                     color="bg-indigo-500"
                     onClick={() => setActiveTab('chats')}
                     stats={[
-                      { label: 'Tổng tin nhắn', value: selectedItem?.resourceStats?.messages.count || 0 },
-                      { label: 'Dung lượng', value: selectedItem?.resourceStats?.messages.storage || '0 MB' }
+                      { label: 'Tổng tin nhắn', value: selectedItem?.resourceStats?.messages?.count || 0 },
+                      { label: 'Dung lượng', value: selectedItem?.resourceStats?.messages?.storage || '0 MB' }
                     ]}
                   />
                 </div>
@@ -794,10 +794,10 @@ export default function App() {
         return (
           <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
             <div className="p-6 border-b border-slate-100 space-y-4">
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <h4 className="font-bold text-xl">Quản lý Người dùng</h4>
-                <div className="flex gap-2">
-                  <button className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm font-medium hover:bg-emerald-600 transition-colors">
+                <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+                  <button className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm font-medium hover:bg-emerald-600 transition-colors">
                     <Plus size={16} />
                     Tạo mới
                   </button>
@@ -1083,9 +1083,9 @@ export default function App() {
             return (
             <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
               <div className="p-6 border-b border-slate-100 space-y-4">
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                   <h4 className="font-bold text-xl">Quản lý Nhóm</h4>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                     <button
                       onClick={() => openModal({
                         title: 'Tạo nhóm mới',
@@ -1112,23 +1112,23 @@ export default function App() {
                         confirmLabel: 'Tạo nhóm',
                         onConfirm: () => console.log('Created group')
                       })}
-                      className="flex items-center gap-2 px-4 py-2 bg-[#1e293b] text-white rounded-lg text-sm font-medium hover:bg-slate-800 transition-colors"
+                      className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 bg-[#1e293b] text-white rounded-lg text-sm font-medium hover:bg-slate-800 transition-colors"
                     >
                       <Plus size={16} />
                       Tạo nhóm mới
                     </button>
-                    <button className="flex items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium">
+                    <button className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium">
                       <RefreshCw size={16} />
                       Refresh
                     </button>
-                    <button className="flex items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium">
+                    <button className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium">
                       <Filter size={16} />
                       Xóa bộ lọc
                     </button>
                   </div>
                 </div>
-                <div className="flex gap-3">
-                  <div className="flex items-center gap-2 px-3 py-1.5 border border-slate-200 rounded-lg text-sm">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="flex items-center justify-between sm:justify-start gap-2 px-3 py-1.5 border border-slate-200 rounded-lg text-sm">
                     <span className="text-slate-500">Trạng thái:</span>
                     <div className="flex items-center gap-1 font-medium">
                       <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
@@ -1863,25 +1863,25 @@ export default function App() {
             </div>
 
             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-              <div className="p-6 border-b border-slate-100 flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2 px-3 py-2 border border-slate-200 rounded-xl text-sm bg-slate-50/50">
+              <div className="p-6 border-b border-slate-100 flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-4">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full xl:w-auto">
+                  <div className="flex justify-between sm:justify-start items-center gap-2 px-3 py-2 border border-slate-200 rounded-xl text-sm bg-slate-50/50">
                     <span className="text-slate-400 font-medium">Trạng thái:</span>
                     <select className="bg-transparent font-bold text-slate-700 outline-none">
                       <option>Đang hoạt động</option>
                       <option>Đã giải tán</option>
                     </select>
                   </div>
-                  <div className="relative">
+                  <div className="relative flex-1 sm:flex-none">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                     <input
                       type="text"
                       placeholder="Tìm kiếm phòng chat..."
-                      className="pl-10 pr-4 py-2 border border-slate-200 rounded-xl text-sm w-80 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+                      className="pl-10 pr-4 py-2 border border-slate-200 rounded-xl text-sm w-full sm:w-80 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
                     />
                   </div>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2 w-full xl:w-auto">
                   <button
                     onClick={() => openModal({
                       title: 'Tạo nhóm trò chuyện mới',
@@ -1920,11 +1920,11 @@ export default function App() {
                       confirmLabel: 'Tạo nhóm ngay',
                       onConfirm: () => console.log('Group Created')
                     })}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 transition-all active:scale-95"
+                    className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 transition-all active:scale-95"
                   >
                     <Plus size={18} /> Tạo nhóm mới
                   </button>
-                  <button className="flex items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all">
+                  <button className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all">
                   <RefreshCw size={16} /> Làm mới
                   </button>
                 </div>
@@ -2148,14 +2148,14 @@ export default function App() {
         return (
           <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
             <div className="p-6 border-b border-slate-100 space-y-4">
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <h4 className="font-bold text-xl">Quản lý Bài viết</h4>
-                <div className="flex gap-2">
-                  <button className="flex items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-50">
+                <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+                  <button className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-50">
                     <RefreshCw size={16} />
                     Làm mới
                   </button>
-                  <button className="flex items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-50">
+                  <button className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-50">
                     <Filter size={16} />
                     Bộ lọc
                   </button>
