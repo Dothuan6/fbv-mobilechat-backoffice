@@ -182,7 +182,7 @@ const Modal = ({ isOpen, onClose, title, children, confirmLabel, onConfirm, type
   );
 };
 
-const ResourceWidget = ({ title, stats, icon: Icon, color, onClick, actionLabel = 'Xem chi tiết' }: any) => (
+const ResourceWidget = ({ title, stats, icon: Icon, color }: any) => (
   <motion.div
     whileHover={{ y: -4 }}
     className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex flex-col justify-between h-full transition-all hover:shadow-md hover:border-blue-100"
@@ -191,12 +191,6 @@ const ResourceWidget = ({ title, stats, icon: Icon, color, onClick, actionLabel 
       <div className={cn("p-2.5 rounded-lg text-white", color)}>
         <Icon size={20} />
       </div>
-      <button
-        onClick={onClick}
-        className="text-[10px] font-bold text-blue-600 hover:underline flex items-center gap-1 uppercase tracking-tighter"
-      >
-        {actionLabel} <ChevronRight size={10} />
-      </button>
     </div>
     <div>
       <h5 className="text-slate-400 text-[11px] font-bold uppercase tracking-widest mb-2">{title}</h5>
@@ -587,7 +581,7 @@ export default function App() {
                     title="Kết bạn"
                     icon={UserPlus}
                     color="bg-purple-500"
-                    onClick={() => {}} // No specific tab yet
+                    onClick={() => { }} // No specific tab yet
                     stats={[
                       { label: 'Lời mời đã gửi', value: selectedItem?.resourceStats?.friendship.sent || 0 },
                       { label: 'Lời mời đã nhận', value: selectedItem?.resourceStats?.friendship.received || 0 }
@@ -611,7 +605,7 @@ export default function App() {
                     title="Cuộc gọi"
                     icon={Phone}
                     color="bg-rose-500"
-                    onClick={() => {}} // No specific tab yet
+                    onClick={() => { }} // No specific tab yet
                     stats={[
                       { label: 'Gọi Voice', value: `${selectedItem?.resourceStats?.calls.voice.made || 0} đi / ${selectedItem?.resourceStats?.calls.voice.received || 0} đến` },
                       { label: 'Gọi Video', value: `${selectedItem?.resourceStats?.calls.video.made || 0} đi / ${selectedItem?.resourceStats?.calls.video.received || 0} đến` }
@@ -816,9 +810,6 @@ export default function App() {
                 <span className="px-2 self-center text-slate-400">...</span>
                 <button className="w-8 h-8 flex items-center justify-center rounded border border-slate-200 text-slate-400 hover:bg-white">{'>'}</button>
               </div>
-            </div>
-            <div className="bg-amber-50 p-3 text-xs text-amber-700 font-medium">
-              Click vào dòng để xem thao tác: <span className="text-blue-600 underline cursor-pointer">Xem chi tiết</span>
             </div>
           </div>
         );
@@ -1348,14 +1339,14 @@ export default function App() {
                     <Settings className="text-blue-600" size={20} />
                     Thông tin cơ bản
                   </h4>
-                  
+
                   <div className="space-y-6">
                     <div className="space-y-2">
                       <label className="text-sm font-bold text-slate-700 block">Tên ứng dụng hiển thị</label>
-                      <input 
-                        type="text" 
-                        defaultValue="FBV MobileChat" 
-                        placeholder="Nhập tên ứng dụng..." 
+                      <input
+                        type="text"
+                        defaultValue="FBV MobileChat"
+                        placeholder="Nhập tên ứng dụng..."
                         className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none font-medium"
                       />
                       <p className="text-[10px] text-slate-400">Tên này sẽ hiển thị trên thanh tiêu đề, email thông báo và các tin nhắn hệ thống.</p>
@@ -1392,12 +1383,12 @@ export default function App() {
               <div className="space-y-6">
                 <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center text-center">
                   <h4 className="text-sm font-bold text-slate-700 mb-6 uppercase tracking-widest w-full text-left">Logo Ứng dụng</h4>
-                  
+
                   <div className="relative group">
                     <div className="w-32 h-32 bg-blue-600 rounded-3xl flex items-center justify-center text-white text-4xl font-bold shadow-xl shadow-blue-500/20 mb-6 group-hover:scale-105 transition-transform duration-300">
                       FBV
                     </div>
-                    <button 
+                    <button
                       onClick={() => openModal({
                         title: 'Thay đổi Logo',
                         children: 'Tính năng tải ảnh logo mới sẽ được triển khai trong bản cập nhật tiếp theo.',
@@ -1411,7 +1402,7 @@ export default function App() {
 
                   <div className="w-full space-y-4">
                     <div className="p-4 rounded-xl border border-dashed border-slate-200 text-slate-400 text-xs py-8 bg-slate-50">
-                      Kéo thả logo mới vào đây <br/> (Hỗ trợ PNG, SVG, JPG)
+                      Kéo thả logo mới vào đây <br /> (Hỗ trợ PNG, SVG, JPG)
                     </div>
                     <button className="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm hover:bg-slate-200 transition-colors">
                       [ + Tải ảnh mới ]
@@ -1422,9 +1413,9 @@ export default function App() {
                 <div className="bg-blue-600 p-8 rounded-2xl shadow-lg shadow-blue-500/20 text-white space-y-4">
                   <h5 className="font-bold">Lưu thay đổi</h5>
                   <p className="text-xs text-blue-100 leading-relaxed">
-                    Mọi thay đổi về cấu hình sẽ được áp dụng ngay lập tức cho tất cả người dùng cuối. 
+                    Mọi thay đổi về cấu hình sẽ được áp dụng ngay lập tức cho tất cả người dùng cuối.
                   </p>
-                  <button 
+                  <button
                     onClick={() => openModal({
                       title: 'Xác nhận cập nhật',
                       children: 'Bạn có chắc chắn muốn lưu các thay đổi cấu hình này không?',
@@ -2484,9 +2475,9 @@ export default function App() {
               <p className="text-sm font-bold truncate text-slate-200">Super Admin</p>
               <p className="text-[10px] text-slate-500 truncate leading-tight">admin@fbv.app</p>
             </div>
-            <ChevronDown 
-              size={16} 
-              className={cn("text-slate-500 transition-transform duration-300", isProfileOpen && "rotate-180")} 
+            <ChevronDown
+              size={16}
+              className={cn("text-slate-500 transition-transform duration-300", isProfileOpen && "rotate-180")}
             />
           </button>
         </div>
