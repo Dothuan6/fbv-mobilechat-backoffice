@@ -30,7 +30,14 @@ import {
   UserPlus,
   Activity,
   Heart,
-  Share2
+  Share2,
+  Database,
+  HardDrive,
+  MessageCircle,
+  Send,
+  PhoneCall,
+  Zap,
+  TrendingUp
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
@@ -46,7 +53,9 @@ import {
   MOCK_MEDIA,
   CONFIG_KEYS,
   MOCK_CONVERSATIONS,
-  MOCK_INTERACTIONS
+  MOCK_INTERACTIONS,
+  DASHBOARD_DETAILED_STATS,
+  STORAGE_HISTORY_DATA
 } from './mockData';
 import { Admin } from './types';
 import {
@@ -269,6 +278,51 @@ const SystemStatusWidget = () => (
   </div>
 );
 
+const DashboardSection = ({ title, icon: Icon, children, color = "text-blue-600" }: any) => (
+  <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-full transition-all hover:shadow-md hover:border-blue-100/50">
+    <div className="p-5 border-b border-slate-50 flex items-center justify-between bg-slate-50/30">
+      <div className="flex items-center gap-3">
+        <div className={cn("p-2 rounded-lg bg-white shadow-sm border border-slate-100", color)}>
+          <Icon size={18} />
+        </div>
+        <h4 className="font-bold text-slate-800 text-sm tracking-tight">{title}</h4>
+      </div>
+      <button className="text-[10px] font-bold text-slate-400 hover:text-blue-600 transition-colors uppercase tracking-widest">
+        [ Chi tiết ]
+      </button>
+    </div>
+    <div className="p-5 flex-1 select-none">
+      {children}
+    </div>
+  </div>
+);
+
+const MiniMetric = ({ label, value, icon: Icon, trend, subValue, trendUp = true }: any) => (
+  <div className="flex items-center justify-between py-2.5 group border-b border-slate-50 last:border-0 hover:bg-slate-50/50 -mx-2 px-2 rounded-lg transition-colors">
+    <div className="flex items-center gap-3">
+      {Icon && (
+        <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+          <Icon size={14} />
+        </div>
+      )}
+      <div>
+        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter mb-0.5">{label}</p>
+        <div className="flex items-baseline gap-2">
+          <p className="text-sm font-bold text-slate-700">{value}</p>
+          {subValue && <span className="text-[10px] text-slate-400 font-medium">{subValue}</span>}
+        </div>
+      </div>
+    </div>
+    {trend && (
+      <div className={cn("flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded-full", trendUp ? "text-emerald-600 bg-emerald-50" : "text-rose-600 bg-rose-50")}>
+        {trendUp ? <TrendingUp size={10} /> : <div className="rotate-180"><TrendingUp size={10} /></div>}
+        {trend}
+      </div>
+    )}
+  </div>
+);
+
+
 
 // --- Main App ---
 
@@ -398,106 +452,218 @@ export default function App() {
       case 'dashboard':
         return (
           <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Top Row: Primary KPIs */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <StatCard
-                label="Tổng người dùng đã đăng ký"
+                label="Người dùng đăng ký"
                 value="12,483"
                 trend="+142"
-                color="bg-blue-500"
+                color="bg-blue-600"
                 icon={Users}
               />
               <StatCard
-                label="Tổng nhóm đã tạo"
-                value="3,291"
-                trend="+25"
-                color="bg-emerald-500"
-                icon={MessageSquare}
+                label="Cuộc trò chuyện"
+                value="12,483"
+                trend="+842"
+                color="bg-indigo-600"
+                icon={MessageCircle}
               />
               <StatCard
-                label="Người dùng bị khóa"
+                label="Dung lượng"
+                value="1.2 TB"
+                trend="+12 GB"
+                color="bg-amber-600"
+                icon={HardDrive}
+              />
+              <StatCard
+                label="Bị khóa"
                 value="47"
                 trend="+3"
-                color="bg-rose-500"
+                color="bg-rose-600"
                 icon={ShieldCheck}
               />
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-                <div className="flex justify-between items-center mb-6">
-                  <h4 className="font-bold">Người dùng đăng ký mới theo ngày</h4>
-                  <div className="flex gap-2 text-xs">
-                    <button className="px-3 py-1 bg-blue-50 text-blue-600 rounded-md font-medium">[ 7 ngày ]</button>
-                    <button className="px-3 py-1 text-slate-500 hover:bg-slate-50 rounded-md">[ 30 ngày ]</button>
-                    <button className="px-3 py-1 text-slate-500 hover:bg-slate-50 rounded-md">[ Tùy chỉnh ]</button>
+            {/* Middle Row: Specialized Modules */}
+            <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest mt-8 mb-2 px-1">Cấu trúc chi tiết hệ thống</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Content & Social */}
+              <DashboardSection title="Content & Social" icon={FileText} color="text-blue-600">
+                <div className="space-y-1">
+                  <MiniMetric
+                    label="Tổng số bài viết"
+                    value={DASHBOARD_DETAILED_STATS.content.totalPosts.toLocaleString()}
+                    icon={FileText}
+                    trend="2.4%"
+                  />
+                  <MiniMetric
+                    label="Bài viết mới hôm nay"
+                    value={DASHBOARD_DETAILED_STATS.content.newPostsToday.toLocaleString()}
+                    icon={Plus}
+                    trend="+12"
+                  />
+                  <MiniMetric
+                    label="Tổng số nhóm"
+                    value={DASHBOARD_DETAILED_STATS.content.totalGroups.toLocaleString()}
+                    icon={Users}
+                  />
+                  <MiniMetric
+                    label="Nhóm hoạt động nhiều nhất"
+                    value={DASHBOARD_DETAILED_STATS.content.mostActiveGroup}
+                    icon={Zap}
+                    subValue="1.2k tương tác"
+                  />
+                </div>
+              </DashboardSection>
+
+              {/* Storage & System */}
+              <DashboardSection title="Storage & System" icon={Database} color="text-amber-600">
+                <div className="space-y-1">
+                  <MiniMetric
+                    label="Tổng dung lượng"
+                    value={DASHBOARD_DETAILED_STATS.storage.totalUsed}
+                    icon={HardDrive}
+                    trend="1.2%"
+                    trendUp={false}
+                  />
+                  <div className="mt-4 space-y-3">
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
+                        <span>Media</span>
+                        <span>{DASHBOARD_DETAILED_STATS.storage.media}</span>
+                      </div>
+                      <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-blue-500" style={{ width: '65%' }}></div>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
+                        <span>File</span>
+                        <span>{DASHBOARD_DETAILED_STATS.storage.files}</span>
+                      </div>
+                      <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-amber-500" style={{ width: '25%' }}></div>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
+                        <span>Message</span>
+                        <span>{DASHBOARD_DETAILED_STATS.storage.messages}</span>
+                      </div>
+                      <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-indigo-500" style={{ width: '10%' }}></div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="h-64 pt-4 pb-2">
+              </DashboardSection>
+
+              {/* Communication (Core hệ thống) */}
+              <DashboardSection title="Communication" icon={MessageCircle} color="text-indigo-600">
+                <div className="space-y-1">
+                  <MiniMetric
+                    label="Tổng số cuộc trò chuyện"
+                    value={DASHBOARD_DETAILED_STATS.communication.totalConversations.toLocaleString()}
+                    icon={MessageCircle}
+                    trend="+124"
+                  />
+                  <MiniMetric
+                    label="Tin nhắn gửi hôm nay"
+                    value={DASHBOARD_DETAILED_STATS.communication.messagesSentToday.toLocaleString()}
+                    icon={Send}
+                    trend="5.2%"
+                  />
+                  <MiniMetric
+                    label="Số cuộc gọi Voice"
+                    value={DASHBOARD_DETAILED_STATS.communication.voiceCalls.toLocaleString()}
+                    icon={PhoneCall}
+                  />
+                  <MiniMetric
+                    label="Thời lượng gọi"
+                    value={`${DASHBOARD_DETAILED_STATS.communication.voiceDurationMin.toLocaleString()} min`}
+                    icon={Clock}
+                  />
+                </div>
+              </DashboardSection>
+            </div>
+
+            {/* Bottom Row: Charts */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <div className="flex justify-between items-center mb-6">
+                  <h4 className="font-bold text-slate-800">Tăng trưởng người dùng mới</h4>
+                  <div className="flex gap-2">
+                    <button className="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-xs font-bold">[ 7 Ngày ]</button>
+                    <button className="px-3 py-1 text-slate-400 hover:bg-slate-50 rounded-lg text-xs font-bold transition-colors">30 Ngày</button>
+                  </div>
+                </div>
+                <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={CHART_DATA_7DAYS}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} dy={10} />
-                      <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} dx={-10} />
-                      <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                      <Line type="monotone" dataKey="users" stroke="#2563eb" strokeWidth={3} dot={{ strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }} />
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8' }} dy={10} />
+                      <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8' }} dx={-10} />
+                      <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
+                      <Line type="monotone" dataKey="users" stroke="#2563eb" strokeWidth={3} dot={{ strokeWidth: 2, r: 4, fill: '#fff' }} activeDot={{ r: 6 }} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                 <div className="flex justify-between items-center mb-6">
-                  <h4 className="font-bold">Nhóm được tạo theo ngày</h4>
+                  <h4 className="font-bold text-slate-800">Tăng trưởng dung lượng (GB)</h4>
+                  <TrendingUp className="text-emerald-500" size={20} />
                 </div>
-                <div className="h-64 pt-4 pb-2">
+                <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={CHART_DATA_7DAYS}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} dy={10} />
-                      <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} dx={-10} />
-                      <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} cursor={{ fill: '#f1f5f9' }} />
-                      <Bar dataKey="groups" fill="#10b981" radius={[4, 4, 0, 0]} barSize={32} />
+                    <BarChart data={STORAGE_HISTORY_DATA}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8' }} dy={10} />
+                      <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8' }} dx={-10} />
+                      <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} cursor={{ fill: '#f8fafc' }} />
+                      <Bar dataKey="usage" fill="#f59e0b" radius={[6, 6, 0, 0]} barSize={24} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
               </div>
 
-              <SystemStatusWidget />
+              <div className="lg:col-span-2">
+                <SystemStatusWidget />
+              </div>
             </div>
 
-            {/* <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"> */}
-            {/* <div className="p-6 border-b border-slate-100">
-                <h4 className="font-bold">Hoạt động gần đây</h4>
-              </div> */}
-            {/* <table className="w-full text-sm">
-                <thead className="bg-slate-50 text-slate-500">
-                  <tr>
-                    <th className="px-6 py-3 text-left font-medium">Thời gian</th>
-                    <th className="px-6 py-3 text-left font-medium">Admin</th>
-                    <th className="px-6 py-3 text-left font-medium">Hành động</th>
-                    <th className="px-6 py-3 text-left font-medium">Đối tượng</th>
-                    <th className="px-6 py-3 text-left font-medium">Kết quả</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {[
-                    { time: '09:41:23', admin: 'admin@fbv', action: 'suspend_user', target: 'user_1234', result: 'Hoạt động' },
-                    { time: '09:38:10', admin: 'cs@fbv.app', action: 'delete_post', target: 'post_5678', result: 'Hoạt động' },
-                    { time: '09:30:05', admin: 'admin@fbv', action: 'update_config', target: 'feed.page_size', result: 'Hoạt động' },
-                  ].map((row, i) => (
-                    <tr key={i} className="hover:bg-slate-50 transition-colors">
-                      <td className="px-6 py-4">{row.time}</td>
-                      <td className="px-6 py-4 font-medium">{row.admin}</td>
-                      <td className="px-6 py-4 text-slate-600">{row.action}</td>
-                      <td className="px-6 py-4 text-slate-600">{row.target}</td>
-                      <td className="px-6 py-4">
-                        <span className="text-emerald-500 bg-emerald-50 px-2 py-1 rounded text-xs font-medium">{row.result}</span>
-                      </td>
+            {/* <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                <div className="p-6 border-b border-slate-100">
+                  <h4 className="font-bold text-slate-800">Hoạt động gần đây</h4>
+                </div>
+                <table className="w-full text-sm">
+                  <thead className="bg-slate-50 text-slate-500">
+                    <tr>
+                      <th className="px-6 py-3 text-left font-medium">Thời gian</th>
+                      <th className="px-6 py-3 text-left font-medium">Admin</th>
+                      <th className="px-6 py-3 text-left font-medium">Hành động</th>
+                      <th className="px-6 py-3 text-left font-medium">Đối tượng</th>
+                      <th className="px-6 py-3 text-left font-medium">Kết quả</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table> */}
-            {/* </div> */}
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {[
+                      { time: '09:41:23', admin: 'admin@fbv', action: 'suspend_user', target: 'user_1234', result: 'Hoạt động' },
+                      { time: '09:38:10', admin: 'cs@fbv.app', action: 'delete_post', target: 'post_5678', result: 'Hoạt động' },
+                      { time: '09:30:05', admin: 'admin@fbv', action: 'update_config', target: 'feed.page_size', result: 'Hoạt động' },
+                    ].map((row, i) => (
+                      <tr key={i} className="hover:bg-slate-50 transition-colors">
+                        <td className="px-6 py-4">{row.time}</td>
+                        <td className="px-6 py-4 font-medium">{row.admin}</td>
+                        <td className="px-6 py-4 text-slate-600">{row.action}</td>
+                        <td className="px-6 py-4 text-slate-600">{row.target}</td>
+                        <td className="px-6 py-4 text-slate-600 text-emerald-500 font-medium">{row.result}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div> */}
           </div>
         );
       case 'users':

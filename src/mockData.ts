@@ -199,3 +199,40 @@ export const MOCK_INTERACTIONS = [
   { id: '4', user: 'Phạm Minh Dũng', avatar: 'https://i.pravatar.cc/150?u=4', content: 'Hay quá! Share ngay cho mọi người biết.', postId: 'post_321', time: '08:20 01/04', status: 'Active' },
   { id: '5', user: 'Võ Thị Phượng', avatar: 'https://i.pravatar.cc/150?u=6', content: 'Spam spam spam mua ngay đi mọi người!!!', postId: 'post_654', time: '07:55 01/04', status: 'Flagged' },
 ];
+
+export const DASHBOARD_DETAILED_STATS = {
+  content: {
+    totalPosts: 42831,
+    newPostsToday: 142,
+    totalGroups: 3291,
+    mostActiveGroup: '[GR] Team Thiết kế FBV'
+  },
+  storage: {
+    totalUsed: '1.2 TB',
+    media: '820 GB',
+    files: '240 GB',
+    messages: '140 GB',
+    growth: [
+      { name: 'Media', value: 820 },
+      { name: 'File', value: 240 },
+      { name: 'Message', value: 140 },
+    ]
+  },
+  communication: {
+    totalConversations: 12483,
+    messagesSentToday: 84210,
+    voiceCalls: 1240,
+    voiceDurationMin: 45200
+  }
+};
+
+export const STORAGE_HISTORY_DATA = [
+  { name: '26/3', usage: 1050 },
+  { name: '27/3', usage: 1080 },
+  { name: '28/3', usage: 1110 },
+  { name: '29/3', usage: 1140 },
+  { name: '30/3', usage: 1170 },
+  { name: '31/3', usage: 1195 },
+  { name: '1/4', usage: 1200 }
+];
+
