@@ -787,6 +787,60 @@ export default function App() {
                   />
                 </div>
               </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 px-1">
+                  <ShieldCheck size={20} className="text-emerald-600" />
+                  <h4 className="text-lg font-bold text-slate-800">Quyền truy cập tính năng</h4>
+                  <div className="h-[1px] flex-1 bg-slate-100 ml-2"></div>
+                </div>
+                <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <FeatureToggle 
+                      label="Bài viết" 
+                      description="Đăng và tương tác" 
+                      enabled={selectedItem?.appFeatures?.posts ?? true} 
+                      icon={FileText} 
+                      onChange={() => {}} 
+                    />
+                    <FeatureToggle 
+                      label="Nhóm" 
+                      description="Tạo và tham gia" 
+                      enabled={selectedItem?.appFeatures?.groups ?? true} 
+                      icon={Users} 
+                      onChange={() => {}} 
+                    />
+                    <FeatureToggle 
+                      label="Bạn bè" 
+                      description="Kết bạn, theo dõi" 
+                      enabled={selectedItem?.appFeatures?.friends ?? true} 
+                      icon={UserPlus} 
+                      onChange={() => {}} 
+                    />
+                    <FeatureToggle 
+                      label="Nhật ký làm việc" 
+                      description="Ghi nhận worklog" 
+                      enabled={selectedItem?.appFeatures?.workLog ?? true} 
+                      icon={Clock} 
+                      onChange={() => {}} 
+                    />
+                    <FeatureToggle 
+                      label="Cuộc gọi" 
+                      description="Voice & Video call" 
+                      enabled={selectedItem?.appFeatures?.calls ?? true} 
+                      icon={Video} 
+                      onChange={() => {}} 
+                    />
+                    <FeatureToggle 
+                      label="Tin nhắn" 
+                      description="Chat nội bộ" 
+                      enabled={selectedItem?.appFeatures?.messaging ?? true} 
+                      icon={MessageCircle} 
+                      onChange={() => {}} 
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           );
         }
