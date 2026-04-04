@@ -851,51 +851,98 @@ export default function App() {
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <h4 className="font-bold text-xl">Quản lý Người dùng</h4>
                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-                  <button className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm font-medium hover:bg-emerald-600 transition-colors">
+                  <button 
+                    onClick={() => openModal({
+                      title: 'Thêm Người dùng mới',
+                      type: 'form',
+                      children: (
+                        <div className="space-y-4 pt-2">
+                          <div>
+                            <label className="text-sm font-medium text-slate-700 block mb-1">Họ và tên</label>
+                            <input type="text" placeholder="Nhập họ và tên..." className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium text-slate-700 block mb-1">Số điện thoại / Email</label>
+                            <input type="text" placeholder="Nhập liên hệ..." className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
+                          </div>
+                        </div>
+                      ),
+                      confirmLabel: 'Tạo tài khoản',
+                      onConfirm: () => console.log('Created User')
+                    })}
+                    className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm font-medium hover:bg-emerald-600 transition-colors">
                     <Plus size={16} />
                     Tạo mới
                   </button>
                 </div>
               </div>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] font-bold tracking-widest">
-                  <tr>
-                    <th className="px-6 py-3 text-left whitespace-nowrap">STT</th>
-                    <th className="px-6 py-3 text-left whitespace-nowrap">Avatar</th>
-                    <th className="px-6 py-3 text-left whitespace-nowrap">Tên người dùng</th>
-                    <th className="px-6 py-3 text-left whitespace-nowrap">Email</th>
-                    <th className="px-6 py-3 text-left whitespace-nowrap">Số điện thoại</th>
-                    <th className="px-6 py-3 text-left whitespace-nowrap">Loại ĐK</th>
-                    <th className="px-6 py-3 text-left whitespace-nowrap">Ngày ĐK</th>
-                    <th className="px-6 py-3 text-left whitespace-nowrap">Trạng thái</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {MOCK_USERS.map((user) => (
-                    <tr
-                      key={user.id}
-                      onClick={() => { setSelectedItem(user); setViewMode('detail'); }}
-                      className="hover:bg-slate-50 transition-colors cursor-pointer"
-                    >
-                      <td className="px-6 py-4">{user.stt}</td>
-                      <td className="px-6 py-4">
-                        <img src={user.avatar} alt="" className="w-8 h-8 rounded-full" />
-                      </td>
-                      <td className="px-6 py-4 font-medium">{user.name}</td>
-                      <td className="px-6 py-4">{user.email}</td>
-                      <td className="px-6 py-4">{user.phone}</td>
-                      <td className="px-6 py-4">{user.regType}</td>
-                      <td className="px-6 py-4">{user.regDate}</td>
-                      <td className="px-6 py-4">
-                        <Badge variant={user.status === 'Hoạt động' ? 'active' : 'suspended'}>{user.status}</Badge>
-                      </td>
+              <div className="overflow-x-auto border-t border-slate-100">
+                <table className="w-full text-sm hidden md:table">
+                  <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] font-bold tracking-widest">
+                    <tr>
+                      <th className="px-6 py-3 text-left whitespace-nowrap">STT</th>
+                      <th className="px-6 py-3 text-left whitespace-nowrap">Avatar</th>
+                      <th className="px-6 py-3 text-left whitespace-nowrap">Tên người dùng</th>
+                      <th className="px-6 py-3 text-left whitespace-nowrap">Email</th>
+                      <th className="px-6 py-3 text-left whitespace-nowrap">Số điện thoại</th>
+                      <th className="px-6 py-3 text-left whitespace-nowrap">Loại ĐK</th>
+                      <th className="px-6 py-3 text-left whitespace-nowrap">Ngày ĐK</th>
+                      <th className="px-6 py-3 text-left whitespace-nowrap">Trạng thái</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {MOCK_USERS.map((user) => (
+                      <tr
+                        key={user.id}
+                        onClick={() => { setSelectedItem(user); setViewMode('detail'); }}
+                        className="hover:bg-slate-50 transition-colors cursor-pointer group"
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap">{user.stt}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <img src={user.avatar} alt="" className="w-8 h-8 rounded-full border border-slate-100" />
+                        </td>
+                        <td className="px-6 py-4 font-medium group-hover:text-blue-600 whitespace-nowrap">{user.name}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">{user.phone}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">{user.regType}</td>
+                        <td className="px-6 py-4 text-slate-500 whitespace-nowrap">{user.regDate}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <Badge variant={user.status === 'Hoạt động' ? 'active' : 'suspended'}>{user.status}</Badge>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="md:hidden flex flex-col divide-y divide-slate-100">
+                {MOCK_USERS.map((user) => (
+                  <div 
+                    key={user.id} 
+                    onClick={() => { setSelectedItem(user); setViewMode('detail'); }}
+                    className="p-4 bg-white hover:bg-slate-50 active:bg-slate-100 transition-colors cursor-pointer space-y-3"
+                  >
+                    <div className="flex items-center gap-3">
+                      <img src={user.avatar} className="w-12 h-12 rounded-full border border-slate-100" />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-slate-800 truncate">{user.name}</p>
+                        <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                      </div>
+                      <Badge variant={user.status === 'Hoạt động' ? 'active' : 'suspended'}>{user.status}</Badge>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-sm bg-slate-50 p-3 rounded-lg border border-slate-100">
+                      <div>
+                        <p className="text-[10px] uppercase font-bold text-slate-400">Điện thoại</p>
+                        <p className="font-medium text-slate-700">{user.phone}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] uppercase font-bold text-slate-400">Loại ĐK / Ngày</p>
+                        <p className="font-medium text-slate-700">{user.regType} • {user.regDate.split('/')[0]}/{user.regDate.split('/')[1]}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             <div className="p-4 border-t border-slate-100 flex justify-between items-center bg-slate-50/50">
               <p className="text-xs text-slate-500">Hiển thị 1-10 / 248 kết quả</p>
               <div className="flex gap-1">
@@ -1196,8 +1243,8 @@ export default function App() {
                   </div>
                 </div>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+              <div className="overflow-x-auto border-t border-slate-100">
+                <table className="w-full text-sm hidden md:table">
                   <thead className="bg-[#1e293b] text-white">
                     <tr className="uppercase text-[10px] font-bold tracking-widest">
                       <th className="px-6 py-3 text-left whitespace-nowrap">STT</th>
@@ -1221,7 +1268,7 @@ export default function App() {
                           {group.avatar === 'FBV' ? (
                             <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-[10px] font-bold text-white">FBV</div>
                           ) : (
-                            <img src={group.avatar} alt="" className="w-8 h-8 rounded-full object-cover" />
+                            <img src={group.avatar} alt="" className="w-8 h-8 rounded-full object-cover border border-slate-100" />
                           )}
                         </td>
                         <td className="px-6 py-4 font-medium group-hover:text-blue-600 whitespace-nowrap">{group.name}</td>
@@ -1237,6 +1284,38 @@ export default function App() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+              <div className="md:hidden flex flex-col divide-y divide-slate-100">
+                {MOCK_GROUPS.map((group) => (
+                  <div
+                    key={group.id}
+                    onClick={() => { setSelectedItem(group); setViewMode('detail'); }}
+                    className="p-4 bg-white hover:bg-slate-50 active:bg-slate-100 transition-colors cursor-pointer space-y-3"
+                  >
+                    <div className="flex items-center gap-3">
+                      {group.avatar === 'FBV' ? (
+                        <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-sm font-bold text-white shadow-sm">FBV</div>
+                      ) : (
+                        <img src={group.avatar} alt="" className="w-12 h-12 rounded-xl object-cover shadow-sm border border-slate-100" />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-slate-800 truncate">{group.name}</p>
+                        <p className="text-xs text-slate-500">{group.members} thành viên</p>
+                      </div>
+                      <Badge variant={group.status === 'Hoạt động' ? 'active' : 'deleted'}>{group.status}</Badge>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-sm bg-slate-50 p-3 rounded-lg border border-slate-100">
+                      <div>
+                        <p className="text-[10px] uppercase font-bold text-slate-400">Ngày tạo</p>
+                        <p className="font-medium text-slate-700">{group.createdAt}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] uppercase font-bold text-slate-400">Trưởng nhóm</p>
+                        <p className="font-medium text-slate-700 truncate">{group.leader}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           );
@@ -1984,8 +2063,8 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+              <div className="overflow-x-auto border-t border-slate-100">
+                <table className="w-full text-sm hidden md:table">
                   <thead>
                     <tr className="bg-slate-50/80 text-slate-500 uppercase text-[10px] font-bold tracking-widest border-b border-slate-100">
                       <th className="px-6 py-4 text-left whitespace-nowrap">ID</th>
@@ -2028,7 +2107,7 @@ export default function App() {
                           <span className="font-medium text-slate-600">{conv.members.length}</span>
                         </td>
                         <td className="px-6 py-4 text-slate-500 font-medium">{conv.createdAt}</td>
-                        <td className="px-6 py-4 text-slate-600 font-medium">
+                        <td className="px-6 py-4 text-slate-600 font-medium whitespace-nowrap">
                           {conv.type === 'group' ? conv.members.find(m => m.role === 'owner')?.name : '--'}
                         </td>
                         <td className="px-6 py-4">
@@ -2048,6 +2127,46 @@ export default function App() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+              <div className="md:hidden flex flex-col divide-y divide-slate-100">
+                {MOCK_CONVERSATIONS.map((conv) => (
+                  <div key={conv.id} className="p-4 bg-white hover:bg-slate-50 active:bg-slate-100 transition-colors space-y-3">
+                    <div className="flex items-center gap-3">
+                      {conv.type === 'direct' ? (
+                        <div className="flex -space-x-3">
+                          {conv.avatar.map((img, idx) => (
+                            <img key={idx} src={img} alt="" className="w-12 h-12 rounded-full border-2 border-white object-cover shadow-sm" />
+                          ))}
+                        </div>
+                      ) : (
+                        <img src={conv.avatar[0]} alt="" className="w-12 h-12 rounded-xl border border-slate-100 object-cover shadow-sm" />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <span className="font-bold text-slate-700 truncate block">{conv.name}</span>
+                        <p className="text-xs text-slate-500">{conv.members.length} thành viên</p>
+                      </div>
+                      <Badge variant={conv.status === 'active' ? 'sent' : 'deleted'}>
+                        {conv.status === 'active' ? 'Hoạt động' : 'Đã giải tán'}
+                      </Badge>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-sm bg-slate-50 p-3 rounded-lg border border-slate-100">
+                      <div>
+                        <p className="text-[10px] uppercase font-bold text-slate-400">Loại phòng</p>
+                        <p className="font-medium text-slate-700">{conv.type === 'group' ? 'Nhóm' : 'Cá nhân'}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] uppercase font-bold text-slate-400">Chủ phòng</p>
+                        <p className="font-medium text-slate-700 truncate">{conv.type === 'group' ? conv.members.find(m => m.role === 'owner')?.name : '--'}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => { setSelectedItem(conv); setViewMode('detail'); }}
+                      className="w-full py-2.5 bg-slate-100 text-slate-700 rounded-lg text-sm font-bold hover:bg-blue-600 hover:text-white transition-all outline-none"
+                    >
+                      Xem chi tiết trò chuyện
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -2222,8 +2341,8 @@ export default function App() {
                 </div>
               </div>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+            <div className="overflow-x-auto border-t border-slate-100">
+              <table className="w-full text-sm hidden md:table">
                 <thead className="bg-[#1e293b] text-white">
                   <tr className="uppercase text-[10px] font-bold tracking-widest">
                     <th className="px-6 py-3 text-left whitespace-nowrap">Hình ảnh</th>
@@ -2234,32 +2353,58 @@ export default function App() {
                     <th className="px-6 py-3 text-left whitespace-nowrap">Trạng thái</th>
                   </tr>
                 </thead>
-              <tbody className="divide-y divide-slate-100">
-                {MOCK_POSTS.map((post) => (
-                  <tr
-                    key={post.id}
-                    onClick={() => { setSelectedItem(post); setViewMode('detail'); }}
-                    className="hover:bg-slate-50 transition-colors cursor-pointer group"
-                  >
-                    <td className="px-6 py-4">
-                      <img src={post.media} alt="" className="w-16 h-12 object-cover rounded shadow-sm border border-slate-200" />
-                    </td>
-                    <td className="px-6 py-4 text-slate-600 max-w-xs truncate">{post.content}</td>
-                    <td className="px-6 py-4 font-medium group-hover:text-blue-600">{post.author}</td>
-                    <td className="px-6 py-4 text-slate-500">
-                      👍 {post.likes} <span className="mx-1 text-slate-300">|</span> 💬 {post.comments}
-                    </td>
-                    <td className="px-6 py-4">{post.date}</td>
-                    <td className="px-6 py-4">
-                      <Badge variant={post.status === 'Active' ? 'active' : post.status === 'Pending' ? 'pending' : 'deleted'}>
-                        {post.status}
-                      </Badge>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                <tbody className="divide-y divide-slate-100">
+                  {MOCK_POSTS.map((post) => (
+                    <tr
+                      key={post.id}
+                      onClick={() => { setSelectedItem(post); setViewMode('detail'); }}
+                      className="hover:bg-slate-50 transition-colors cursor-pointer group"
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <img src={post.media} alt="" className="w-16 h-12 object-cover rounded shadow-sm border border-slate-200" />
+                      </td>
+                      <td className="px-6 py-4 text-slate-600 max-w-xs truncate">{post.content}</td>
+                      <td className="px-6 py-4 font-medium group-hover:text-blue-600 whitespace-nowrap">{post.author}</td>
+                      <td className="px-6 py-4 text-slate-500 whitespace-nowrap">
+                        👍 {post.likes} <span className="mx-1 text-slate-300">|</span> 💬 {post.comments}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">{post.date}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <Badge variant={post.status === 'Active' ? 'active' : post.status === 'Pending' ? 'pending' : 'deleted'}>
+                          {post.status}
+                        </Badge>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="md:hidden flex flex-col divide-y divide-slate-100">
+              {MOCK_POSTS.map((post) => (
+                <div
+                  key={post.id}
+                  onClick={() => { setSelectedItem(post); setViewMode('detail'); }}
+                  className="p-4 bg-white hover:bg-slate-50 active:bg-slate-100 transition-colors cursor-pointer space-y-3"
+                >
+                  <div className="flex gap-4">
+                    <img src={post.media} alt="" className="w-20 h-16 object-cover rounded-xl shadow-sm border border-slate-100" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-slate-800 text-sm line-clamp-2 leading-snug">{post.content}</p>
+                      <p className="text-xs text-slate-500 mt-1">Đăng bởi <span className="font-medium text-slate-700">{post.author}</span></p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between text-xs bg-slate-50 p-3 rounded-lg border border-slate-100 mt-2">
+                    <div className="flex gap-3 text-slate-600 font-medium">
+                      <span className="flex items-center gap-1.5"><span className="text-blue-500 text-sm">👍</span> {post.likes}</span>
+                      <span className="flex items-center gap-1.5"><span className="text-green-500 text-sm">💬</span> {post.comments}</span>
+                    </div>
+                    <Badge variant={post.status === 'Active' ? 'active' : post.status === 'Pending' ? 'pending' : 'deleted'}>
+                      {post.status}
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
         </div>
       );
       case 'settings':
