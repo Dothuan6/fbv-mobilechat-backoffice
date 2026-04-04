@@ -826,99 +826,55 @@ export default function App() {
                   </div>
                 </div>
               </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 px-1">
-                  <Activity size={20} className="text-blue-600" />
-                  <h4 className="text-lg font-bold text-slate-800">Hoạt động người dùng</h4>
-                  <div className="h-[1px] flex-1 bg-slate-100 ml-2"></div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <ResourceWidget
-                    title="Bài viết"
-                    icon={FileText}
-                    color="bg-blue-500"
-                    onClick={() => setActiveTab('posts')}
-                    stats={[
-                      { label: 'Tổng bài viết', value: selectedItem?.resourceStats?.posts?.count || 0 },
-                      { label: 'Dung lượng', value: selectedItem?.resourceStats?.posts?.storage || '0 MB' }
-                    ]}
-                  />
-
-                  <ResourceWidget
-                    title="Nhóm"
-                    icon={Users}
-                    color="bg-purple-500"
-                    onClick={() => setActiveTab('groups')}
-                    stats={[
-                      { label: 'Nhóm tham gia', value: selectedItem?.resourceStats?.groups?.count || 0 },
-                      { label: 'Nhóm quản lý', value: selectedItem?.resourceStats?.groups?.owned || 0 }
-                    ]}
-                  />
-
-                  <ResourceWidget
-                    title="Cuộc trò chuyện"
-                    icon={MessageCircle}
-                    color="bg-indigo-500"
-                    onClick={() => setActiveTab('chats')}
-                    stats={[
-                      { label: 'Tổng tin nhắn', value: selectedItem?.resourceStats?.messages?.count || 0 },
-                      { label: 'Dung lượng', value: selectedItem?.resourceStats?.messages?.storage || '0 MB' }
-                    ]}
-                  />
-                </div>
-              </div>
-
               <div className="space-y-4">
                 <div className="flex items-center gap-2 px-1">
                   <ShieldCheck size={20} className="text-emerald-600" />
                   <h4 className="text-lg font-bold text-slate-800">Quyền truy cập tính năng</h4>
                   <div className="h-[1px] flex-1 bg-slate-100 ml-2"></div>
                 </div>
-                <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+                <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 sm:p-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <FeatureToggle 
-                      label="Bài viết" 
-                      description="Đăng và tương tác" 
-                      enabled={selectedItem?.appFeatures?.posts ?? true} 
-                      icon={FileText} 
-                      onChange={() => {}} 
+                    <FeatureToggle
+                      label="Bài viết"
+                      description="Đăng và tương tác"
+                      enabled={selectedItem?.appFeatures?.posts ?? true}
+                      icon={FileText}
+                      onChange={(v: boolean) => setSelectedItem((prev: any) => ({ ...prev, appFeatures: { ...prev?.appFeatures, posts: v } }))}
                     />
-                    <FeatureToggle 
-                      label="Nhóm" 
-                      description="Tạo và tham gia" 
-                      enabled={selectedItem?.appFeatures?.groups ?? true} 
-                      icon={Users} 
-                      onChange={() => {}} 
+                    <FeatureToggle
+                      label="Nhóm"
+                      description="Tạo và tham gia"
+                      enabled={selectedItem?.appFeatures?.groups ?? true}
+                      icon={Users}
+                      onChange={(v: boolean) => setSelectedItem((prev: any) => ({ ...prev, appFeatures: { ...prev?.appFeatures, groups: v } }))}
                     />
-                    <FeatureToggle 
-                      label="Bạn bè" 
-                      description="Kết bạn, theo dõi" 
-                      enabled={selectedItem?.appFeatures?.friends ?? true} 
-                      icon={UserPlus} 
-                      onChange={() => {}} 
+                    <FeatureToggle
+                      label="Bạn bè"
+                      description="Kết bạn, theo dõi"
+                      enabled={selectedItem?.appFeatures?.friends ?? true}
+                      icon={UserPlus}
+                      onChange={(v: boolean) => setSelectedItem((prev: any) => ({ ...prev, appFeatures: { ...prev?.appFeatures, friends: v } }))}
                     />
-                    <FeatureToggle 
-                      label="Nhật ký làm việc" 
-                      description="Ghi nhận worklog" 
-                      enabled={selectedItem?.appFeatures?.workLog ?? true} 
-                      icon={Clock} 
-                      onChange={() => {}} 
+                    <FeatureToggle
+                      label="Nhật ký làm việc"
+                      description="Ghi nhận worklog"
+                      enabled={selectedItem?.appFeatures?.workLog ?? true}
+                      icon={Clock}
+                      onChange={(v: boolean) => setSelectedItem((prev: any) => ({ ...prev, appFeatures: { ...prev?.appFeatures, workLog: v } }))}
                     />
-                    <FeatureToggle 
-                      label="Cuộc gọi" 
-                      description="Voice & Video call" 
-                      enabled={selectedItem?.appFeatures?.calls ?? true} 
-                      icon={Video} 
-                      onChange={() => {}} 
+                    <FeatureToggle
+                      label="Cuộc gọi"
+                      description="Voice & Video call"
+                      enabled={selectedItem?.appFeatures?.calls ?? true}
+                      icon={Video}
+                      onChange={(v: boolean) => setSelectedItem((prev: any) => ({ ...prev, appFeatures: { ...prev?.appFeatures, calls: v } }))}
                     />
-                    <FeatureToggle 
-                      label="Tin nhắn" 
-                      description="Chat nội bộ" 
-                      enabled={selectedItem?.appFeatures?.messaging ?? true} 
-                      icon={MessageCircle} 
-                      onChange={() => {}} 
+                    <FeatureToggle
+                      label="Tin nhắn"
+                      description="Chat nội bộ"
+                      enabled={selectedItem?.appFeatures?.messaging ?? true}
+                      icon={MessageCircle}
+                      onChange={(v: boolean) => setSelectedItem((prev: any) => ({ ...prev, appFeatures: { ...prev?.appFeatures, messaging: v } }))}
                     />
                   </div>
                 </div>
@@ -933,7 +889,7 @@ export default function App() {
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <h4 className="font-bold text-xl">Quản lý Người dùng</h4>
                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-                  <button 
+                  <button
                     onClick={() => openModal({
                       title: 'Thêm Người dùng mới',
                       type: 'form',
@@ -959,72 +915,72 @@ export default function App() {
                 </div>
               </div>
             </div>
-              <div className="overflow-x-auto border-t border-slate-100">
-                <table className="w-full text-sm hidden md:table">
-                  <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] font-bold tracking-widest">
-                    <tr>
-                      <th className="px-6 py-3 text-left whitespace-nowrap">STT</th>
-                      <th className="px-6 py-3 text-left whitespace-nowrap">Avatar</th>
-                      <th className="px-6 py-3 text-left whitespace-nowrap">Tên người dùng</th>
-                      <th className="px-6 py-3 text-left whitespace-nowrap">Email</th>
-                      <th className="px-6 py-3 text-left whitespace-nowrap">Số điện thoại</th>
-                      <th className="px-6 py-3 text-left whitespace-nowrap">Loại ĐK</th>
-                      <th className="px-6 py-3 text-left whitespace-nowrap">Ngày ĐK</th>
-                      <th className="px-6 py-3 text-left whitespace-nowrap">Trạng thái</th>
+            <div className="overflow-x-auto border-t border-slate-100">
+              <table className="w-full text-sm hidden md:table">
+                <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] font-bold tracking-widest">
+                  <tr>
+                    <th className="px-6 py-3 text-left whitespace-nowrap">STT</th>
+                    <th className="px-6 py-3 text-left whitespace-nowrap">Avatar</th>
+                    <th className="px-6 py-3 text-left whitespace-nowrap">Tên người dùng</th>
+                    <th className="px-6 py-3 text-left whitespace-nowrap">Email</th>
+                    <th className="px-6 py-3 text-left whitespace-nowrap">Số điện thoại</th>
+                    <th className="px-6 py-3 text-left whitespace-nowrap">Loại ĐK</th>
+                    <th className="px-6 py-3 text-left whitespace-nowrap">Ngày ĐK</th>
+                    <th className="px-6 py-3 text-left whitespace-nowrap">Trạng thái</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {MOCK_USERS.map((user) => (
+                    <tr
+                      key={user.id}
+                      onClick={() => { setSelectedItem(user); setViewMode('detail'); }}
+                      className="hover:bg-slate-50 transition-colors cursor-pointer group"
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap">{user.stt}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <img src={user.avatar} alt="" className="w-8 h-8 rounded-full border border-slate-100" />
+                      </td>
+                      <td className="px-6 py-4 font-medium group-hover:text-blue-600 whitespace-nowrap">{user.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{user.phone}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{user.regType}</td>
+                      <td className="px-6 py-4 text-slate-500 whitespace-nowrap">{user.regDate}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <Badge variant={user.status === 'Hoạt động' ? 'active' : 'suspended'}>{user.status}</Badge>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {MOCK_USERS.map((user) => (
-                      <tr
-                        key={user.id}
-                        onClick={() => { setSelectedItem(user); setViewMode('detail'); }}
-                        className="hover:bg-slate-50 transition-colors cursor-pointer group"
-                      >
-                        <td className="px-6 py-4 whitespace-nowrap">{user.stt}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <img src={user.avatar} alt="" className="w-8 h-8 rounded-full border border-slate-100" />
-                        </td>
-                        <td className="px-6 py-4 font-medium group-hover:text-blue-600 whitespace-nowrap">{user.name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{user.phone}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{user.regType}</td>
-                        <td className="px-6 py-4 text-slate-500 whitespace-nowrap">{user.regDate}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <Badge variant={user.status === 'Hoạt động' ? 'active' : 'suspended'}>{user.status}</Badge>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div className="md:hidden flex flex-col divide-y divide-slate-100">
-                {MOCK_USERS.map((user) => (
-                  <div 
-                    key={user.id} 
-                    onClick={() => { setSelectedItem(user); setViewMode('detail'); }}
-                    className="p-4 bg-white hover:bg-slate-50 active:bg-slate-100 transition-colors cursor-pointer space-y-3"
-                  >
-                    <div className="flex items-center gap-3">
-                      <img src={user.avatar} className="w-12 h-12 rounded-full border border-slate-100" />
-                      <div className="flex-1 min-w-0">
-                        <p className="font-bold text-slate-800 truncate">{user.name}</p>
-                        <p className="text-xs text-slate-500 truncate">{user.email}</p>
-                      </div>
-                      <Badge variant={user.status === 'Hoạt động' ? 'active' : 'suspended'}>{user.status}</Badge>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="md:hidden flex flex-col divide-y divide-slate-100">
+              {MOCK_USERS.map((user) => (
+                <div
+                  key={user.id}
+                  onClick={() => { setSelectedItem(user); setViewMode('detail'); }}
+                  className="p-4 bg-white hover:bg-slate-50 active:bg-slate-100 transition-colors cursor-pointer space-y-3"
+                >
+                  <div className="flex items-center gap-3">
+                    <img src={user.avatar} className="w-12 h-12 rounded-full border border-slate-100" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-slate-800 truncate">{user.name}</p>
+                      <p className="text-xs text-slate-500 truncate">{user.email}</p>
                     </div>
-                    <div className="grid grid-cols-2 gap-2 text-sm bg-slate-50 p-3 rounded-lg border border-slate-100">
-                      <div>
-                        <p className="text-[10px] uppercase font-bold text-slate-400">Điện thoại</p>
-                        <p className="font-medium text-slate-700">{user.phone}</p>
-                      </div>
-                      <div>
-                        <p className="text-[10px] uppercase font-bold text-slate-400">Loại ĐK / Ngày</p>
-                        <p className="font-medium text-slate-700">{user.regType} • {user.regDate.split('/')[0]}/{user.regDate.split('/')[1]}</p>
-                      </div>
+                    <Badge variant={user.status === 'Hoạt động' ? 'active' : 'suspended'}>{user.status}</Badge>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-sm bg-slate-50 p-3 rounded-lg border border-slate-100">
+                    <div>
+                      <p className="text-[10px] uppercase font-bold text-slate-400">Điện thoại</p>
+                      <p className="font-medium text-slate-700">{user.phone}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase font-bold text-slate-400">Loại ĐK / Ngày</p>
+                      <p className="font-medium text-slate-700">{user.regType} • {user.regDate.split('/')[0]}/{user.regDate.split('/')[1]}</p>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
+            </div>
             <div className="p-4 border-t border-slate-100 flex justify-between items-center bg-slate-50/50">
               <p className="text-xs text-slate-500">Hiển thị 1-10 / 248 kết quả</p>
               <div className="flex gap-1">
@@ -1263,144 +1219,144 @@ export default function App() {
             </div>
           );
         }
-            return (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-              <div className="p-6 border-b border-slate-100 space-y-4">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                  <h4 className="font-bold text-xl">Quản lý Nhóm</h4>
-                  <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-                    <button
-                      onClick={() => openModal({
-                        title: 'Tạo nhóm mới',
-                        type: 'form',
-                        children: (
-                          <div className="space-y-4 pt-2">
-                            <div>
-                              <label className="text-sm font-medium text-slate-700 block mb-1">Tên nhóm</label>
-                              <input type="text" placeholder="Nhập tên nhóm" className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
-                            </div>
-                            <div>
-                              <label className="text-sm font-medium text-slate-700 block mb-1">Mô tả</label>
-                              <textarea placeholder="Nhập mô tả nhóm" rows={3} className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none resize-none"></textarea>
-                            </div>
-                            <div>
-                              <label className="text-sm font-medium text-slate-700 block mb-1">Loại nhóm</label>
-                              <select className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none">
-                                <option value="public">Công khai</option>
-                                <option value="private">Riêng tư</option>
-                              </select>
-                            </div>
+        return (
+          <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+            <div className="p-6 border-b border-slate-100 space-y-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <h4 className="font-bold text-xl">Quản lý Nhóm</h4>
+                <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+                  <button
+                    onClick={() => openModal({
+                      title: 'Tạo nhóm mới',
+                      type: 'form',
+                      children: (
+                        <div className="space-y-4 pt-2">
+                          <div>
+                            <label className="text-sm font-medium text-slate-700 block mb-1">Tên nhóm</label>
+                            <input type="text" placeholder="Nhập tên nhóm" className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
                           </div>
-                        ),
-                        confirmLabel: 'Tạo nhóm',
-                        onConfirm: () => console.log('Created group')
-                      })}
-                      className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 bg-[#1e293b] text-white rounded-lg text-sm font-medium hover:bg-slate-800 transition-colors"
-                    >
-                      <Plus size={16} />
-                      Tạo nhóm mới
-                    </button>
-                    <button className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium">
-                      <RefreshCw size={16} />
-                      Refresh
-                    </button>
-                    <button className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium">
-                      <Filter size={16} />
-                      Xóa bộ lọc
-                    </button>
-                  </div>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <div className="flex items-center justify-between sm:justify-start gap-2 px-3 py-1.5 border border-slate-200 rounded-lg text-sm">
-                    <span className="text-slate-500">Trạng thái:</span>
-                    <div className="flex items-center gap-1 font-medium">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                      Tất cả
-                      <ChevronDown size={14} />
-                    </div>
-                  </div>
-                  <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                    <input type="text" placeholder="Tìm kiếm theo tên nhóm..." className="w-full pl-10 pr-4 py-1.5 border border-slate-200 rounded-lg text-sm focus:outline-none" />
-                  </div>
-                </div>
-              </div>
-              <div className="overflow-x-auto border-t border-slate-100">
-                <table className="w-full text-sm hidden md:table">
-                  <thead className="bg-[#1e293b] text-white">
-                    <tr className="uppercase text-[10px] font-bold tracking-widest">
-                      <th className="px-6 py-3 text-left whitespace-nowrap">STT</th>
-                      <th className="px-6 py-3 text-left whitespace-nowrap">Avatar</th>
-                      <th className="px-6 py-3 text-left whitespace-nowrap">Tên nhóm</th>
-                      <th className="px-6 py-3 text-left whitespace-nowrap">Số thành viên</th>
-                      <th className="px-6 py-3 text-left whitespace-nowrap">Ngày tạo</th>
-                      <th className="px-6 py-3 text-left whitespace-nowrap">Trưởng nhóm</th>
-                      <th className="px-6 py-3 text-left whitespace-nowrap">Trạng thái</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {MOCK_GROUPS.map((group) => (
-                      <tr
-                        key={group.id}
-                        onClick={() => { setSelectedItem(group); setViewMode('detail'); }}
-                        className="hover:bg-slate-50 transition-colors cursor-pointer group"
-                      >
-                        <td className="px-6 py-4 whitespace-nowrap">{group.stt}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {group.avatar === 'FBV' ? (
-                            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-[10px] font-bold text-white">FBV</div>
-                          ) : (
-                            <img src={group.avatar} alt="" className="w-8 h-8 rounded-full object-cover border border-slate-100" />
-                          )}
-                        </td>
-                        <td className="px-6 py-4 font-medium group-hover:text-blue-600 whitespace-nowrap">{group.name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{group.members}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{group.createdAt}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{group.leader}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <Badge variant={group.status === 'Hoạt động' ? 'active' : 'deleted'}>
-                            {group.status}
-                          </Badge>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div className="md:hidden flex flex-col divide-y divide-slate-100">
-                {MOCK_GROUPS.map((group) => (
-                  <div
-                    key={group.id}
-                    onClick={() => { setSelectedItem(group); setViewMode('detail'); }}
-                    className="p-4 bg-white hover:bg-slate-50 active:bg-slate-100 transition-colors cursor-pointer space-y-3"
+                          <div>
+                            <label className="text-sm font-medium text-slate-700 block mb-1">Mô tả</label>
+                            <textarea placeholder="Nhập mô tả nhóm" rows={3} className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none resize-none"></textarea>
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium text-slate-700 block mb-1">Loại nhóm</label>
+                            <select className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none">
+                              <option value="public">Công khai</option>
+                              <option value="private">Riêng tư</option>
+                            </select>
+                          </div>
+                        </div>
+                      ),
+                      confirmLabel: 'Tạo nhóm',
+                      onConfirm: () => console.log('Created group')
+                    })}
+                    className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 bg-[#1e293b] text-white rounded-lg text-sm font-medium hover:bg-slate-800 transition-colors"
                   >
-                    <div className="flex items-center gap-3">
-                      {group.avatar === 'FBV' ? (
-                        <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-sm font-bold text-white shadow-sm">FBV</div>
-                      ) : (
-                        <img src={group.avatar} alt="" className="w-12 h-12 rounded-xl object-cover shadow-sm border border-slate-100" />
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="font-bold text-slate-800 truncate">{group.name}</p>
-                        <p className="text-xs text-slate-500">{group.members} thành viên</p>
-                      </div>
-                      <Badge variant={group.status === 'Hoạt động' ? 'active' : 'deleted'}>{group.status}</Badge>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2 text-sm bg-slate-50 p-3 rounded-lg border border-slate-100">
-                      <div>
-                        <p className="text-[10px] uppercase font-bold text-slate-400">Ngày tạo</p>
-                        <p className="font-medium text-slate-700">{group.createdAt}</p>
-                      </div>
-                      <div>
-                        <p className="text-[10px] uppercase font-bold text-slate-400">Trưởng nhóm</p>
-                        <p className="font-medium text-slate-700 truncate">{group.leader}</p>
-                      </div>
-                    </div>
+                    <Plus size={16} />
+                    Tạo nhóm mới
+                  </button>
+                  <button className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium">
+                    <RefreshCw size={16} />
+                    Refresh
+                  </button>
+                  <button className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium">
+                    <Filter size={16} />
+                    Xóa bộ lọc
+                  </button>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex items-center justify-between sm:justify-start gap-2 px-3 py-1.5 border border-slate-200 rounded-lg text-sm">
+                  <span className="text-slate-500">Trạng thái:</span>
+                  <div className="flex items-center gap-1 font-medium">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    Tất cả
+                    <ChevronDown size={14} />
                   </div>
-                ))}
+                </div>
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                  <input type="text" placeholder="Tìm kiếm theo tên nhóm..." className="w-full pl-10 pr-4 py-1.5 border border-slate-200 rounded-lg text-sm focus:outline-none" />
+                </div>
               </div>
             </div>
-          );
+            <div className="overflow-x-auto border-t border-slate-100">
+              <table className="w-full text-sm hidden md:table">
+                <thead className="bg-[#1e293b] text-white">
+                  <tr className="uppercase text-[10px] font-bold tracking-widest">
+                    <th className="px-6 py-3 text-left whitespace-nowrap">STT</th>
+                    <th className="px-6 py-3 text-left whitespace-nowrap">Avatar</th>
+                    <th className="px-6 py-3 text-left whitespace-nowrap">Tên nhóm</th>
+                    <th className="px-6 py-3 text-left whitespace-nowrap">Số thành viên</th>
+                    <th className="px-6 py-3 text-left whitespace-nowrap">Ngày tạo</th>
+                    <th className="px-6 py-3 text-left whitespace-nowrap">Trưởng nhóm</th>
+                    <th className="px-6 py-3 text-left whitespace-nowrap">Trạng thái</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {MOCK_GROUPS.map((group) => (
+                    <tr
+                      key={group.id}
+                      onClick={() => { setSelectedItem(group); setViewMode('detail'); }}
+                      className="hover:bg-slate-50 transition-colors cursor-pointer group"
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap">{group.stt}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {group.avatar === 'FBV' ? (
+                          <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-[10px] font-bold text-white">FBV</div>
+                        ) : (
+                          <img src={group.avatar} alt="" className="w-8 h-8 rounded-full object-cover border border-slate-100" />
+                        )}
+                      </td>
+                      <td className="px-6 py-4 font-medium group-hover:text-blue-600 whitespace-nowrap">{group.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{group.members}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{group.createdAt}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{group.leader}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <Badge variant={group.status === 'Hoạt động' ? 'active' : 'deleted'}>
+                          {group.status}
+                        </Badge>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="md:hidden flex flex-col divide-y divide-slate-100">
+              {MOCK_GROUPS.map((group) => (
+                <div
+                  key={group.id}
+                  onClick={() => { setSelectedItem(group); setViewMode('detail'); }}
+                  className="p-4 bg-white hover:bg-slate-50 active:bg-slate-100 transition-colors cursor-pointer space-y-3"
+                >
+                  <div className="flex items-center gap-3">
+                    {group.avatar === 'FBV' ? (
+                      <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-sm font-bold text-white shadow-sm">FBV</div>
+                    ) : (
+                      <img src={group.avatar} alt="" className="w-12 h-12 rounded-xl object-cover shadow-sm border border-slate-100" />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-slate-800 truncate">{group.name}</p>
+                      <p className="text-xs text-slate-500">{group.members} thành viên</p>
+                    </div>
+                    <Badge variant={group.status === 'Hoạt động' ? 'active' : 'deleted'}>{group.status}</Badge>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-sm bg-slate-50 p-3 rounded-lg border border-slate-100">
+                    <div>
+                      <p className="text-[10px] uppercase font-bold text-slate-400">Ngày tạo</p>
+                      <p className="font-medium text-slate-700">{group.createdAt}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase font-bold text-slate-400">Trưởng nhóm</p>
+                      <p className="font-medium text-slate-700 truncate">{group.leader}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
       case 'notifications':
         return (
           <div className="space-y-6">
@@ -1481,25 +1437,26 @@ export default function App() {
             </div>
           </div>
         );
-      case 'media':
+      case 'media': {
+        const mediaItems = [
+          { id: '1', type: 'image', name: 'team-meeting-Jan15.jpg', date: '2024-01-15 10:30:00', thumb: 'https://picsum.photos/seed/media1/100' },
+          { id: '2', type: 'video', name: 'product-demo-v2.mp4', date: '2024-01-14 15:45:22', thumb: 'https://picsum.photos/seed/media2/100' },
+          { id: '3', type: 'image', name: 'logo_white_transparent.png', date: '2024-01-14 10:30:00', thumb: 'https://picsum.photos/seed/media3/100' },
+        ];
         return (
           <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-            <div className="p-6 border-b border-slate-100 space-y-4">
+            <div className="p-4 sm:p-6 border-b border-slate-100 space-y-4">
               <h4 className="font-bold text-xl">Media Management</h4>
               <p className="text-slate-500 text-sm">Total Assets: 1,452 (512 Images, 940 Videos)</p>
-
               <div className="flex justify-between items-center pt-4">
-                {/* <button className="flex items-center gap-2 px-4 py-1.5 border border-slate-200 rounded-lg text-sm font-medium">
-                  Bulk Actions <ChevronDown size={14} />
-                </button> */}
-                <div className="relative w-64">
+                <div className="relative w-full sm:w-64">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                   <input type="text" placeholder="Search media files..." className="w-full pl-10 pr-4 py-1.5 border border-slate-200 rounded-lg text-sm" />
                 </div>
               </div>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-sm hidden md:table">
                 <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] font-bold tracking-widest">
                   <tr>
                     <th className="px-6 py-3 text-left whitespace-nowrap">Media Type</th>
@@ -1509,11 +1466,7 @@ export default function App() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {[
-                    { id: '1', type: 'image', name: 'team-meeting-Jan15.jpg', date: '2024-01-15 10:30:00', thumb: 'https://picsum.photos/seed/media1/100' },
-                    { id: '2', type: 'video', name: 'product-demo-v2.mp4', date: '2024-01-14 15:45:22', thumb: 'https://picsum.photos/seed/media2/100' },
-                    { id: '3', type: 'image', name: 'logo_white_transparent.png', date: '2024-01-14 10:30:00', thumb: 'https://picsum.photos/seed/media3/100' },
-                  ].map((media) => (
+                  {mediaItems.map((media) => (
                     <tr key={media.id} className="hover:bg-slate-50 transition-colors">
                       <td className="px-6 py-4">
                         {media.type === 'image' ? <ImageIcon size={20} className="text-slate-400" /> : <MessageSquare size={20} className="text-slate-400" />}
@@ -1575,8 +1528,62 @@ export default function App() {
                 </tbody>
               </table>
             </div>
+            <div className="md:hidden flex flex-col divide-y divide-slate-100">
+              {mediaItems.map((media) => (
+                <div key={media.id} className="p-4 bg-white hover:bg-slate-50 transition-colors space-y-3">
+                  <div className="flex items-center gap-3">
+                    <img src={media.thumb} alt="" className="w-16 h-12 rounded-lg object-cover border border-slate-100 shadow-sm" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-slate-800 text-sm truncate">{media.name}</p>
+                      <p className="text-xs text-slate-500">{media.type === 'image' ? '📷 Image' : '🎬 Video'} · {media.date.split(' ')[0]}</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => openModal({
+                        title: 'Chi tiết tệp tin',
+                        children: (
+                          <div className="space-y-4">
+                            <div className="aspect-video bg-slate-100 rounded-lg overflow-hidden border border-slate-200">
+                              <img src={media.thumb} alt="" className="w-full h-full object-contain" />
+                            </div>
+                            <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
+                              <span className="text-slate-400 font-bold uppercase text-[10px]">Tên tệp</span>
+                              <span className="text-slate-400 font-bold uppercase text-[10px]">Định dạng</span>
+                              <span className="font-medium">{media.name}</span>
+                              <span className="font-medium uppercase">{media.type}</span>
+                            </div>
+                          </div>
+                        ),
+                        confirmLabel: 'Đóng',
+                        type: 'info'
+                      })}
+                      className="flex-1 flex justify-center items-center gap-1.5 py-2 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50"
+                    >
+                      <FileText size={14} /> Chi tiết
+                    </button>
+                    <button className="flex-1 flex justify-center items-center gap-1.5 py-2 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50">
+                      <Download size={14} /> Tải xuống
+                    </button>
+                    <button
+                      onClick={() => openModal({
+                        title: 'Xóa tệp tin?',
+                        children: `Bạn có chắc muốn xóa tệp "${media.name}" không?`,
+                        confirmLabel: 'Xóa vĩnh viễn',
+                        type: 'danger',
+                        onConfirm: () => console.log('Deleted media', media.id)
+                      })}
+                      className="flex justify-center items-center gap-1.5 px-3 py-2 border border-rose-200 rounded-lg text-xs font-bold text-rose-500 hover:bg-rose-50"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         );
+      }
       case 'config':
         return (
           <div className="space-y-6">
@@ -1690,9 +1697,9 @@ export default function App() {
       case 'rbac':
         return (
           <div className="space-y-6">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <h4 className="text-2xl font-bold">Admin Roles & Permissions (RBAC)</h4>
+                <h4 className="text-xl sm:text-2xl font-bold">Admin Roles & Permissions</h4>
                 <p className="text-slate-500 text-sm">RBAC — Kiểm soát truy cập dựa trên vai trò</p>
               </div>
               <button
@@ -1700,7 +1707,7 @@ export default function App() {
                   title: 'Thêm Quản trị viên mới',
                   children: (
                     <div className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-1">
                           <label className="text-xs font-bold text-slate-500">Họ và tên</label>
                           <input type="text" placeholder="Nguyễn Văn A" className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
@@ -1710,7 +1717,7 @@ export default function App() {
                           <input type="email" placeholder="admin@fbv.app" className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none" />
                         </div>
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-1">
                           <label className="text-xs font-bold text-slate-500">Vai trò</label>
                           <select className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none bg-white">
@@ -1730,14 +1737,14 @@ export default function App() {
                   confirmLabel: 'Tạo tài khoản',
                   onConfirm: () => console.log('Admin created')
                 })}
-                className="px-6 py-2 bg-orange-500 text-white rounded-lg font-bold hover:bg-orange-600 transition-colors"
+                className="w-full sm:w-auto flex justify-center items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-bold hover:bg-orange-600 transition-colors"
               >
-                [ + Tạo Admin mới ]
+                <Plus size={16} /> Tạo Admin mới
               </button>
             </div>
             <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="w-full text-sm hidden md:table">
                   <thead className="bg-[#1e293b] text-white uppercase text-[10px] font-bold tracking-widest">
                     <tr>
                       <th className="px-6 py-3 text-left whitespace-nowrap">ID</th>
@@ -1801,6 +1808,57 @@ export default function App() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+              <div className="md:hidden flex flex-col divide-y divide-slate-100">
+                {admins.map((admin) => (
+                  <div key={admin.id} className="p-4 bg-white hover:bg-slate-50 transition-colors space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-sm">{admin.name.charAt(0)}</div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-slate-800 truncate">{admin.name}</p>
+                        <p className="text-xs text-slate-500 truncate">{admin.email}</p>
+                      </div>
+                      <Badge variant={admin.status.toLowerCase()}>{admin.status}</Badge>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-sm bg-slate-50 p-3 rounded-lg border border-slate-100">
+                      <div>
+                        <p className="text-[10px] uppercase font-bold text-slate-400">Vai trò</p>
+                        <p className="font-medium text-slate-700">{admin.role}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] uppercase font-bold text-slate-400">Phòng ban</p>
+                        <p className="font-medium text-slate-700">{admin.department}</p>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {(admin.permissions || []).slice(0, 4).map(p => (
+                        <span key={p} className="px-1.5 py-0.5 bg-blue-50 text-blue-600 border border-blue-100 rounded text-[9px] font-bold uppercase">{p}</span>
+                      ))}
+                      {(admin.permissions || []).length > 4 && (
+                        <span className="px-1.5 py-0.5 bg-slate-50 text-slate-400 border border-slate-100 rounded text-[9px] font-bold">+{admin.permissions!.length - 4}</span>
+                      )}
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEditPermissions(admin)}
+                        className="flex-1 flex justify-center items-center gap-1.5 py-2 border border-slate-200 rounded-lg text-xs font-bold text-blue-600 hover:bg-blue-50"
+                      >
+                        <Settings size={14} /> Sửa quyền
+                      </button>
+                      <button
+                        onClick={() => openModal({
+                          title: 'Xác nhận xóa Admin?',
+                          children: `Bạn có chắc muốn xóa tài khoản '${admin.name}' không?`,
+                          confirmLabel: 'Xác nhận',
+                          onConfirm: () => setAdmins(prev => prev.filter(a => a.id !== admin.id))
+                        })}
+                        className="flex justify-center items-center gap-1.5 px-3 py-2 border border-rose-200 rounded-lg text-xs font-bold text-rose-500 hover:bg-rose-50"
+                      >
+                        <Trash2 size={14} /> Xóa
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
               <div className="p-4 border-t border-slate-100 flex justify-end items-center bg-slate-50/50">
                 <div className="flex gap-1">
@@ -2140,7 +2198,7 @@ export default function App() {
                     <Plus size={18} /> Tạo nhóm mới
                   </button>
                   <button className="flex-1 sm:flex-none flex justify-center items-center gap-2 px-4 py-2 border border-slate-200 text-slate-600 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all">
-                  <RefreshCw size={16} /> Làm mới
+                    <RefreshCw size={16} /> Làm mới
                   </button>
                 </div>
               </div>
@@ -2263,11 +2321,11 @@ export default function App() {
               >
                 <ChevronRight size={16} className="rotate-180" /> Quay lại danh sách
               </button>
-              <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100">
-                <h4 className="text-2xl font-bold mb-1">Chi tiết Bài viết</h4>
-                <p className="text-slate-500 text-sm mb-8">Trang chủ / Quản lý Bài viết / {selectedItem?.id}</p>
+              <div className="bg-white p-4 sm:p-8 rounded-xl shadow-sm border border-slate-100">
+                <h4 className="text-xl sm:text-2xl font-bold mb-1">Chi tiết Bài viết</h4>
+                <p className="text-slate-500 text-sm mb-4 sm:mb-8">Trang chủ / Quản lý Bài viết / {selectedItem?.id}</p>
 
-                <div className="flex gap-8 border-b border-slate-100 mb-6">
+                <div className="flex gap-4 sm:gap-8 border-b border-slate-100 mb-6 overflow-x-auto">
                   {['Chi tiết', 'Bình luận', 'Tương tác'].map((tab) => (
                     <button
                       key={tab}
@@ -2487,8 +2545,8 @@ export default function App() {
                 </div>
               ))}
             </div>
-        </div>
-      );
+          </div>
+        );
       case 'settings':
         return (
           <div className="space-y-6">
@@ -2588,32 +2646,30 @@ export default function App() {
       case 'audit':
         return (
           <div className="space-y-6">
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-100">
-              <h4 className="text-2xl font-bold mb-1">Audit Logs</h4>
-              <p className="text-slate-500 text-sm mb-8">Nhật ký hoạt động của quản trị viên hệ thống.</p>
+            <div className="bg-white p-4 sm:p-8 rounded-xl shadow-sm border border-slate-100">
+              <h4 className="text-xl sm:text-2xl font-bold mb-1">Audit Logs</h4>
+              <p className="text-slate-500 text-sm mb-4 sm:mb-8">Nhật ký hoạt động của quản trị viên hệ thống.</p>
 
               <div className="overflow-x-auto border border-slate-100 rounded-xl">
-                <table className="w-full text-sm">
+                <table className="w-full text-sm hidden md:table">
                   <thead className="bg-slate-50 text-slate-500">
                     <tr>
                       <th className="px-6 py-3 text-left font-bold whitespace-nowrap">Time</th>
                       <th className="px-6 py-3 text-left font-bold whitespace-nowrap">Admin</th>
                       <th className="px-6 py-3 text-left font-bold whitespace-nowrap">Action</th>
                       <th className="px-6 py-3 text-left font-bold whitespace-nowrap">Target</th>
-                      {/* <th className="px-6 py-3 text-left font-bold whitespace-nowrap">IP Address</th> */}
                       <th className="px-6 py-3 text-left font-bold whitespace-nowrap">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {MOCK_AUDIT_LOGS.map((log, i) => (
                       <tr key={i} className="hover:bg-slate-50 transition-colors">
-                        <td className="px-6 py-4 text-slate-500">{log.time}</td>
-                        <td className="px-6 py-4 font-medium">{log.admin}</td>
-                        <td className="px-6 py-4">
+                        <td className="px-6 py-4 text-slate-500 whitespace-nowrap">{log.time}</td>
+                        <td className="px-6 py-4 font-medium whitespace-nowrap">{log.admin}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">
                           <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-[10px] font-bold uppercase border border-blue-100">{log.action}</span>
                         </td>
                         <td className="px-6 py-4 text-slate-600 max-w-xs truncate">{log.target}</td>
-                        {/* <td className="px-6 py-4 text-slate-400 font-mono text-xs">{log.ip}</td> */}
                         <td className="px-6 py-4">
                           <button
                             onClick={() => openModal({
@@ -2637,10 +2693,6 @@ export default function App() {
                                       <span className="text-xs text-slate-400 font-bold uppercase">Đối tượng</span>
                                       <span className="text-sm font-medium font-mono truncate max-w-[200px]">{log.target}</span>
                                     </div>
-                                    {/* <div className="flex justify-between">
-                                      <span className="text-xs text-slate-400 font-bold uppercase">Địa chỉ IP</span>
-                                      <span className="text-sm font-medium">{log.ip}</span>
-                                    </div> */}
                                     <div className="flex justify-between pt-2">
                                       <span className="text-xs text-slate-400 font-bold uppercase">Kết quả</span>
                                       <Badge variant="active">{log.result}</Badge>
@@ -2660,6 +2712,59 @@ export default function App() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+              <div className="md:hidden flex flex-col divide-y divide-slate-100">
+                {MOCK_AUDIT_LOGS.map((log, i) => (
+                  <div key={i} className="py-4 space-y-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-[10px] font-bold uppercase border border-blue-100">{log.action}</span>
+                        <p className="text-sm font-medium text-slate-800 mt-1.5 truncate">{log.target}</p>
+                      </div>
+                      <Badge variant={log.result === 'Success' ? 'active' : 'deleted'}>{log.result}</Badge>
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-slate-500">
+                      <span className="truncate">{log.admin}</span>
+                      <span className="whitespace-nowrap ml-2">{log.time}</span>
+                    </div>
+                    <button
+                      onClick={() => openModal({
+                        title: 'Chi tiết Nhật ký hệ thống',
+                        children: (
+                          <div className="space-y-4">
+                            <div className="p-4 bg-slate-50 rounded-xl space-y-3">
+                              <div className="flex justify-between border-b border-slate-100 pb-2">
+                                <span className="text-xs text-slate-400 font-bold uppercase">Thời gian</span>
+                                <span className="text-sm font-medium">{log.time}</span>
+                              </div>
+                              <div className="flex justify-between border-b border-slate-100 pb-2">
+                                <span className="text-xs text-slate-400 font-bold uppercase">Quản trị viên</span>
+                                <span className="text-sm font-medium">{log.admin}</span>
+                              </div>
+                              <div className="flex justify-between border-b border-slate-100 pb-2">
+                                <span className="text-xs text-slate-400 font-bold uppercase">Hành động</span>
+                                <span className="text-sm font-bold text-blue-600">{log.action}</span>
+                              </div>
+                              <div className="flex justify-between border-b border-slate-100 pb-2">
+                                <span className="text-xs text-slate-400 font-bold uppercase">Đối tượng</span>
+                                <span className="text-sm font-medium font-mono truncate max-w-[200px]">{log.target}</span>
+                              </div>
+                              <div className="flex justify-between pt-2">
+                                <span className="text-xs text-slate-400 font-bold uppercase">Kết quả</span>
+                                <Badge variant="active">{log.result}</Badge>
+                              </div>
+                            </div>
+                          </div>
+                        ),
+                        confirmLabel: 'Đóng',
+                        type: 'info'
+                      })}
+                      className="w-full py-2 bg-slate-50 text-blue-600 rounded-lg text-xs font-bold hover:bg-blue-50 transition-colors border border-slate-100"
+                    >
+                      Xem chi tiết
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
