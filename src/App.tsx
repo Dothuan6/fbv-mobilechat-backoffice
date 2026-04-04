@@ -687,10 +687,10 @@ export default function App() {
                   </div>
                 </div>
                 <div className="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
-                  <div className="space-y-1">
+                  {/* <div className="space-y-1">
                     <p className="text-xs text-slate-400 font-medium">Agora UID</p>
                     <p className="text-sm font-bold">uid_78231</p>
-                  </div>
+                  </div> */}
                   <div className="space-y-1">
                     <p className="text-xs text-slate-400 font-medium">Logged-in Devices</p>
                     <p className="text-sm font-bold">3 thiết bị</p>
