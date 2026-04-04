@@ -287,9 +287,9 @@ const DashboardSection = ({ title, icon: Icon, children, color = "text-blue-600"
         </div>
         <h4 className="font-bold text-slate-800 text-sm tracking-tight">{title}</h4>
       </div>
-      <button className="text-[10px] font-bold text-slate-400 hover:text-blue-600 transition-colors uppercase tracking-widest">
+      {/* <button className="text-[10px] font-bold text-slate-400 hover:text-blue-600 transition-colors uppercase tracking-widest">
         [ Chi tiết ]
-      </button>
+      </button> */}
     </div>
     <div className="p-5 flex-1 select-none">
       {children}
