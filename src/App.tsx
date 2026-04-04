@@ -747,6 +747,88 @@ export default function App() {
 
               <div className="space-y-4">
                 <div className="flex items-center gap-2 px-1">
+                  <TrendingUp size={20} className="text-orange-500" />
+                  <h4 className="text-lg font-bold text-slate-800">Lưu lượng & Dung lượng sử dụng</h4>
+                  <div className="h-[1px] flex-1 bg-slate-100 ml-2"></div>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {/* Bài viết */}
+                  <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="p-2 bg-blue-100 text-blue-600 rounded-lg"><FileText size={16} /></div>
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Bài viết</span>
+                    </div>
+                    <p className="text-2xl font-bold text-slate-800">{selectedItem?.resourceStats?.posts?.count || 0}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">Dung lượng: <span className="font-semibold text-slate-600">{selectedItem?.resourceStats?.posts?.storage || '0 MB'}</span></p>
+                  </div>
+                  {/* Kết bạn */}
+                  <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="p-2 bg-pink-100 text-pink-600 rounded-lg"><Heart size={16} /></div>
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Kết bạn</span>
+                    </div>
+                    <p className="text-2xl font-bold text-slate-800">{(selectedItem?.resourceStats?.friendship?.sent || 0) + (selectedItem?.resourceStats?.friendship?.received || 0)}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">Gửi: <span className="font-semibold text-slate-600">{selectedItem?.resourceStats?.friendship?.sent || 0}</span> · Nhận: <span className="font-semibold text-slate-600">{selectedItem?.resourceStats?.friendship?.received || 0}</span></p>
+                  </div>
+                  {/* Nhật ký */}
+                  <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="p-2 bg-amber-100 text-amber-600 rounded-lg"><Clock size={16} /></div>
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Nhật ký</span>
+                    </div>
+                    <p className="text-2xl font-bold text-slate-800">{selectedItem?.resourceStats?.workLog?.total || 0}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">Tổng bản ghi worklog</p>
+                  </div>
+                  {/* Cuộc gọi thoại */}
+                  <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="p-2 bg-emerald-100 text-emerald-600 rounded-lg"><PhoneCall size={16} /></div>
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Gọi thoại</span>
+                    </div>
+                    <p className="text-2xl font-bold text-slate-800">{(selectedItem?.resourceStats?.calls?.voice?.made || 0) + (selectedItem?.resourceStats?.calls?.voice?.received || 0)}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">Gọi đi: <span className="font-semibold text-slate-600">{selectedItem?.resourceStats?.calls?.voice?.made || 0}</span> · Nhận: <span className="font-semibold text-slate-600">{selectedItem?.resourceStats?.calls?.voice?.received || 0}</span></p>
+                  </div>
+                  {/* Video call */}
+                  <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="p-2 bg-violet-100 text-violet-600 rounded-lg"><Video size={16} /></div>
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Video Call</span>
+                    </div>
+                    <p className="text-2xl font-bold text-slate-800">{(selectedItem?.resourceStats?.calls?.video?.made || 0) + (selectedItem?.resourceStats?.calls?.video?.received || 0)}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">Gọi đi: <span className="font-semibold text-slate-600">{selectedItem?.resourceStats?.calls?.video?.made || 0}</span> · Nhận: <span className="font-semibold text-slate-600">{selectedItem?.resourceStats?.calls?.video?.received || 0}</span></p>
+                  </div>
+                  {/* Nhóm */}
+                  <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="p-2 bg-purple-100 text-purple-600 rounded-lg"><Users size={16} /></div>
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Nhóm</span>
+                    </div>
+                    <p className="text-2xl font-bold text-slate-800">{(selectedItem?.resourceStats?.groups?.created || 0) + (selectedItem?.resourceStats?.groups?.joined || 0)}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">Tạo: <span className="font-semibold text-slate-600">{selectedItem?.resourceStats?.groups?.created || 0}</span> · Tham gia: <span className="font-semibold text-slate-600">{selectedItem?.resourceStats?.groups?.joined || 0}</span></p>
+                  </div>
+                  {/* Tin nhắn */}
+                  <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="p-2 bg-indigo-100 text-indigo-600 rounded-lg"><MessageCircle size={16} /></div>
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Tin nhắn</span>
+                    </div>
+                    <p className="text-2xl font-bold text-slate-800">{selectedItem?.resourceStats?.messaging?.conversations || 0}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">Cuộc trò chuyện đang hoạt động</p>
+                  </div>
+                  {/* Tổng dung lượng */}
+                  <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-sm border border-slate-700 p-4 hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="p-2 bg-white/10 text-white rounded-lg"><HardDrive size={16} /></div>
+                      <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">Tổng lưu trữ</span>
+                    </div>
+                    <p className="text-2xl font-bold text-white">{selectedItem?.resourceStats?.posts?.storage || '0 MB'}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">Media, file & tin nhắn</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 px-1">
                   <Activity size={20} className="text-blue-600" />
                   <h4 className="text-lg font-bold text-slate-800">Hoạt động người dùng</h4>
                   <div className="h-[1px] flex-1 bg-slate-100 ml-2"></div>
