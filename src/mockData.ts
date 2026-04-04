@@ -10,6 +10,14 @@ export const MOCK_USERS: User[] = [
       workLog: { total: 452 },
       calls: { voice: { made: 45, received: 32 }, video: { made: 12, received: 8 } },
       messaging: { conversations: 28 }
+    },
+    appFeatures: {
+      posts: true,
+      groups: true,
+      friends: true,
+      workLog: true,
+      calls: true,
+      messaging: true
     }
   },
   { 
@@ -21,6 +29,14 @@ export const MOCK_USERS: User[] = [
       workLog: { total: 840 },
       calls: { voice: { made: 88, received: 65 }, video: { made: 24, received: 15 } },
       messaging: { conversations: 45 }
+    },
+    appFeatures: {
+      posts: true,
+      groups: true,
+      friends: true,
+      workLog: true,
+      calls: true,
+      messaging: true
     }
   },
   { id: '3', stt: 3, avatar: 'https://i.pravatar.cc/150?u=3', name: 'Lê Văn Cường', email: 'levanc@email.com', phone: '+84923456789', regType: 'SĐT', regDate: '20/01/2025', status: 'Đình chỉ' },

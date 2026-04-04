@@ -1,5 +1,14 @@
 import type { ReactNode } from 'react';
 
+export interface AppFeatures {
+  posts: boolean;
+  groups: boolean;
+  friends: boolean;
+  workLog: boolean;
+  calls: boolean;
+  messaging: boolean;
+}
+
 export interface ResourceStats {
   posts: { count: number; storage: string };
   groups: { created: number; joined: number };
@@ -20,6 +29,7 @@ export interface User {
   regDate: string;
   status: 'Hoạt động' | 'Đình chỉ' | 'Chờ XÁC NHẬN' | 'Bị cấm';
   resourceStats?: ResourceStats;
+  appFeatures?: AppFeatures;
 }
 
 export interface Group {

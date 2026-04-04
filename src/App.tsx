@@ -206,6 +206,69 @@ const ResourceWidget = ({ title, stats, icon: Icon, color }: any) => (
   </motion.div>
 );
 
+const FeatureToggle = ({ label, description, enabled, onChange, icon: Icon }: any) => (
+  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100 hover:bg-white hover:border-blue-100 transition-all group">
+    <div className="flex items-center gap-3">
+      <div className={cn("p-2 rounded-lg transition-colors", enabled ? "bg-blue-100 text-blue-600" : "bg-slate-200 text-slate-400")}>
+        <Icon size={18} />
+      </div>
+      <div>
+        <h6 className="text-sm font-bold text-slate-700">{label}</h6>
+        <p className="text-[10px] text-slate-400">{description}</p>
+      </div>
+    </div>
+    <button
+      onClick={() => onChange(!enabled)}
+      className={cn(
+        "relative inline-flex h-6 w-11 items-center rounded-full transition-all focus:outline-none",
+        enabled ? "bg-blue-600 shadow-lg shadow-blue-500/30" : "bg-slate-300"
+      )}
+    >
+      <span
+        className={cn(
+          "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
+          enabled ? "translate-x-6" : "translate-x-1"
+        )}
+      />
+    </button>
+  </div>
+);
+
+const SystemStatusWidget = () => (
+  <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 h-full flex flex-col justify-between">
+    <div>
+      <div className="flex items-center gap-3 mb-6">
+        <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
+          <Activity size={20} />
+        </div>
+        <div>
+          <h4 className="font-bold text-sm">Trạng thái hệ thống</h4>
+          <p className="text-[10px] text-slate-400 uppercase tracking-wider">Live Monitoring</p>
+        </div>
+      </div>
+      <div className="space-y-4">
+        {[
+          { label: 'Phiên bản App', value: 'v2.4.1', status: 'update-ready' },
+          { label: 'Máy chủ Agora', value: 'Ổn định', status: 'online' },
+          { label: 'Cơ sở dữ liệu', value: 'Đang kết nối', status: 'online' },
+          { label: 'Admin trực tuyến', value: '4 người', status: 'online' },
+        ].map((item, i) => (
+          <div key={i} className="flex justify-between items-center text-xs">
+            <span className="text-slate-500 font-medium">{item.label}</span>
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-slate-700">{item.value}</span>
+              <div className={cn("w-2 h-2 rounded-full animate-pulse", item.status === 'online' ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]")}></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+    <button className="w-full mt-6 py-2.5 bg-slate-50 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-100 transition-colors border border-slate-100">
+      [ Xem nhật ký chi tiết ]
+    </button>
+  </div>
+);
+
 
 // --- Main App ---
 
@@ -398,6 +461,8 @@ export default function App() {
                   </ResponsiveContainer>
                 </div>
               </div>
+
+              <SystemStatusWidget />
             </div>
 
             {/* <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"> */}
@@ -541,6 +606,59 @@ export default function App() {
                   >
                     Cập nhật thông tin
                   </button>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 px-1 text-emerald-600">
+                  <ShieldCheck size={20} />
+                  <h4 className="text-lg font-bold text-slate-800">Quản lý tính năng người dùng</h4>
+                  <div className="h-[1px] flex-1 bg-slate-100 ml-2"></div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <FeatureToggle
+                    label="Bài viết"
+                    description="Cho phép đăng và xem bài viết"
+                    enabled={selectedItem?.appFeatures?.posts ?? true}
+                    onChange={(val: boolean) => setSelectedItem({ ...selectedItem, appFeatures: { ...selectedItem.appFeatures, posts: val } })}
+                    icon={FileText}
+                  />
+                  <FeatureToggle
+                    label="Nhóm"
+                    description="Cho phép tạo và tham gia nhóm"
+                    enabled={selectedItem?.appFeatures?.groups ?? true}
+                    onChange={(val: boolean) => setSelectedItem({ ...selectedItem, appFeatures: { ...selectedItem.appFeatures, groups: val } })}
+                    icon={Users}
+                  />
+                  <FeatureToggle
+                    label="Kết bạn"
+                    description="Cho phép gửi lời mời kết bạn"
+                    enabled={selectedItem?.appFeatures?.friends ?? true}
+                    onChange={(val: boolean) => setSelectedItem({ ...selectedItem, appFeatures: { ...selectedItem.appFeatures, friends: val } })}
+                    icon={UserPlus}
+                  />
+                  <FeatureToggle
+                    label="Nhật ký"
+                    description="Cho phép ghi nhật ký hoạt động"
+                    enabled={selectedItem?.appFeatures?.workLog ?? true}
+                    onChange={(val: boolean) => setSelectedItem({ ...selectedItem, appFeatures: { ...selectedItem.appFeatures, workLog: val } })}
+                    icon={History}
+                  />
+                  <FeatureToggle
+                    label="Cuộc gọi"
+                    description="Cho phép gọi Voice và Video"
+                    enabled={selectedItem?.appFeatures?.calls ?? true}
+                    onChange={(val: boolean) => setSelectedItem({ ...selectedItem, appFeatures: { ...selectedItem.appFeatures, calls: val } })}
+                    icon={Phone}
+                  />
+                  <FeatureToggle
+                    label="Nhắn tin"
+                    description="Cho phép trò chuyện trực tiếp"
+                    enabled={selectedItem?.appFeatures?.messaging ?? true}
+                    onChange={(val: boolean) => setSelectedItem({ ...selectedItem, appFeatures: { ...selectedItem.appFeatures, messaging: val } })}
+                    icon={MessageSquare}
+                  />
                 </div>
               </div>
 
