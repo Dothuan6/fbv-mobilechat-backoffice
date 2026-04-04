@@ -272,9 +272,9 @@ const SystemStatusWidget = () => (
         ))}
       </div>
     </div>
-    <button className="w-full mt-6 py-2.5 bg-slate-50 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-100 transition-colors border border-slate-100">
+    {/* <button className="w-full mt-6 py-2.5 bg-slate-50 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-100 transition-colors border border-slate-100">
       [ Xem nhật ký chi tiết ]
-    </button>
+    </button> */}
   </div>
 );
 
