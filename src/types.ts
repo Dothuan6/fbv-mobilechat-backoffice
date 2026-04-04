@@ -1,5 +1,14 @@
 import type { ReactNode } from 'react';
 
+export interface ResourceStats {
+  posts: { count: number; storage: string };
+  groups: { created: number; joined: number };
+  friendship: { sent: number; received: number };
+  workLog: { total: number };
+  calls: { voice: { made: number; received: number }; video: { made: number; received: number } };
+  messaging: { conversations: number };
+}
+
 export interface User {
   id: string;
   stt: number;
@@ -10,6 +19,7 @@ export interface User {
   regType: 'Email' | 'Google' | 'SĐT' | 'Apple';
   regDate: string;
   status: 'Hoạt động' | 'Đình chỉ' | 'Chờ XÁC NHẬN' | 'Bị cấm';
+  resourceStats?: ResourceStats;
 }
 
 export interface Group {

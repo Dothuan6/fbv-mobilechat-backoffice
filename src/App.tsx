@@ -24,7 +24,13 @@ import {
   CheckCircle2,
   XCircle,
   Clock,
-  AlertTriangle
+  AlertTriangle,
+  Video,
+  Phone,
+  UserPlus,
+  Activity,
+  Heart,
+  Share2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
@@ -175,6 +181,37 @@ const Modal = ({ isOpen, onClose, title, children, confirmLabel, onConfirm, type
     </div>
   );
 };
+
+const ResourceWidget = ({ title, stats, icon: Icon, color, onClick, actionLabel = 'Xem chi tiết' }: any) => (
+  <motion.div
+    whileHover={{ y: -4 }}
+    className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex flex-col justify-between h-full transition-all hover:shadow-md hover:border-blue-100"
+  >
+    <div className="flex justify-between items-start mb-4">
+      <div className={cn("p-2.5 rounded-lg text-white", color)}>
+        <Icon size={20} />
+      </div>
+      <button
+        onClick={onClick}
+        className="text-[10px] font-bold text-blue-600 hover:underline flex items-center gap-1 uppercase tracking-tighter"
+      >
+        {actionLabel} <ChevronRight size={10} />
+      </button>
+    </div>
+    <div>
+      <h5 className="text-slate-400 text-[11px] font-bold uppercase tracking-widest mb-2">{title}</h5>
+      <div className="space-y-1.5">
+        {stats.map((stat: any, i: number) => (
+          <div key={i} className="flex justify-between items-baseline border-b border-slate-50 pb-1 last:border-0 last:pb-0">
+            <span className="text-xs text-slate-500">{stat.label}</span>
+            <span className="text-sm font-bold text-slate-800">{stat.value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </motion.div>
+);
+
 
 // --- Main App ---
 
@@ -510,6 +547,88 @@ export default function App() {
                   >
                     Cập nhật thông tin
                   </button>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 px-1">
+                  <Activity size={20} className="text-blue-600" />
+                  <h4 className="text-lg font-bold text-slate-800">Hoạt động người dùng</h4>
+                  <div className="h-[1px] flex-1 bg-slate-100 ml-2"></div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {/* Bài viết */}
+                  <ResourceWidget
+                    title="Bài viết"
+                    icon={FileText}
+                    color="bg-blue-500"
+                    onClick={() => setActiveTab('posts')}
+                    stats={[
+                      { label: 'Tổng bài viết', value: selectedItem?.resourceStats?.posts.count || 0 },
+                      { label: 'Dung lượng', value: selectedItem?.resourceStats?.posts.storage || '0 MB' }
+                    ]}
+                  />
+
+                  {/* Nhóm */}
+                  <ResourceWidget
+                    title="Nhóm"
+                    icon={Users}
+                    color="bg-emerald-500"
+                    onClick={() => setActiveTab('groups')}
+                    stats={[
+                      { label: 'Đã tạo', value: selectedItem?.resourceStats?.groups.created || 0 },
+                      { label: 'Đã tham gia', value: selectedItem?.resourceStats?.groups.joined || 0 }
+                    ]}
+                  />
+
+                  {/* Kết bạn */}
+                  <ResourceWidget
+                    title="Kết bạn"
+                    icon={UserPlus}
+                    color="bg-purple-500"
+                    onClick={() => {}} // No specific tab yet
+                    stats={[
+                      { label: 'Lời mời đã gửi', value: selectedItem?.resourceStats?.friendship.sent || 0 },
+                      { label: 'Lời mời đã nhận', value: selectedItem?.resourceStats?.friendship.received || 0 }
+                    ]}
+                  />
+
+                  {/* Nhật ký làm việc */}
+                  <ResourceWidget
+                    title="Nhật ký làm việc"
+                    icon={History}
+                    color="bg-orange-500"
+                    onClick={() => setActiveTab('audit')}
+                    stats={[
+                      { label: 'Tổng hoạt động', value: selectedItem?.resourceStats?.workLog.total || 0 },
+                      { label: 'Lần cuối', value: 'Hôm nay' }
+                    ]}
+                  />
+
+                  {/* Gọi Voice/Video */}
+                  <ResourceWidget
+                    title="Cuộc gọi"
+                    icon={Phone}
+                    color="bg-rose-500"
+                    onClick={() => {}} // No specific tab yet
+                    stats={[
+                      { label: 'Gọi Voice', value: `${selectedItem?.resourceStats?.calls.voice.made || 0} đi / ${selectedItem?.resourceStats?.calls.voice.received || 0} đến` },
+                      { label: 'Gọi Video', value: `${selectedItem?.resourceStats?.calls.video.made || 0} đi / ${selectedItem?.resourceStats?.calls.video.received || 0} đến` }
+                    ]}
+                  />
+
+                  {/* Nhắn tin */}
+                  <ResourceWidget
+                    title="Nhắn tin"
+                    icon={MessageSquare}
+                    color="bg-indigo-500"
+                    onClick={() => setActiveTab('chats')}
+                    stats={[
+                      { label: 'Cuộc trò chuyện', value: selectedItem?.resourceStats?.messaging.conversations || 0 },
+                      { label: 'Tin nhắn mới', value: '0' }
+                    ]}
+                  />
                 </div>
               </div>
 

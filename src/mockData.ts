@@ -1,8 +1,28 @@
 import { User, Group, Post, Admin, Conversation, Member } from './types';
 
 export const MOCK_USERS: User[] = [
-  { id: '1', stt: 1, avatar: 'https://i.pravatar.cc/150?u=1', name: 'Nguyễn Văn An', email: 'nguyenan@email.com', phone: '+84901234567', regType: 'Email', regDate: '01/01/2025', status: 'Hoạt động' },
-  { id: '2', stt: 2, avatar: 'https://i.pravatar.cc/150?u=2', name: 'Trần Thị Bình', email: 'trinhbinh@gmail.com', phone: '+84912345678', regType: 'Google', regDate: '15/01/2025', status: 'Hoạt động' },
+  { 
+    id: '1', stt: 1, avatar: 'https://i.pravatar.cc/150?u=1', name: 'Nguyễn Văn An', email: 'nguyenan@email.com', phone: '+84901234567', regType: 'Email', regDate: '01/01/2025', status: 'Hoạt động',
+    resourceStats: {
+      posts: { count: 24, storage: '1.2 GB' },
+      groups: { created: 3, joined: 12 },
+      friendship: { sent: 156, received: 89 },
+      workLog: { total: 452 },
+      calls: { voice: { made: 45, received: 32 }, video: { made: 12, received: 8 } },
+      messaging: { conversations: 28 }
+    }
+  },
+  { 
+    id: '2', stt: 2, avatar: 'https://i.pravatar.cc/150?u=2', name: 'Trần Thị Bình', email: 'trinhbinh@gmail.com', phone: '+84912345678', regType: 'Google', regDate: '15/01/2025', status: 'Hoạt động',
+    resourceStats: {
+      posts: { count: 42, storage: '2.5 GB' },
+      groups: { created: 5, joined: 18 },
+      friendship: { sent: 210, received: 145 },
+      workLog: { total: 840 },
+      calls: { voice: { made: 88, received: 65 }, video: { made: 24, received: 15 } },
+      messaging: { conversations: 45 }
+    }
+  },
   { id: '3', stt: 3, avatar: 'https://i.pravatar.cc/150?u=3', name: 'Lê Văn Cường', email: 'levanc@email.com', phone: '+84923456789', regType: 'SĐT', regDate: '20/01/2025', status: 'Đình chỉ' },
   { id: '4', stt: 4, avatar: 'https://i.pravatar.cc/150?u=4', name: 'Phạm Minh Dũng', email: 'phammd@email.com', phone: '+84934567890', regType: 'Apple', regDate: '25/01/2025', status: 'Chờ XÁC NHẬN' },
   { id: '5', stt: 5, avatar: 'https://i.pravatar.cc/150?u=5', name: 'Hoàng Thị Em', email: 'hte@gmail.com', phone: '+84945678901', regType: 'Email', regDate: '01/02/2025', status: 'Hoạt động' },
